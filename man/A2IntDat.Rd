@@ -11,10 +11,12 @@
   Ammonia emission and supporting data from the ALFAM2 database on ammonia emission from field-applied manure (described in Hafner et al. (2018)), including interval-level data (\code{A2IntDat}), plot-level data (\code{A2PlotDat}), and descriptions of variables (\code{A2IntVars} and \code{A2PlotVars}).
 }
 
-\usage{data("A2IntDat")}
-\usage{data("A2PlotDat")}
-\usage{data("A2IntVars")}
-\usage{data("A2PlotVars")}
+\usage{
+data("A2IntDat")
+data("A2PlotDat")
+data("A2IntVars")
+data("A2PlotVars")
+}
 
 \format{
   Data frames with 30907 observations (measurement intervals) and 107 variables (\code{A2IntDat}) or 1899 observations (field plots) and 151 variables (\code{A2PlotDat}).
