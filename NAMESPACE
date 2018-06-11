@@ -1,0 +1,3 @@
+import(doParallel)
+import(foreach)
+export(A2Mod, A2IntDat, A2PlotDat, A2IntVars, A2PlotVars)
