@@ -4,7 +4,25 @@
 # group is name of group column, app.name is name of total pool (a0 + u0) column
 ALFAM2mod <- function(
   dat, 
-  pars, 
+  pars = c(
+           int0           = -0.91400,
+           int1           = -1.16256,
+           int2           = -1.02444,
+           int3           = -2.92947,
+           app.methodos0  = -0.98384,
+           app.rate0      = -0.01602,
+           man.dm0        =  0.40164,
+           incorpdeep5    = -3.08108,
+           incorpshallow5 = -0.91376,
+           app.methodbc1  =  0.62870,
+           man.dm1        = -0.07974,
+           air.temp1      =  0.04909,
+           wind.1m1       =  0.04876,
+           air.temp3      =  0.01344,
+           incorpdeep3    = -0.74621,
+           app.methodos3  = -0.20088,
+           rain.rate2     =  0.38434
+           ), 
   app.name = 'TAN.app', 
   time.name = 'ct',
   time.incorp = NULL,                     # NULL with no incorporation, otherwise numeric or column name. If column name value should be NA for no incorporation (w groups)
@@ -33,14 +51,15 @@ ALFAM2mod <- function(
 
   #print(pars)
 
+  # NTS: Work needed here. 
   # Add checks for all arguments
   checkArgClassValue(dat, expected.class = 'data.frame')
-  if(nrow(dat) == 0) stop('`dat` argument data frame has no rows.')
-  checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
-  # Add more checks . . .
+  checkArgClassValue(pars, expected.class = c('numeric', 'list'))
 
-  # Check that all names for p end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more names in p does not end with a number.')
+  checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
+
+  # Other checks to help with stupid mistakes I have made before
+  if(nrow(dat) == 0) stop('`dat` argument data frame has no rows.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
 
@@ -119,6 +138,9 @@ ALFAM2mod <- function(
     }
 
   }
+
+  # Check that all names for p end with a number
+  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more names in p does not end with a number.')
 
   # Drop parameters for missing predictors
   p.orig <- pars
