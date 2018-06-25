@@ -60,21 +60,15 @@ ALFAM2mod <- function(
 
   # If pars was given as list, change to vector
   if(is.list(pars)) {
+    pars <- unlist(pars)
+  }
 
-    dnames <- as.numeric(gsub('[fr]', '', names(pars)))
-    p.list <- pars
-    pars <- NULL
-
-    for(i in 1:length(p.list)) {
-      spars <- p.list[[i]]
-      names(spars) <- paste0(names(spars), dnames[i])
-      pars <- c(pars, spars)
-    }
-
+  if(any(ch_nms <- grepl("[fr]{1}[0-5]{1}[.]",names(pars)))){
+    names(pars)[ch_nms] <- gsub("^[fr]([0-5])[.](.*)","\\2\\1",names(pars)[ch_nms])
   }
 
   # Check that all names for p end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more names in argument "pars" does not end with a number.')
+  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, r4, r5.\n Make sure that the naming is correct. Either append the corresponding number (0 to 5) at the name endings (e.g. int0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
   # -> possibly extend names as done below?
