@@ -39,13 +39,13 @@ ALFAM2mod <- function(
   check.NA = TRUE, 
   pass.col = NULL,
   add.incorp.rows = FALSE,
-  parallel = TRUE
+  parallel = FALSE
   ) {
 
   #### NTS: not package-ready
   if(parallel) {
     library(foreach)
-    library(parallel) # NTS: shouldn't need, since in R-core???
+    library(parallel) # NTS: shouldn't need, since in R-core??? -> hac: but you still have to load it, unless we det depend on those libraries...
     library(doParallel)
   }
 
@@ -58,27 +58,45 @@ ALFAM2mod <- function(
 
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
-  # Other checks to help with stupid mistakes I have made before
-  if(nrow(dat) == 0) stop('`dat` argument data frame has no rows.')
+  # If pars was given as list, change to vector
+  if(is.list(pars)) {
+
+    dnames <- as.numeric(gsub('[fr]', '', names(pars)))
+    p.list <- pars
+    pars <- NULL
+
+    for(i in 1:length(p.list)) {
+      spars <- p.list[[i]]
+      names(spars) <- paste0(names(spars), dnames[i])
+      pars <- c(pars, spars)
+    }
+
+  }
+
+  # Check that all names for p end with a number
+  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more names in argument "pars" does not end with a number.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
+  # -> possibly extend names as done below?
+
+  # Rename pass-through column if pass-through requested
+  if(!is.null(pass.col)) {
+    dat[,paste0("pass_me.through_",pass.col)] <- dat[,pass.col]
+  }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
-    group <- 'group'
-    dat[, group] <- 0
+    dat$group <- 0
+  } else {
+    dat$group <- as.character(dat[,group])
   }
-  # NTS Factor??
-  dat[, group] <- as.character(dat[, group])
 
   # Center numeric predictors
   if(center) {
-    for (v in names(cmns)[names(cmns) %in% names(dat)]) {
-      dat[, paste0(v, '.orig')] <- dat[, v] 
-      dat[, v] <- dat[, v] - cmns[v]
-      #print(v)
-      #print(median(dat[, v]), na.rm = TRUE)
-    }
+    # get columns that will be centered 
+    c_cols <- names(cmns)[names(cmns) %in% names(dat)]
+    # center
+    if(length(c_cols)) dat[,c_cols] <- sweep(dat[,c_cols],2,cmns[c_cols])
   }
 
   # Original order (for sorting before return)
@@ -95,10 +113,11 @@ ALFAM2mod <- function(
       time.incorp <- 'time.incorp' # NTS: really a name, change arg name to t.incorp.name?
     }
 
-    # Add incorporation times
+    # Add incorporation times -> hac: how about using a vector as input argument: e.g. c(group1=4, group2=2,...)
+    # or even a list: e.g. list(group1=c("deep",4),group2=c("shallow",10))
     if(!is.null(time.incorp)) {
-      for(i in sort(unique(dat[, group]))) {
-        dd <- dat[dat[, group] == i, ]
+      for(i in sort(unique(dat$group))) {
+        dd <- dat[dat$group == i, ]
         tt <- dd[1, time.incorp]
 
         if(!is.na(tt)) { 
@@ -112,7 +131,7 @@ ALFAM2mod <- function(
           } 
 
           # Identify time of incorporation event
-          dat[dat[, group] == i & dat[, time.name] == tt, 'ievent'] <- TRUE
+          dat[dat$group == i & dat[, time.name] == tt, 'ievent'] <- TRUE
 
         }
 
@@ -122,25 +141,7 @@ ALFAM2mod <- function(
   }
 
   # Sort (time must increase for calcEmis())
-  dat <- dat[order(dat[, group], dat[, time.name]), ]
-
-  # If pars was given as list, change to vector
-  if(class(pars) == 'list') {
-
-    dnames <- as.numeric(gsub('[fr]', '', names(pars)))
-    p.list <- pars
-    pars <- NULL
-
-    for(i in 1:length(p.list)) {
-      spars <- p.list[[i]]
-      names(spars) <- paste0(names(spars), dnames[i])
-      pars <- c(pars, spars)
-    }
-
-  }
-
-  # Check that all names for p end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more names in p does not end with a number.')
+  dat <- dat[order(dat$group, dat[, time.name]), ]
 
   # Drop parameters for missing predictors
   p.orig <- pars
@@ -184,19 +185,19 @@ ALFAM2mod <- function(
   
   # After calculating f5, set incorporation predictor variables to FALSE for times before incorporation occurred
   if(!is.null(time.incorp)) {
-    for(i in sort(unique(dat[, group]))) {
-      dd <- dat[dat[, group] == i, ]
+    for(i in sort(unique(dat$group))) {
+      dd <- dat[dat$group == i, ]
       tt <- dd[1, time.incorp]
 
       if(!is.na(tt)) { 
 
     # NTS: problematic
-        dat[dat[, group] == i & dat[, time.name] <= tt, grepl('incorp', names(dat)) & names(dat) %in% gsub('[0-9]$', '', names(pars))] <- FALSE
+        dat[dat$group == i & dat[, time.name] <= tt, grepl('incorp', names(dat)) & names(dat) %in% gsub('[0-9]$', '', names(pars))] <- FALSE
 
       } else {
 
         # NTS: does this really fix problem wehn there is no incorp?
-        f5[dat[, group] == i] <- 1
+        f5[dat$group == i] <- 1
 
       }
 
@@ -208,13 +209,13 @@ ALFAM2mod <- function(
 
   # Not parallel
   if(!parallel) {
-    for(i in sort(unique(dat[, group]))) {
-      dd <- dat[dat[, group] == i, ]
-      ff0 <- f0[dat[, group] == i]
-      rr1 <- r1[dat[, group] == i]
-      rr2 <- r2[dat[, group] == i]
-      rr3 <- r3[dat[, group] == i]
-      ff5 <- f5[dat[, group] == i]
+    for(i in sort(unique(dat$group))) {
+      dd <- dat[dat$group == i, ]
+      ff0 <- f0[dat$group == i]
+      rr1 <- r1[dat$group == i]
+      rr2 <- r2[dat$group == i]
+      rr3 <- r3[dat$group == i]
+      ff5 <- f5[dat$group == i]
 
       # Check for duplicate ct
       if(any(duplicated(dd[, time.name]))) {
@@ -231,13 +232,13 @@ ALFAM2mod <- function(
       e <- rbind(e, cbind(group = i, ce))
     }
   } else {
-    e <- foreach(i = sort(unique(dat[, group])), .packages = 'minpack.lm', .export = 'calcEmis', .combine = rbind, .init = NULL) %dopar% {
-    dd <- dat[dat[, group] == i, ]
-    ff0 <- f0[dat[, group] == i]
-    rr1 <- r1[dat[, group] == i]
-    rr2 <- r2[dat[, group] == i]
-    rr3 <- r3[dat[, group] == i]
-    ff5 <- f5[dat[, group] == i]
+    e <- foreach(i = sort(unique(dat$group)), .packages = 'minpack.lm', .export = 'calcEmis', .combine = rbind, .init = NULL) %dopar% {
+    dd <- dat[dat$group == i, ]
+    ff0 <- f0[dat$group == i]
+    rr1 <- r1[dat$group == i]
+    rr2 <- r2[dat$group == i]
+    rr3 <- r3[dat$group == i]
+    ff5 <- f5[dat$group == i]
 
     # Check for duplicate ct
     if(any(duplicated(dd[, time.name]))) {
@@ -256,7 +257,9 @@ ALFAM2mod <- function(
     }
  }
   
-  names(e)[1] <- group
+  if(!is.null(group)){
+    names(e)[1] <- group
+  }
 
   # Sort to match original order
   # NTS: check that this works
@@ -266,12 +269,7 @@ ALFAM2mod <- function(
 
   # Add pass-through column if requested
   if(!is.null(pass.col)) {
-    e <- data.frame(dat[, pass.col], e)
-  }
-
-  # If no group specified, drop group column
-  if(is.null(group)) {
-    dat$group <- NULL
+    e <- data.frame(setNames(dat[, paste0("pass_me.through_",pass.col)],pass.col), e)
   }
 
   return(e)
