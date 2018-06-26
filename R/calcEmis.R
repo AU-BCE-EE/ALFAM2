@@ -1,4 +1,4 @@
-calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, ievent, drop.rows) {
+calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
   # t is interval length (hr)
 
   if(is.unsorted(ct)) {

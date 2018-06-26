@@ -95,45 +95,40 @@ ALFAM2mod <- function(
   dat$orig.order <- 1:nrow(dat)
 
   # Extend dat data frame with incorporation time if needed
-  dat$ievent <- dat$added.row <- FALSE # NTS: problem if dat already has column with this name
-
-  if(!is.null(time.incorp)) {
-
-    # Add numeric time.incorp to data frame dat (column needed to handle groups)
-    if(is.numeric(time.incorp)) {
-      dat$time.incorp <- time.incorp
-      time.incorp <- 'time.incorp' # NTS: really a name, change arg name to t.incorp.name?
-    }
-
-    # Add incorporation times -> hac: how about using a vector as input argument: e.g. c(group1=4, group2=2,...)
-    # or even a list: e.g. list(group1=c("deep",4),group2=c("shallow",10))
-    if(!is.null(time.incorp)) {
-      for(i in sort(unique(dat$group))) {
-        dd <- dat[dat$group == i, ]
-        tt <- dd[1, time.incorp]
-
-        if(!is.na(tt)) { 
-
-          # If exact time is already present, no need to add row
-          if(!tt %in% dd[, time.name]) {
-            irow <- dd[1, ]
-            irow$added.row <- TRUE
-            irow[, time.name] <- tt
-            dat <- rbind(dat, irow)
-          } 
-
-          # Identify time of incorporation event
-          dat[dat$group == i & dat[, time.name] == tt, 'ievent'] <- TRUE
-
-        }
-
-      }
-    }
-
-  }
+  dat$added.row <- FALSE # NTS: problem if dat already has column with this name
 
   # Sort (time must increase for calcEmis())
   dat <- dat[order(dat$group, dat[, time.name]), ]
+
+  # Sort out incorporation
+  if(!is.null(time.incorp)) {
+    # get incorporation parameter names (if any)
+    inc.names <- unique(gsub("[0-5]$","",grep("inc|shallow|deep",names(pars),value=TRUE)))
+
+    if(length(inc.names)){
+      # do they exist?
+      inc.ex <- inc.names[inc.names %in% names(dat)]
+      # unique groups
+      u.group <- unique(dat$group)
+      # get times and types
+      if(is.numeric(time.incorp)){
+        # repeat time.incorp values to match number of groups
+        incorp.time <- rep(time.incorp,length(u.group))[seq_along(u.group)]
+      } else {
+        # get time.incorp column entries
+        incorp.time <- tapply(dat[,time.incorp],dat$group,"[",1)
+      }
+      # check if columns exist
+      if(!length(inc.ex)){
+        warning("No matching column for incorporation parameter(s): ",paste(inc.names,collapse=", "),". Skipping incorporation.")
+        time.incorp <- NULL
+      }
+    } else {
+      warning("No incorporation parameter estimates have been provided. Skipping incorporation.")
+      time.incorp <- NULL
+    }
+  }
+
 
   # Drop parameters for missing predictors
   p.orig <- pars
@@ -157,54 +152,65 @@ ALFAM2mod <- function(
   # Make sure parameter names can be found in dat
   if(any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
-  # Calculate primary parameters (zero by default)
-  zv <- rep(0, nrow(dat))
-  if(length(which0) > 0) f0 <- calcPParms(pars[which0], dat, tr = 'logistic') else f0 <- zv
-  if(length(which1) > 0) r1 <- calcPParms(pars[which1], dat)                  else r1 <- zv
-  if(length(which2) > 0) r2 <- calcPParms(pars[which2], dat)                  else r2 <- zv
-  if(length(which3) > 0) r3 <- calcPParms(pars[which3], dat)                  else r3 <- zv
-  if(length(which5) > 0) f5 <- calcPParms(pars[which5], dat, tr = 'logistic') else f5 <- zv
-
-  # f5 only applies when incorporation occurs (0 or 1 time per group), otherwise, 100% stays in f/a
-  f5[!dat$ievent] <- 1
-
-  if(check.NA) if(any(is.na(c(f0, r1, r2, r3, f5)))) {
-    cat('Missing values in predictors:\n')
-    print(apply(dat[, unique(names(pars[!grepl('^int', names(pars))]))], 2, function(x) sum(is.na(x))))
-    stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
-  }
-
-  
-  # After calculating f5, set incorporation predictor variables to FALSE for times before incorporation occurred
-  if(!is.null(time.incorp)) {
-    for(i in sort(unique(dat$group))) {
-      dd <- dat[dat$group == i, ]
-      tt <- dd[1, time.incorp]
-
-      if(!is.na(tt)) { 
-
-    # NTS: problematic
-        dat[dat$group == i & dat[, time.name] <= tt, grepl('incorp', names(dat)) & names(dat) %in% gsub('[0-9]$', '', names(pars))] <- FALSE
-
-      } else {
-
-        # NTS: does this really fix problem wehn there is no incorp?
-        f5[dat$group == i] <- 1
-
-      }
-
-    }
-  }
-
-  # ToDo: 
-  # - clean above for loop and f0 r1 etc parameters
-
-
   # keep incorp rows?
   if(add.incorp.rows){
     dat[,"added.row"] <- rep(FALSE, nrow(dat))
   }
-  s.dat <- split(cbind(dat,"__f0"=f0,"__r1"=r1,"__r2"=r2,"__r3"=r3,"__f5"=f5),dat$group)
+  # Calculate primary parameters (zero by default)
+  zv <- rep(0, nrow(dat))
+  if(length(which0) > 0) dat[,"__f0"] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[,"__f0"] <- zv
+  if(length(which1) > 0) dat[,"__r1"] <- calcPParms(pars[which1], dat)                  else dat[,"__r1"] <- zv
+  if(length(which2) > 0) dat[,"__r2"] <- calcPParms(pars[which2], dat)                  else dat[,"__r2"] <- zv
+  if(length(which3) > 0) dat[,"__r3"] <- calcPParms(pars[which3], dat)                  else dat[,"__r3"] <- zv
+  # f5 on group basis (further below)
+  # first set f5 to 1 (or 0???) -> double-check with Sasha
+  dat[,"__f5"] <- 1
+
+  # split dat into groups
+  s.dat <- split(dat,dat$group)
+
+  # f5 on group basis
+  if(!is.null(time.incorp) && length(which5) > 0){
+    # extend dat by ievent rows on group basis
+    for(i in seq_along(u.group)){
+      # check if incorp
+      if(!is.na(incorp.time[i])){
+        # get subset
+        sub.dat <- s.dat[[i]]
+        # find time
+        ct <- sub.dat[,time.name]
+        ct.ind <- which(ct >= incorp.time[i])[1] - 1
+        # calc f5
+        f5 <- calcPParms(pars[which5], sub.dat[ct.ind,])
+        # add rows        
+        if(ct.ind == 0){
+          # extend first row
+          ext.dat <- sub.dat[1,]
+          ext.dat[,c(time.name,"added.row","__f5")] <- list(incorp.time[i],TRUE,f5)
+          s.dat[[i]] <- rbind(ext.dat,sub.dat)          
+        } else if(ct.ind == length(ct)){
+          # extend last row
+          ext.dat <- sub.dat[ct.ind,]
+          ext.dat[,c(time.name,"added.row","__f5")] <- list(incorp.time[i],TRUE,f5)
+          s.dat[[i]] <- rbind(sub.dat,ext.dat)
+        } else if(any(incorp.time[i] == ct)){
+          # change f5 value
+          s.dat[[i]][ct.ind,"__f5"] <- f5
+        } else {
+          # insert row
+          ins.dat <- sub.dat[ct.ind,]
+          ins.dat[,c(time.name,"added.row","__f5")] <- list(incorp.time[i],TRUE,f5)
+          s.dat[[i]] <- rbind(sub.dat[1:ct.ind,],ins.dat,sub.dat[(ct.ind + 1):length(ct),])
+        }
+      }
+    }
+  }
+
+  if(check.NA && sapply(s.dat,function(x)anyNA(x[,c("__f0", "__r1", "__r2", "__r3", "__f5")]))) {
+    cat('Missing values in predictors:\n')
+    print(apply(dat[, unique(names(pars[!grepl('^int', names(pars))]))], 2, function(x) sum(is.na(x))))
+    stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+  }
 
   # Not parallel
   if(parallel) {
@@ -229,7 +235,6 @@ ALFAM2mod <- function(
         ,r2 = sub.dat[,"__r2"]
         ,r3 = sub.dat[,"__r3"]
         ,f5 = sub.dat[,"__f5"]
-        ,ievent = sub.dat$ievent
         ,drop.rows = sub.dat$added.row)
       , row.names = NULL, check.names = FALSE)    
     })
@@ -243,7 +248,7 @@ ALFAM2mod <- function(
       # get subset
       sub.dat <- s.dat[[i]]
       # Check for duplicate ct
-      if(any(duplicated(sub.dat[, time.name]))) {
+      if(any(duplicated(sub.dat[!sub.dat$added.row, time.name]))) {
         stop('Look for 998123b in pmod.R. Duplicated ct values.')
       }
       # calculate emission
@@ -255,7 +260,7 @@ ALFAM2mod <- function(
         ,r1 = sub.dat[,"__r1"]
         ,r2 = sub.dat[,"__r2"]
         ,r3 = sub.dat[,"__r3"]
-        ,f5 = sub.dat[,"__f5"], ievent = sub.dat$ievent, drop.rows = sub.dat$added.row)
+        ,f5 = sub.dat[,"__f5"], drop.rows = sub.dat$added.row)
       # add group
       e.list[[i]] <- data.frame(group = sub.dat[!sub.dat$added.row,"group"], ce, row.names = NULL, check.names = FALSE)
     } 
