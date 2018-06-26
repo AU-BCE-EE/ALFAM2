@@ -1,8 +1,8 @@
 Package: ALFAM2
 Type: Package
 Title: Model and Data on Ammonia Emission from Field-Applied Manure
-Version: 0.1.0
-Date: 2018-06-11
+Version: 0.1.1
+Date: 2018-06-26
 Author: Sasha D. Hafner, Christoph Haeni, ...
 Maintainer: Sasha D. Hafner <sasha.hafner@eng.au.dk>
 Description: An implementation of the ALFAM2 model for ammonia emission from field-applied manure. Model can be used with default parameters or applied to specific cases (locations, application methods, etc.). The completed ALFAM2 (alfam.dk) database, currently with ammonia emission measurements from 1800 field plots from 22 institutes in 12 countries, is also included.

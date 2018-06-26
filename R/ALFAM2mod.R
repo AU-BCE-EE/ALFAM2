@@ -39,14 +39,13 @@ ALFAM2mod <- function(
   check.NA = TRUE, 
   pass.col = NULL,
   add.incorp.rows = FALSE,
-  parallel = FALSE
+  parallel = FALSE,
+  n.cpus = 1
   ) {
 
   #### NTS: not package-ready
   if(parallel) {
-    library(foreach)
-    library(parallel) # NTS: shouldn't need, since in R-core??? -> hac: but you still have to load it, unless we det depend on those libraries...
-    library(doParallel)
+    requireNamespace("parallel") 
   }
 
   #print(pars)
@@ -55,7 +54,6 @@ ALFAM2mod <- function(
   # Add checks for all arguments
   checkArgClassValue(dat, expected.class = 'data.frame')
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
-
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
   # If pars was given as list, change to vector
@@ -198,72 +196,85 @@ ALFAM2mod <- function(
     }
   }
 
-  # e is output data frame 
-  e <- NULL
+  # ToDo: 
+  # - clean above for loop and f0 r1 etc parameters
+
+
+  # keep incorp rows?
+  if(add.incorp.rows){
+    dat[,"added.row"] <- rep(FALSE, nrow(dat))
+  }
+  s.dat <- split(cbind(dat,"__f0"=f0,"__r1"=r1,"__r2"=r2,"__r3"=r3,"__f5"=f5),dat$group)
 
   # Not parallel
-  if(!parallel) {
-    for(i in sort(unique(dat$group))) {
-      dd <- dat[dat$group == i, ]
-      ff0 <- f0[dat$group == i]
-      rr1 <- r1[dat$group == i]
-      rr2 <- r2[dat$group == i]
-      rr3 <- r3[dat$group == i]
-      ff5 <- f5[dat$group == i]
+  if(parallel) {
+    # starting cluster and trigger stop on.exit
+    cl <- parallel::makeCluster(n.cpus,type="SOCK")
+    on.exit(parallel::stopCluster(cl))
 
+    # sorting input for efficiency
+    s.nr <- sapply(s.dat,nrow)
+    do.nr <- order(s.nr,decreasing=TRUE)
+    e.list <- vector("list",length(s.dat))
+
+    # do parallel
+    # parallel::clusterExport(cl,c("calcEmis","time.name","app.name")) 
+    e.list[do.nr] <- parallel::clusterApply(cl,s.dat[do.nr],function(sub.dat){
+      data.frame(group = sub.dat[!sub.dat$added.row,"group"], calcEmis(
+        ct = sub.dat[, time.name]
+        # Calculate a0 and u0 (f5 transfers done in calcEmis())
+        ,a0 = sub.dat[1,"__f0"]*sub.dat[1, app.name]
+        ,u0 = (1 - sub.dat[1,"__f0"])*sub.dat[1, app.name]
+        ,r1 = sub.dat[,"__r1"]
+        ,r2 = sub.dat[,"__r2"]
+        ,r3 = sub.dat[,"__r3"]
+        ,f5 = sub.dat[,"__f5"]
+        ,ievent = sub.dat$ievent
+        ,drop.rows = sub.dat$added.row)
+      , row.names = NULL, check.names = FALSE)    
+    })
+
+    # stop cluster and empty on.exit
+    parallel::stopCluster(cl)
+    on.exit()
+  } else {
+    e.list <- vector("list",length(s.dat))
+    for(i in seq_along(s.dat)) {
+      # get subset
+      sub.dat <- s.dat[[i]]
       # Check for duplicate ct
-      if(any(duplicated(dd[, time.name]))) {
+      if(any(duplicated(sub.dat[, time.name]))) {
         stop('Look for 998123b in pmod.R. Duplicated ct values.')
       }
+      # calculate emission
+      ce <- calcEmis(
+        ct = sub.dat[, time.name]
+        # Calculate a0 and u0 (f5 transfers done in calcEmis())
+        ,a0 = sub.dat[1,"__f0"]*sub.dat[1, app.name]
+        ,u0 = (1 - sub.dat[1,"__f0"])*sub.dat[1, app.name]
+        ,r1 = sub.dat[,"__r1"]
+        ,r2 = sub.dat[,"__r2"]
+        ,r3 = sub.dat[,"__r3"]
+        ,f5 = sub.dat[,"__f5"], ievent = sub.dat$ievent, drop.rows = sub.dat$added.row)
+      # add group
+      e.list[[i]] <- data.frame(group = sub.dat[!sub.dat$added.row,"group"], ce, row.names = NULL, check.names = FALSE)
+    } 
+  }
 
-      # Calculate a0 and u0 (f5 transfers done in calcEmis())
-      u0 <- (1 - ff0[1])*dd[, app.name][1]
-      a0 <- ff0[1]*dd[, app.name][1]
-      ct <- dd[, time.name]
-      drop.rows <- dd$added.row
-      if(add.incorp.rows) drop.rows <- rep(FALSE, length(drop.rows))
-      ce <- calcEmis(ct = ct, a0 = a0, u0 = u0, r1 = rr1, r2 = rr2, r3 = rr3, f5 = ff5, ievent = dd$ievent, drop.rows = drop.rows)
-      e <- rbind(e, cbind(group = i, ce))
-    }
-  } else {
-    e <- foreach(i = sort(unique(dat$group)), .packages = 'minpack.lm', .export = 'calcEmis', .combine = rbind, .init = NULL) %dopar% {
-    dd <- dat[dat$group == i, ]
-    ff0 <- f0[dat$group == i]
-    rr1 <- r1[dat$group == i]
-    rr2 <- r2[dat$group == i]
-    rr3 <- r3[dat$group == i]
-    ff5 <- f5[dat$group == i]
+  # rbind e.list to data.frame
+  e <- do.call("rbind",e.list)
 
-    # Check for duplicate ct
-    if(any(duplicated(dd[, time.name]))) {
-      stop('Look for 998123b in pmod.R. Duplicated ct values.')
-    }
-
-    # Calculate a0 and u0 (f5 transfers done in calcEmis())
-    u0 <- (1 - ff0[1])*dd[, app.name][1]
-    a0 <- ff0[1]*dd[, app.name][1]
-    ct <- dd[, time.name]
-    drop.rows <- dd$added.row
-    if(add.incorp.rows) drop.rows <- rep(FALSE, length(drop.rows))
-    ce <- calcEmis(ct = ct, a0 = a0, u0 = u0, r1 = rr1, r2 = rr2, r3 = rr3, f5 = ff5, ievent = dd$ievent, drop.rows = drop.rows)
-
-      cbind(group = i, ce)
-    }
- }
-  
+  # rename 'group' column
   if(!is.null(group)){
     names(e)[1] <- group
   }
 
   # Sort to match original order
-  # NTS: check that this works
-  drop.rows <- dat$added.row
-  if(add.incorp.rows) drop.rows <- rep(FALSE, length(drop.rows))
-  e <- e[order(dat$orig.order[!drop.rows]), ]
+  e <- e[order(dat$orig.order[!dat$added.row]), ]
 
   # Add pass-through column if requested
   if(!is.null(pass.col)) {
-    e <- data.frame(setNames(dat[, paste0("pass_me.through_",pass.col)],pass.col), e)
+    e <- data.frame(setNames(dat[!dat$added.row, paste0("pass_me.through_",pass.col)],pass.col), e)
   }
 
   return(e)

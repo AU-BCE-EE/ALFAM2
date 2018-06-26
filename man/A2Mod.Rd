@@ -12,35 +12,39 @@ The model is described in Hafner et al. (in preparation).
 
 \usage{
 ALFAM2mod(dat, 
-      pars = c(int0 = 0.8, 
-               int1 = -1,
-               int2 = -1,
-               int3 = -3,
-               app.methodos0 = -1,
-               app.rate0 = -0.02,
-               man.dm0 = 0.3,
-               man.sourcepig0 = -0.5,
-               incorpdeep5 = -4,
-               incorpshallow5 = -0.3,
-               app.methodbc1 = 0.6,
-               man.dm1 = -0.07,
-               air.temp1 = 0.04,
-               wind1 = 0.05,
-               air.temp3 = 0.005,
-               incorpdeep3 = -1,
-               app.methodos3 = -0.1)
-      app.name = "TAN.app", time.name = "ct", 
-      time.incorp = NULL, group = NULL, center = TRUE, 
-      cmns = c(app.rate  = 40, 
-               man.dm = 6, 
-               man.tan = 1.2, 
-               man.ph = 7.5, 
-               air.temp = 13, 
-               wind.1m = 2.7, 
-               lwind = 0.43, 
-               crop.z = 10),
-      check.NA = TRUE, pass.col = NULL, 
-      add.incorp.rows = FALSE, parallel = FALSE)
+    pars = c(
+             int0           = -0.91400,
+             int1           = -1.16256,
+             int2           = -1.02444,
+             int3           = -2.92947,
+             app.methodos0  = -0.98384,
+             app.rate0      = -0.01602,
+             man.dm0        =  0.40164,
+             incorpdeep5    = -3.08108,
+             incorpshallow5 = -0.91376,
+             app.methodbc1  =  0.62870,
+             man.dm1        = -0.07974,
+             air.temp1      =  0.04909,
+             wind.1m1       =  0.04876,
+             air.temp3      =  0.01344,
+             incorpdeep3    = -0.74621,
+             app.methodos3  = -0.20088,
+             rain.rate2     =  0.38434
+             ), 
+    app.name = 'TAN.app', time.name = 'ct',
+    time.incorp = NULL,group = NULL, center = TRUE,
+    cmns = c(app.rate  = 40, 
+             man.dm = 6, 
+             man.tan = 1.2, 
+             man.ph = 7.5, 
+             air.temp = 13, 
+             wind.1m = 2.7, 
+             lwind = 0.43, 
+             crop.z = 10),
+    check.NA = TRUE, pass.col = NULL,
+    add.incorp.rows = FALSE, 
+    parallel = FALSE,n.cpus = 1
+      )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -81,6 +85,9 @@ ALFAM2mod(dat,
 }
   \item{parallel}{
     should parallel processing be used? Helpful for very large \code{dat}.
+}
+  \item{n.cpus}{
+    numeric. Defines the number of cores if \code{parallel} is \code{TRUE}.
 }
 }
 \details{
@@ -163,8 +170,8 @@ ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, add.
 
 # Example 5
 # Function accepts multiple groups
-dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, app.methodbc = TRUE)
-pred5 <- ALFAM2mod(dat6, app.name = 'TAN.app', time.name = 'ctime', group = 'plot', time.incorp = 't.incorp')
+dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, app.methodbc = TRUE, t.incorp = 4)
+pred5 <- ALFAM2mod(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', time.incorp = 't.incorp')
 pred5
 
 
