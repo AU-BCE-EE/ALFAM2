@@ -153,11 +153,6 @@ ALFAM2mod <- function(
   # Make sure parameter names can be found in dat
   if(any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
-  # keep incorp rows?
-  if(add.incorp.rows){
-    dat[, "added.row"] <- rep(FALSE, nrow(dat))
-  }
-
   # Calculate primary parameters (zero by default)
   zv <- rep(0, nrow(dat))
   if(length(which0) > 0) dat[, "__f0"] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, "__f0"] <- zv
@@ -196,14 +191,14 @@ ALFAM2mod <- function(
 
           # extend first row
           ext.dat <- sub.dat[1, ]
-          ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], TRUE, f5)
+          ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
           s.dat[[i]] <- rbind(ext.dat, sub.dat)          
 
         } else if(ct.ind == length(ct)){
 
           # extend last row
           ext.dat <- sub.dat[ct.ind, ]
-          ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], TRUE, f5)
+          ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
           s.dat[[i]] <- rbind(sub.dat, ext.dat)
 
         } else if(any(incorp.time[i] == ct)){
@@ -215,13 +210,16 @@ ALFAM2mod <- function(
 
           # insert row
           ins.dat <- sub.dat[ct.ind, ]
-          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], TRUE, f5)
+          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
           s.dat[[i]] <- rbind(sub.dat[1:ct.ind, ],ins.dat, sub.dat[(ct.ind + 1):length(ct), ])
 
         }
+
+
       }
     }
   }
+
 
   if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f5")]))) {
     cat('Missing values in predictors:\n')
@@ -283,7 +281,7 @@ ALFAM2mod <- function(
         ,r3 = sub.dat[, "__r3"]
         ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$added.row)
       # add group
-      e.list[[i]] <- data.frame(group = sub.dat[!sub.dat$added.row, "group"], ce, row.names = NULL, check.names = FALSE)
+      e.list[[i]] <- data.frame(orig.order = sub.dat$orig.order, group = sub.dat[!sub.dat$added.row, "group"], ce, row.names = NULL, check.names = FALSE)
     } 
   }
 
@@ -296,7 +294,7 @@ ALFAM2mod <- function(
   }
 
   # Sort to match original order
-  e <- e[order(dat$orig.order[!dat$added.row]), ]
+  e <- e[order(e$orig.order), -1]
 
   # Add pass-through column if requested
   if(!is.null(pass.col)) {
