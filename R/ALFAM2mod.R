@@ -183,12 +183,9 @@ ALFAM2mod <- function(
         ct <- sub.dat[, time.name]
         ct.ind <- which(ct > incorp.time[i])[1] - 1
 
-        # calc f5
-        f5 <- calcPParms(pars[which5], sub.dat[ct.ind, ])
-
         # add rows        
         if(ct.ind == 0){
-          # recalculate f5 with parameters from row after
+          # calculate f5 with parameters from row + 1
           f5 <- calcPParms(pars[which5], sub.dat[ct.ind + 1, ])
           # extend first row
           ext.dat <- sub.dat[1, ]
@@ -196,19 +193,22 @@ ALFAM2mod <- function(
           s.dat[[i]] <- rbind(ext.dat, sub.dat)          
 
         } else if(ct.ind == length(ct)){
-
+          # calculate f5 with parameters from last row
+          f5 <- calcPParms(pars[which5], sub.dat[ct.ind, ])
           # extend last row
           ext.dat <- sub.dat[ct.ind, ]
           ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
           s.dat[[i]] <- rbind(sub.dat, ext.dat)
 
         } else if(any(incorp.time[i] == ct)){
-
+          # calculate f5 with parameters from matching row
+          f5 <- calcPParms(pars[which5], sub.dat[ct.ind, ])
           # change f5 value
           s.dat[[i]][ct.ind, "__f5"] <- f5
 
         } else {
-
+          # calculate f5 with parameters from row + 1
+          f5 <- calcPParms(pars[which5], sub.dat[ct.ind + 1, ])
           # insert row
           ins.dat <- sub.dat[ct.ind, ]
           ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
