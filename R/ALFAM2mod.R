@@ -181,7 +181,7 @@ ALFAM2mod <- function(
 
         # find time
         ct <- sub.dat[, time.name]
-        ct.ind <- which(ct >= incorp.time[i])[1] - 1
+        ct.ind <- which(ct > incorp.time[i])[1] - 1
 
         # calc f5
         f5 <- calcPParms(pars[which5], sub.dat[ct.ind, ])
