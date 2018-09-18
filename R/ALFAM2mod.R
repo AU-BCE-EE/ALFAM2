@@ -188,7 +188,8 @@ ALFAM2mod <- function(
 
         # add rows        
         if(ct.ind == 0){
-
+          # recalculate f5 with parameters from row after
+          f5 <- calcPParms(pars[which5], sub.dat[ct.ind + 1, ])
           # extend first row
           ext.dat <- sub.dat[1, ]
           ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
