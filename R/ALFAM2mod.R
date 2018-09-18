@@ -281,7 +281,7 @@ ALFAM2mod <- function(
         ,r3 = sub.dat[, "__r3"]
         ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$added.row)
       # add group
-      e.list[[i]] <- data.frame(orig.order = sub.dat$orig.order, group = sub.dat[!sub.dat$added.row, "group"], ce, row.names = NULL, check.names = FALSE)
+      e.list[[i]] <- data.frame(orig.order = sub.dat[!sub.dat$added.row, "orig.order"], group = sub.dat[!sub.dat$added.row, "group"], ce, row.names = NULL, check.names = FALSE)
     } 
   }
 
