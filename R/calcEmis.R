@@ -47,7 +47,7 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
 
   # Now combine and drop rows that were added for incorporation in afMod()
   out <- data.frame(ct = ct, dt = NA, 
-                    f0 = a0/(u0 + a0), r1 = r1, r2 = r2, r3 = r3, f5 = f5,
+                    f0 = a0/(u0 + a0), r1 = r1, r2 = r2, r3 = r3, f5 = f5, 
                     f = a, s = u, 
                     j = NA, e = e, e.int = NA, er = e/(a0 + u0))
 

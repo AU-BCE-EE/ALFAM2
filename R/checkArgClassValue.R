@@ -4,7 +4,7 @@ function(
   expected.class = NULL, 
   expected.values = NULL, 
   expected.range = NULL, 
-  case.sens = TRUE,
+  case.sens = TRUE, 
   warn.only = FALSE
   ) {
 
