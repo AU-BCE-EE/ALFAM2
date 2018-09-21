@@ -271,6 +271,7 @@ ALFAM2mod <- function(
       if(any(duplicated(sub.dat[!sub.dat$added.row, time.name]))) {
         stop('Look for 998123b in pmod.R. Duplicated ct values.')
       }
+
       # calculate emission
       ce <- calcEmis(
         ct = sub.dat[, time.name]
@@ -281,6 +282,7 @@ ALFAM2mod <- function(
         ,r2 = sub.dat[, "__r2"]
         ,r3 = sub.dat[, "__r3"]
         ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$added.row)
+
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!sub.dat$added.row, "orig.order"], group = sub.dat[!sub.dat$added.row, "group"], ce, row.names = NULL, check.names = FALSE)
     } 
@@ -291,7 +293,7 @@ ALFAM2mod <- function(
 
   # rename 'group' column
   if(!is.null(group)){
-    names(e)[1] <- group
+    names(e)[2] <- group
   }
 
   # Sort to match original order
