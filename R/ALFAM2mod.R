@@ -123,6 +123,12 @@ ALFAM2mod <- function(
       if(!length(inc.ex)){
         warning("No matching column for incorporation parameter(s): ", paste(inc.names, collapse = ", "), ". Skipping incorporation.")
         time.incorp <- NULL
+      } else {
+        # set incorporation column to FALSE before incorp.time
+        for(i in seq_along(u.group)){
+          # for each group
+          dat[dat$group == u.group[i] & dat[, time.name] < incorp.time[i], inc.ex] <- FALSE
+        }
       }
     } else {
       warning("No incorporation parameter estimates have been provided. Skipping incorporation.")
@@ -185,38 +191,44 @@ ALFAM2mod <- function(
 
         # add rows        
         if(ct.ind == 0){
-          # calculate f5 with parameters from row + 1
-          f5 <- calcPParms(pars[which5], sub.dat[ct.ind + 1, ])
-          # extend first row
-          ext.dat <- sub.dat[1, ]
-          ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
-          s.dat[[i]] <- rbind(ext.dat, sub.dat)          
+          # insert row before first row
+          ins.dat <- sub.dat[1, ]
+          # calculate f5 with parameters from first row
+          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, calcPParms(pars[which5], sub.dat[1, ]))
+          # set incorp columns to FALSE and recalculate parameters r1 to r3
+          ins.dat[, inc.ex] <- FALSE
+          ins.dat[, "__r1"] <- if(length(which1) > 0) calcPParms(pars[which1], ins.dat) else 0
+          ins.dat[, "__r2"] <- if(length(which2) > 0) calcPParms(pars[which2], ins.dat) else 0
+          ins.dat[, "__r3"] <- if(length(which3) > 0) calcPParms(pars[which3], ins.dat) else 0
+          # insert added row
+          s.dat[[i]] <- rbind(ins.dat, sub.dat)          
 
         } else if(ct.ind == length(ct)){
-          # calculate f5 with parameters from last row
-          f5 <- calcPParms(pars[which5], sub.dat[ct.ind, ])
-          # extend last row
-          ext.dat <- sub.dat[ct.ind, ]
-          ext.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
-          s.dat[[i]] <- rbind(sub.dat, ext.dat)
+          warning("incorporation takes place after the end of the last interval and will be ignored")
 
         } else if(any(incorp.time[i] == ct)){
           # calculate f5 with parameters from matching row
-          f5 <- calcPParms(pars[which5], sub.dat[ct.ind, ])
-          # change f5 value
-          s.dat[[i]][ct.ind, "__f5"] <- f5
+          s.dat[[i]][ct.ind, "__f5"] <- calcPParms(pars[which5], sub.dat[ct.ind, ])
+          # set incorp columns to FALSE and recalculate parameters r1 to r3
+          s.dat[[i]][ct.ind, inc.ex] <- FALSE
+          s.dat[[i]][ct.ind, "__r1"] <- if(length(which1) > 0) calcPParms(pars[which1], s.dat[[i]][ct.ind, ]) else 0
+          s.dat[[i]][ct.ind, "__r2"] <- if(length(which2) > 0) calcPParms(pars[which2], s.dat[[i]][ct.ind, ]) else 0
+          s.dat[[i]][ct.ind, "__r3"] <- if(length(which3) > 0) calcPParms(pars[which3], s.dat[[i]][ct.ind, ]) else 0
 
         } else {
-          # calculate f5 with parameters from row + 1
-          f5 <- calcPParms(pars[which5], sub.dat[ct.ind + 1, ])
-          # insert row
-          ins.dat <- sub.dat[ct.ind, ]
-          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, f5)
+          # get row where incorp takes place
+          ins.dat <- sub.dat[ct.ind + 1, ]
+          # calculate f5 and add to ins.dat
+          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, calcPParms(pars[which5], ins.dat))
+          # set incorp columns to FALSE and recalculate parameters r1 to r3
+          ins.dat[, inc.ex] <- FALSE
+          ins.dat[, "__r1"] <- if(length(which1) > 0) calcPParms(pars[which1], ins.dat) else 0
+          ins.dat[, "__r2"] <- if(length(which2) > 0) calcPParms(pars[which2], ins.dat) else 0
+          ins.dat[, "__r3"] <- if(length(which3) > 0) calcPParms(pars[which3], ins.dat) else 0
+          # insert added row
           s.dat[[i]] <- rbind(sub.dat[1:ct.ind, ],ins.dat, sub.dat[(ct.ind + 1):length(ct), ])
 
         }
-
-
       }
     }
   }
