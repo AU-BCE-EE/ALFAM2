@@ -63,26 +63,28 @@ ALFAM2mod <- function(
     pars <- unlist(pars)
   }
 
-  if(any(ch_nms <- grepl("[fr]{1}[0-5]{1}[.]", names(pars)))){
-    names(pars)[ch_nms] <- gsub("^[fr]([0-5])[.](.*)", "\\2\\1", names(pars)[ch_nms])
+  if(any(chg.nms <- grepl("[fr]{1}[0-5]{1}[.]", names(pars)))){
+    names(pars)[chg.nms] <- gsub("^[fr]([0-5])[.](.*)", "\\2\\1", names(pars)[chg.nms])
   }
 
-  # Check that all names for p end with a number
+  # Check that all names for pars end with a number
   if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, r4, r5.\n Make sure that the naming is correct. Either append the corresponding number (0 to 5) at the name endings (e.g. int0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
   # -> possibly extend names as done below?
+  # Yup! Will work on.
 
   # Rename pass-through column if pass-through requested
+  # NTS: why?
   if(!is.null(pass.col)) {
     dat[, paste0("pass_me.through_", pass.col)] <- dat[, pass.col]
   }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
-    dat$group <- 'a' 
+    dat$`__group` <- 'a' 
   } else {
-    dat$group <- as.character(dat[, group])
+    dat$`__group` <- as.character(dat[, group])
   }
 
   # Center numeric predictors
@@ -97,7 +99,7 @@ ALFAM2mod <- function(
   dat$orig.order <- 1:nrow(dat)
 
   # Extend dat data frame with incorporation time if needed
-  dat$added.row <- FALSE # NTS: problem if dat already has column with this name. Need to check names.
+  dat$`__add.row` <- FALSE # NTS: problem if dat already has column with this name. Need to check names.
 
 
   # Sort out incorporation
@@ -112,7 +114,7 @@ ALFAM2mod <- function(
       inc.ex <- inc.names[inc.names %in% names(dat)]
 
       # Unique groups
-      u.group <- unique(dat$group)
+      u.group <- unique(dat$`__group`)
 
       # Get times and types
       if(is.numeric(time.incorp)){
@@ -121,7 +123,7 @@ ALFAM2mod <- function(
         names(incorp.time) <- u.group
       } else {
         # Get time.incorp column entries
-        incorp.time <- tapply(dat[, time.incorp], dat$group, "[", 1)
+        incorp.time <- tapply(dat[, time.incorp], dat$`__group`, "[", 1)
       }
 
       # Check if columns exist
@@ -141,13 +143,13 @@ ALFAM2mod <- function(
     }
 
     # Add incorporation rows as needed
-    dat$added.row <- FALSE
+    dat$`__add.row` <- FALSE
     if(!is.null(time.incorp)) {
 
       # Loop through groups with incorporation (incorp.time != NA)
       for(i in u.group[!is.na(incorp.time)]) {
 
-        sub.dat <- dat[dat$group == i, ]
+        sub.dat <- dat[dat$`__group` == i, ]
 
         # Extract cumulative time time
         ct <- sub.dat[, time.name]
@@ -161,7 +163,7 @@ ALFAM2mod <- function(
           # Use predictor values from first row
           ins.dat <- sub.dat[1, ]
           ins.dat[, time.name] <- incorp.time[i] 
-          ins.dat$added.row <- TRUE
+          ins.dat$`__add.row` <- TRUE
           dat <- rbind(dat, ins.dat)          
 
         } else if(ct.ind == length(ct)){
@@ -178,13 +180,13 @@ ALFAM2mod <- function(
           # Insert a row before incorp, interval ends at incorp.time
           ins.dat <- sub.dat[ct.ind + 1, ]
           ins.dat[, time.name] <- incorp.time[i] 
-          ins.dat$added.row <- TRUE
+          ins.dat$`__add.row` <- TRUE
           dat <- rbind(dat, ins.dat)          
 
         }
 
         # Set incorp variables to FALSE for time <= incorp.time (incorp then applied at start of next interval)
-        dat[dat$group == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
+        dat[dat$`__group` == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
 
         # Set f5 to 1 for intervals with incorporation (at start)
 
@@ -195,7 +197,7 @@ ALFAM2mod <- function(
   }
 
   # Sort 
-  dat <- dat[order(dat$group, dat[, time.name]), ]
+  dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
   # Default f5 value (for no incorporation in group, or incorporation only later)
   dat[, '__f5'] <- 1
@@ -205,10 +207,10 @@ ALFAM2mod <- function(
 
     # Loop through groups with incorporation (incorp.time != NA)
     for(i in u.group[!is.na(incorp.time)]) {
-      ng <- nrow(dat[dat$group == i, ])
-      dat[dat$group == i & c(0, dat[-ng, time.name]) == incorp.time[i], '__f5'] <- 0
+      ng <- nrow(dat[dat$`__group` == i, ])
+      dat[dat$`__group` == i & c(0, dat[-ng, time.name]) == incorp.time[i], '__f5'] <- 0
       # Incorp FALSE unless previous interval ends at incorp.time
-      dat[dat$group == i & c(0, dat[-ng, time.name]) < incorp.time[i], inc.ex] <- FALSE 
+      dat[dat$`__group` == i & c(0, dat[-ng, time.name]) < incorp.time[i], inc.ex] <- FALSE 
     }
 
   }
@@ -247,7 +249,7 @@ ALFAM2mod <- function(
   if(length(which5) > 0) dat[dat[, "__f5"] == 0, "__f5"] <- calcPParms(pars[which5], dat[dat[, "__f5"] == 0, ], tr = 'logistic') ##else dat[, "__f5"] <- 1
 
   # split dat into groups
-  s.dat <- split(dat, dat$group)
+  s.dat <- split(dat, dat$`__group`)
 
   if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f5")]))) {
     cat('Missing values in predictors:\n')
@@ -270,7 +272,7 @@ ALFAM2mod <- function(
     # do parallel
     # parallel::clusterExport(cl, c("calcEmis", "time.name", "app.name")) 
     e.list[do.nr] <- parallel::clusterApply(cl, s.dat[do.nr], function(sub.dat){
-      data.frame(group = sub.dat[!sub.dat$added.row, "group"], calcEmis(
+      data.frame(group = sub.dat[!sub.dat$`__add.row`, "__group"], calcEmis(
         ct = sub.dat[, time.name]
         # Calculate a0 and u0 (f5 transfers done in calcEmis())
         ,a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name]
@@ -279,7 +281,7 @@ ALFAM2mod <- function(
         ,r2 = sub.dat[, "__r2"]
         ,r3 = sub.dat[, "__r3"]
         ,f5 = sub.dat[, "__f5"]
-        ,drop.rows = sub.dat$added.row & !add.incorp.rows)
+        ,drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
       , row.names = NULL, check.names = FALSE)    
     })
 
@@ -295,7 +297,7 @@ ALFAM2mod <- function(
       # get subset
       sub.dat <- s.dat[[i]]
       # Check for duplicate ct
-      if(any(duplicated(sub.dat[!sub.dat$added.row, time.name]))) {
+      if(any(duplicated(sub.dat[!sub.dat$`__add.row`, time.name]))) {
         stop('Look for 998123b in pmod.R. Duplicated ct values.')
       }
 
@@ -308,12 +310,11 @@ ALFAM2mod <- function(
         ,r1 = sub.dat[, "__r1"]
         ,r2 = sub.dat[, "__r2"]
         ,r3 = sub.dat[, "__r3"]
-        ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$added.row & !add.incorp.rows)
+        ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
 
       # add group
-      e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$added.row & !add.incorp.rows), "orig.order"], 
-                                group = sub.dat[!(sub.dat$added.row & !add.incorp.rows), "group"], ce, row.names = NULL, check.names = FALSE)
-      ##e.list[[i]] <- data.frame(orig.order = sub.dat[, "orig.order"], group = sub.dat[, "group"], ce, row.names = NULL, check.names = FALSE)
+      e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "orig.order"], 
+                                group = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "__group"], ce, row.names = NULL, check.names = FALSE)
     } 
   }
 
@@ -323,6 +324,8 @@ ALFAM2mod <- function(
   # rename 'group' column
   if(!is.null(group)){
     names(e)[2] <- group
+  } else {
+    e$group <- NULL
   }
 
   # Sort to match original order
@@ -330,7 +333,7 @@ ALFAM2mod <- function(
 
   # Add pass-through column if requested
   if(!is.null(pass.col)) {
-    e <- data.frame(setNames(dat[!dat$added.row, paste0("pass_me.through_", pass.col)], pass.col), e)
+    e <- data.frame(setNames(dat[!dat$`__add.row`, paste0("pass_me.through_", pass.col)], pass.col), e)
   }
 
   return(e)
