@@ -39,15 +39,16 @@ ALFAM2mod <- function(
            crop.z = 10), 
   check.NA = TRUE, 
   pass.col = NULL, 
+  incorp.names = c('^incorp', 'deep', 'shallow'),
   add.incorp.rows = FALSE, 
   parallel = FALSE, 
   n.cpus = 1
   ) {
 
-  #### NTS: not package-ready
-  if(parallel) {
-    requireNamespace("parallel") 
-  }
+  ###### NTS: not package-ready
+  ##if(parallel) {
+  ##  requireNamespace("parallel") 
+  ##}
 
   #print(pars)
 
@@ -79,7 +80,7 @@ ALFAM2mod <- function(
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
-    dat$group <- 0
+    dat$group <- 'a' 
   } else {
     dat$group <- as.character(dat[, group])
   }
@@ -96,51 +97,127 @@ ALFAM2mod <- function(
   dat$orig.order <- 1:nrow(dat)
 
   # Extend dat data frame with incorporation time if needed
-  dat$added.row <- FALSE # NTS: problem if dat already has column with this name
+  dat$added.row <- FALSE # NTS: problem if dat already has column with this name. Need to check names.
 
-  # Sort (time must increase for calcEmis())
-  dat <- dat[order(dat$group, dat[, time.name]), ]
 
   # Sort out incorporation
   if(!is.null(time.incorp)) {
-    # get incorporation parameter names (if any)
-    inc.names <- unique(gsub("[0-5]$", "", grep("inc|shallow|deep", names(pars), value = TRUE)))
 
-    if(length(inc.names)){
-      # do they exist?
+    # Get actual incorporation parameter names (if any) from parameters
+    inc.names <- unique(gsub("[0-5]$", "", grep(incorp.names, names(pars), value = TRUE)))
+
+    if(length(inc.names) > 0){
+
+      # Do they exist?
       inc.ex <- inc.names[inc.names %in% names(dat)]
-      # unique groups
+
+      # Unique groups
       u.group <- unique(dat$group)
-      # get times and types
+
+      # Get times and types
       if(is.numeric(time.incorp)){
-        # repeat time.incorp values to match number of groups
-        incorp.time <- rep(time.incorp, length(u.group))[seq_along(u.group)]
+        # Repeat time.incorp values to match number of groups
+        incorp.time <- rep(time.incorp, length(u.group))[seq_along(u.group)] # NTS: why is [] needed?
+        names(incorp.time) <- u.group
       } else {
-        # get time.incorp column entries
+        # Get time.incorp column entries
         incorp.time <- tapply(dat[, time.incorp], dat$group, "[", 1)
       }
-      # check if columns exist
-      if(!length(inc.ex)){
+
+      # Check if columns exist
+      if(length(inc.ex) == 0){
         warning("No matching column for incorporation parameter(s): ", paste(inc.names, collapse = ", "), ". Skipping incorporation.")
         time.incorp <- NULL
-      } else {
-        # set incorporation column to FALSE before incorp.time
-        for(i in seq_along(u.group)){
-          # for each group
-          dat[dat$group == u.group[i] & dat[, time.name] < incorp.time[i], inc.ex] <- FALSE
-        }
-      }
+      } ##else {
+        ### set incorporation column to FALSE before incorp.time
+        ##for(i in seq_along(u.group)){
+        ##  # for each group
+        ##  dat[dat$group == u.group[i] & dat[, time.name] < incorp.time[i], inc.ex] <- FALSE
+        ##}
+      ##}
     } else {
       warning("No incorporation parameter estimates have been provided. Skipping incorporation.")
       time.incorp <- NULL
     }
+
+    # Add incorporation rows as needed
+    dat$added.row <- FALSE
+    if(!is.null(time.incorp)) {
+
+      # Loop through groups with incorporation (incorp.time != NA)
+      for(i in u.group[!is.na(incorp.time)]) {
+
+        sub.dat <- dat[dat$group == i, ]
+
+        # Extract cumulative time time
+        ct <- sub.dat[, time.name]
+
+        # Find where incorporation occurs
+        ct.ind <- which(ct > incorp.time[i])[1] - 1
+
+        # Add rows        
+        if(ct.ind == 0){
+
+          # Use predictor values from first row
+          ins.dat <- sub.dat[1, ]
+          ins.dat[, time.name] <- incorp.time[i] 
+          ins.dat$added.row <- TRUE
+          dat <- rbind(dat, ins.dat)          
+
+        } else if(ct.ind == length(ct)){
+
+          warning("incorporation takes place after the end of the last interval and will be ignored")
+
+        } else if(any(incorp.time[i] == ct)){ # NTS need to check that length == 1
+
+          # Nothing?
+          # dat[dat$group == i & dat[, time.name] == ?????? incorp.time[i], '__f5'] <- 1
+
+        } else {
+
+          # Insert a row before incorp, interval ends at incorp.time
+          ins.dat <- sub.dat[ct.ind + 1, ]
+          ins.dat[, time.name] <- incorp.time[i] 
+          ins.dat$added.row <- TRUE
+          dat <- rbind(dat, ins.dat)          
+
+        }
+
+        # Set incorp variables to FALSE for time <= incorp.time (incorp then applied at start of next interval)
+        dat[dat$group == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
+
+        # Set f5 to 1 for intervals with incorporation (at start)
+
+      }
+
+    }
+
   }
 
+  # Sort 
+  dat <- dat[order(dat$group, dat[, time.name]), ]
+
+  # Default f5 value (for no incorporation in group, or incorporation only later)
+  dat[, '__f5'] <- 1
+
+  # Allow f5 value only for intervals that have a *start* time (end time of previous interval) equal to incorp.time
+  if(!is.null(time.incorp)) {
+
+    # Loop through groups with incorporation (incorp.time != NA)
+    for(i in u.group[!is.na(incorp.time)]) {
+      ng <- nrow(dat[dat$group == i, ])
+      dat[dat$group == i & c(0, dat[-ng, time.name]) == incorp.time[i], '__f5'] <- 0
+      # Incorp FALSE unless previous interval ends at incorp.time
+      dat[dat$group == i & c(0, dat[-ng, time.name]) < incorp.time[i], inc.ex] <- FALSE 
+    }
+
+  }
 
   # Drop parameters for missing predictors
   p.orig <- pars
   ppnames <- gsub('[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
+
   if(any(!predpres)) {
     warning('Missing predictors. These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = ', '))
   }
@@ -155,86 +232,22 @@ ALFAM2mod <- function(
   names(pars) <- gsub('[0-9]$', '', names(pars))
 
   if(!all(ww <- sort(c(which0, which1, which2, which3, which5)) == 1:length(pars))) {
-    stop('Something wrong with p. ', paste(ww, collapse = ', '))
+    stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
   }
 
   # Make sure parameter names can be found in dat
   if(any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
-  # Calculate primary parameters (zero by default)
-  zv <- rep(0, nrow(dat))
-  if(length(which0) > 0) dat[, "__f0"] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, "__f0"] <- zv
-  if(length(which1) > 0) dat[, "__r1"] <- calcPParms(pars[which1], dat)                  else dat[, "__r1"] <- zv
-  if(length(which2) > 0) dat[, "__r2"] <- calcPParms(pars[which2], dat)                  else dat[, "__r2"] <- zv
-  if(length(which3) > 0) dat[, "__r3"] <- calcPParms(pars[which3], dat)                  else dat[, "__r3"] <- zv
-
-  # f5 on group basis (further below)
-  # first set f5 to 1 by default (100% stays in fast pool)
-  dat[, "__f5"] <- 1
+  # Calculate primary parameters
+  if(length(which0) > 0) dat[, "__f0"] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, "__f0"] <- 0
+  if(length(which1) > 0) dat[, "__r1"] <- calcPParms(pars[which1], dat)                  else dat[, "__r1"] <- 0
+  if(length(which2) > 0) dat[, "__r2"] <- calcPParms(pars[which2], dat)                  else dat[, "__r2"] <- 0
+  if(length(which3) > 0) dat[, "__r3"] <- calcPParms(pars[which3], dat)                  else dat[, "__r3"] <- 0
+  # f5 only calculated where it is already 0 (not default of 1)
+  if(length(which5) > 0) dat[dat[, "__f5"] == 0, "__f5"] <- calcPParms(pars[which5], dat[dat[, "__f5"] == 0, ], tr = 'logistic') ##else dat[, "__f5"] <- 1
 
   # split dat into groups
   s.dat <- split(dat, dat$group)
-
-  # f5 on group basis
-  if(!is.null(time.incorp) && length(which5) > 0){
-
-    # extend dat by ievent rows on group basis
-    for(i in seq_along(u.group)){
-
-      # check if incorp
-      if(!is.na(incorp.time[i])){
-
-        # get subset
-        sub.dat <- s.dat[[i]]
-
-        # find time
-        ct <- sub.dat[, time.name]
-        ct.ind <- which(ct > incorp.time[i])[1] - 1
-
-        # add rows        
-        if(ct.ind == 0){
-          # insert row before first row
-          ins.dat <- sub.dat[1, ]
-          # calculate f5 with parameters from first row
-          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, calcPParms(pars[which5], sub.dat[1, ]))
-          # set incorp columns to FALSE and recalculate parameters r1 to r3
-          ins.dat[, inc.ex] <- FALSE
-          ins.dat[, "__r1"] <- if(length(which1) > 0) calcPParms(pars[which1], ins.dat) else 0
-          ins.dat[, "__r2"] <- if(length(which2) > 0) calcPParms(pars[which2], ins.dat) else 0
-          ins.dat[, "__r3"] <- if(length(which3) > 0) calcPParms(pars[which3], ins.dat) else 0
-          # insert added row
-          s.dat[[i]] <- rbind(ins.dat, sub.dat)          
-
-        } else if(ct.ind == length(ct)){
-          warning("incorporation takes place after the end of the last interval and will be ignored")
-
-        } else if(any(incorp.time[i] == ct)){
-          # calculate f5 with parameters from matching row
-          s.dat[[i]][ct.ind, "__f5"] <- calcPParms(pars[which5], sub.dat[ct.ind, ])
-          # set incorp columns to FALSE and recalculate parameters r1 to r3
-          s.dat[[i]][ct.ind, inc.ex] <- FALSE
-          s.dat[[i]][ct.ind, "__r1"] <- if(length(which1) > 0) calcPParms(pars[which1], s.dat[[i]][ct.ind, ]) else 0
-          s.dat[[i]][ct.ind, "__r2"] <- if(length(which2) > 0) calcPParms(pars[which2], s.dat[[i]][ct.ind, ]) else 0
-          s.dat[[i]][ct.ind, "__r3"] <- if(length(which3) > 0) calcPParms(pars[which3], s.dat[[i]][ct.ind, ]) else 0
-
-        } else {
-          # get row where incorp takes place
-          ins.dat <- sub.dat[ct.ind + 1, ]
-          # calculate f5 and add to ins.dat
-          ins.dat[, c(time.name, "added.row", "__f5")] <- list(incorp.time[i], !add.incorp.rows, calcPParms(pars[which5], ins.dat))
-          # set incorp columns to FALSE and recalculate parameters r1 to r3
-          ins.dat[, inc.ex] <- FALSE
-          ins.dat[, "__r1"] <- if(length(which1) > 0) calcPParms(pars[which1], ins.dat) else 0
-          ins.dat[, "__r2"] <- if(length(which2) > 0) calcPParms(pars[which2], ins.dat) else 0
-          ins.dat[, "__r3"] <- if(length(which3) > 0) calcPParms(pars[which3], ins.dat) else 0
-          # insert added row
-          s.dat[[i]] <- rbind(sub.dat[1:ct.ind, ],ins.dat, sub.dat[(ct.ind + 1):length(ct), ])
-
-        }
-      }
-    }
-  }
-
 
   if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f5")]))) {
     cat('Missing values in predictors:\n')
@@ -266,7 +279,7 @@ ALFAM2mod <- function(
         ,r2 = sub.dat[, "__r2"]
         ,r3 = sub.dat[, "__r3"]
         ,f5 = sub.dat[, "__f5"]
-        ,drop.rows = sub.dat$added.row)
+        ,drop.rows = sub.dat$added.row & !add.incorp.rows)
       , row.names = NULL, check.names = FALSE)    
     })
 
@@ -295,10 +308,12 @@ ALFAM2mod <- function(
         ,r1 = sub.dat[, "__r1"]
         ,r2 = sub.dat[, "__r2"]
         ,r3 = sub.dat[, "__r3"]
-        ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$added.row)
+        ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$added.row & !add.incorp.rows)
 
       # add group
-      e.list[[i]] <- data.frame(orig.order = sub.dat[!sub.dat$added.row, "orig.order"], group = sub.dat[!sub.dat$added.row, "group"], ce, row.names = NULL, check.names = FALSE)
+      e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$added.row & !add.incorp.rows), "orig.order"], 
+                                group = sub.dat[!(sub.dat$added.row & !add.incorp.rows), "group"], ce, row.names = NULL, check.names = FALSE)
+      ##e.list[[i]] <- data.frame(orig.order = sub.dat[, "orig.order"], group = sub.dat[, "group"], ce, row.names = NULL, check.names = FALSE)
     } 
   }
 

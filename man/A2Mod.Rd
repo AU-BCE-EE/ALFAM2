@@ -41,7 +41,9 @@ ALFAM2mod(dat,
              wind.1m = 2.7, 
              lwind = 0.43, 
              crop.z = 10),
-    check.NA = TRUE, pass.col = NULL,
+    check.NA = TRUE, 
+    pass.col = NULL, 
+    incorp.names = c('^incorp', 'deep', 'shallow'),
     add.incorp.rows = FALSE, 
     parallel = FALSE,n.cpus = 1
       )
@@ -79,6 +81,9 @@ ALFAM2mod(dat,
 }
   \item{pass.col}{
     character vector with name(s) of column(s) in \code{dat} that should be passed through to the returned data frame.
+}
+  \item{incorp.names}{
+    character vector with name(s) of column(s) in \code{dat} that contain binary incorporation variables.
 }
   \item{add.incorp.rows}{
     function will add additional rows that exactly match the incorporation time(s) (no more than one per level of \code{group}) if they are not already present. Should these be returned or left out (default)?

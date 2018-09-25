@@ -24,6 +24,10 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
   # Loop through the periods
   for(i in 1:l) {
 
+    # Make incorporation transfer (at *start* of interval) (if none then f5 = 1 and ati = a[i])
+    ati <- f5[i] * ati
+    uti <- (1 - f5[i]) * ati + uti
+
     # Calculate pools at *end* of ct[i]
     if(r2[i] > 0) { # These don't work well for r2 == 0
       a[i] <- ati*exp(-(r1[i] + r2[i])*ddt[i])
@@ -38,9 +42,8 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
       e[i] <- eti + (uti - u[i]) +  (ati - a[i])
     }
 
-    # Make incorporation transfer (at *end* of interval) (otherwise f5 = 0 and ati = a[i])
-    ati <- f5[i]*a[i]
-    uti <- (1 - f5[i])*a[i] + u[i]
+    ati <- a[i]
+    uti <- u[i]
     eti <- e[i]
 
   }
