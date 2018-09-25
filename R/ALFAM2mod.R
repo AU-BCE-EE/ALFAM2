@@ -151,7 +151,9 @@ ALFAM2mod <- function(
   which2 <- grep('2$', names(pars)) # For r2
   which3 <- grep('3$', names(pars)) # For r3
   which5 <- grep('5$', names(pars)) # For a to u transfer at specific times, incorporation, will be applied once only!
+
   names(pars) <- gsub('[0-9]$', '', names(pars))
+
   if(!all(ww <- sort(c(which0, which1, which2, which3, which5)) == 1:length(pars))) {
     stop('Something wrong with p. ', paste(ww, collapse = ', '))
   }
