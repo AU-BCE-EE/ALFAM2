@@ -5,52 +5,43 @@
 
 ALFAM2mod <- function(
   dat, 
-  pars = c(
-           int0           = -0.91400, 
-           int1           = -1.16256, 
-           int2           = -1.02444, 
-           int3           = -2.92947, 
-           app.methodos0  = -0.98384, 
-           app.rate0      = -0.01602, 
-           man.dm0        =  0.40164, 
-           incorpdeep5    = -3.08108, 
-           incorpshallow5 = -0.91376, 
-           app.methodbc1  =  0.62870, 
-           man.dm1        = -0.07974, 
-           air.temp1      =  0.04909, 
-           wind.1m1       =  0.04876, 
-           air.temp3      =  0.01344, 
-           incorpdeep3    = -0.74621, 
-           app.methodos3  = -0.20088, 
-           rain.rate2     =  0.38434
-           ), 
+  pars = c(int0           = -0.7364889,
+           int1           = -1.1785848,
+           int2           = -0.9543731,
+           int3           = -2.9012937,
+           app.methodos0  = -1.1717859,
+           app.rate0      = -0.0134681,
+           man.dm0        =  0.407466,
+           incorpdeep5    = -3.6477259,
+           incorpshallow5 = -0.4121023,
+           app.methodbc1  =  0.6283396,
+           man.dm1        = -0.075822,
+           air.temp1      =  0.0492777,
+           wind.2m1       =  0.0486651,
+           air.temp3      =  0.0152419,
+           incorpdeep3    = -0.3838862,
+           app.methodos3  = -0.122883,
+           rain.rate2     =  0.4327281,
+           rain.cum3      = -0.0300936), 
   app.name = 'TAN.app', 
   time.name = 'ct', 
-  time.incorp = NULL,                     # NULL with no incorporation, otherwise numeric or column name. If column name value should be NA for no incorporation (w groups)
+  time.incorp = NULL, # NULL with no incorporation, otherwise numeric or column name. If column name value should be NA for no incorporation (w groups)
   group = NULL, 
   center = TRUE, 
   cmns = c(app.rate  = 40, 
-           man.dm = 6, 
-           man.tan = 1.2, 
-           man.ph = 7.5, 
-           air.temp = 13, 
-           wind.1m = 2.7, 
-           lwind = 0.43, 
-           crop.z = 10), 
+           man.dm    =  6.0, 
+           man.tan   =  1.2, 
+           man.ph    =  7.5, 
+           air.temp  = 13, 
+           wind.2m   =  2.7, 
+           crop.z    = 10), 
   check.NA = TRUE, 
   pass.col = NULL, 
-  incorp.names = c('^incorp', 'deep', 'shallow'),
+  incorp.names = c('incorp', 'deep', 'shallow'),
   add.incorp.rows = FALSE, 
   parallel = FALSE, 
   n.cpus = 1
   ) {
-
-  ###### NTS: not package-ready
-  ##if(parallel) {
-  ##  requireNamespace("parallel") 
-  ##}
-
-  #print(pars)
 
   # NTS: Work needed here. 
   # Add checks for all arguments
@@ -63,7 +54,8 @@ ALFAM2mod <- function(
     pars <- unlist(pars)
   }
 
-  if(any(chg.nms <- grepl("[fr]{1}[0-5]{1}[.]", names(pars)))){
+  # Continue with change, switch order for names that start with e.g. f0 or r3
+  if(any(chg.nms <- grepl("^[fr]{1}[0-5]{1}[.]", names(pars)))){
     names(pars)[chg.nms] <- gsub("^[fr]([0-5])[.](.*)", "\\2\\1", names(pars)[chg.nms])
   }
 
@@ -91,22 +83,23 @@ ALFAM2mod <- function(
   if(center) {
     # get columns that will be centered 
     c_cols <- names(cmns)[names(cmns) %in% names(dat)]
+
     # center
-    if(length(c_cols)) dat[, c_cols] <- sweep(dat[, c_cols], 2,cmns[c_cols])
+    if(length(c_cols)) dat[, c_cols] <- sweep(dat[, c_cols], 2, cmns[c_cols])
   }
 
   # Original order (for sorting before return)
   dat$orig.order <- 1:nrow(dat)
 
   # Extend dat data frame with incorporation time if needed
-  dat$`__add.row` <- FALSE # NTS: problem if dat already has column with this name. Need to check names.
+  dat$`__add.row` <- FALSE 
 
 
   # Sort out incorporation
   if(!is.null(time.incorp)) {
 
     # Get actual incorporation parameter names (if any) from parameters
-    inc.names <- unique(gsub("[0-5]$", "", grep(incorp.names, names(pars), value = TRUE)))
+    inc.names <- unique(gsub("[0-5]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
 
     if(length(inc.names) > 0){
 
@@ -155,6 +148,7 @@ ALFAM2mod <- function(
         ct <- sub.dat[, time.name]
 
         # Find where incorporation occurs
+        # NTS: Christoph, do you want to remove the "-1"? 
         ct.ind <- which(ct > incorp.time[i])[1] - 1
 
         # Add rows        
@@ -170,11 +164,6 @@ ALFAM2mod <- function(
 
           warning("incorporation takes place after the end of the last interval and will be ignored")
 
-        } else if(any(incorp.time[i] == ct)){ # NTS need to check that length == 1
-
-          # Nothing?
-          # dat[dat$group == i & dat[, time.name] == ?????? incorp.time[i], '__f5'] <- 1
-
         } else {
 
           # Insert a row before incorp, interval ends at incorp.time
@@ -187,8 +176,6 @@ ALFAM2mod <- function(
 
         # Set incorp variables to FALSE for time <= incorp.time (incorp then applied at start of next interval)
         dat[dat$`__group` == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
-
-        # Set f5 to 1 for intervals with incorporation (at start)
 
       }
 
@@ -272,17 +259,17 @@ ALFAM2mod <- function(
     # do parallel
     # parallel::clusterExport(cl, c("calcEmis", "time.name", "app.name")) 
     e.list[do.nr] <- parallel::clusterApply(cl, s.dat[do.nr], function(sub.dat){
-      data.frame(group = sub.dat[!sub.dat$`__add.row`, "__group"], calcEmis(
-        ct = sub.dat[, time.name]
-        # Calculate a0 and u0 (f5 transfers done in calcEmis())
-        ,a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name]
-        ,u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name]
-        ,r1 = sub.dat[, "__r1"]
-        ,r2 = sub.dat[, "__r2"]
-        ,r3 = sub.dat[, "__r3"]
-        ,f5 = sub.dat[, "__f5"]
-        ,drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
-      , row.names = NULL, check.names = FALSE)    
+      data.frame(group = sub.dat[!sub.dat$`__add.row`, "__group"], 
+                 calcEmis(ct = sub.dat[, time.name],
+                          # Calculate a0 and u0 (f5 transfers done in calcEmis())
+                          a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
+                          u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
+                          r1 = sub.dat[, "__r1"],
+                          r2 = sub.dat[, "__r2"],
+                          r3 = sub.dat[, "__r3"],
+                          f5 = sub.dat[, "__f5"],
+                          drop.rows = sub.dat$`__add.row` & !add.incorp.rows),
+                 row.names = NULL, check.names = FALSE)    
     })
 
     # stop cluster and empty on.exit
@@ -303,14 +290,14 @@ ALFAM2mod <- function(
 
       # calculate emission
       ce <- calcEmis(
-        ct = sub.dat[, time.name]
+        ct = sub.dat[, time.name],
         # Calculate a0 and u0 (f5 transfers done in calcEmis())
-        ,a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name]
-        ,u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name]
-        ,r1 = sub.dat[, "__r1"]
-        ,r2 = sub.dat[, "__r2"]
-        ,r3 = sub.dat[, "__r3"]
-        ,f5 = sub.dat[, "__f5"], drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
+        a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
+        u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
+        r1 = sub.dat[, "__r1"],
+        r2 = sub.dat[, "__r2"],
+        r3 = sub.dat[, "__r3"],
+        f5 = sub.dat[, "__f5"], drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
 
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "orig.order"], 
@@ -328,12 +315,12 @@ ALFAM2mod <- function(
     e$group <- NULL
   }
 
-  # Sort to match original order
+  # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
   e <- e[order(e$orig.order), -1]
 
   # Add pass-through column if requested
   if(!is.null(pass.col)) {
-    e <- data.frame(setNames(dat[!dat$`__add.row`, paste0("pass_me.through_", pass.col)], pass.col), e)
+    e <- data.frame(setNames(dat[!(dat$`__add.row` & !add.incorp.rows), paste0("pass_me.through_", pass.col)], pass.col), e)
   }
 
   return(e)
