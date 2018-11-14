@@ -12,8 +12,8 @@ ALFAM2mod <- function(
            app.methodos0  = -1.1717859,
            app.rate0      = -0.0134681,
            man.dm0        =  0.407466,
-           incorpdeep5    = -3.6477259,
-           incorpshallow5 = -0.4121023,
+           incorpdeep4    = -3.6477259,
+           incorpshallow4 = -0.4121023,
            app.methodbc1  =  0.6283396,
            man.dm1        = -0.075822,
            air.temp1      =  0.0492777,
@@ -56,12 +56,12 @@ ALFAM2mod <- function(
   }
 
   # Continue with change, switch order for names that start with e.g. f0 or r3
-  if(any(chg.nms <- grepl("^[fr]{1}[0-5]{1}[.]", names(pars)))){
-    names(pars)[chg.nms] <- gsub("^[fr]([0-5])[.](.*)", "\\2\\1", names(pars)[chg.nms])
+  if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(pars)))){
+    names(pars)[chg.nms] <- gsub("^[fr]([0-4])[.](.*)", "\\2\\1", names(pars)[chg.nms])
   }
 
   # Check that all names for pars end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, r4, r5.\n Make sure that the naming is correct. Either append the corresponding number (0 to 5) at the name endings (e.g. int0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
+  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding number (0 to 4) at the name endings (e.g. int0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
   # -> possibly extend names as done below?
@@ -96,14 +96,14 @@ ALFAM2mod <- function(
   dat$`__add.row` <- FALSE 
 
 
-  # Default f5 value (for no incorporation in group, or incorporation only later)
-  dat[, '__f5'] <- 1
+  # Default f4 value (for no incorporation in group, or incorporation only later)
+  dat[, '__f4'] <- 1
 
   # Sort out incorporation
   if(!is.null(time.incorp)) {
 
     # Get actual incorporation parameter names (if any) from parameters
-    inc.names <- unique(gsub("[0-5]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
+    inc.names <- unique(gsub("[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
 
     if(length(inc.names) > 0){
 
@@ -160,7 +160,7 @@ ALFAM2mod <- function(
           ins.dat <- sub.dat[1, ]
           ins.dat[, time.name] <- incorp.time[i] 
           ins.dat$`__add.row` <- TRUE
-          sub.dat[1, '__f5'] <- 0
+          sub.dat[1, '__f4'] <- 0
           dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
 
         } else if(incorp.time[i] != ct[ct.ind - 1]){
@@ -169,12 +169,12 @@ ALFAM2mod <- function(
           ins.dat <- sub.dat[ct.ind, ]
           ins.dat[, time.name] <- incorp.time[i] 
           ins.dat$`__add.row` <- TRUE
-          sub.dat[ct.ind, '__f5'] <- 0
+          sub.dat[ct.ind, '__f4'] <- 0
           dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
 
         } else {
 
-          sub.dat[ct.ind, '__f5'] <- 0
+          sub.dat[ct.ind, '__f4'] <- 0
           dat <- rbind(dat[dat$`__group` != i, ], sub.dat)          
 
         }
@@ -205,11 +205,11 @@ ALFAM2mod <- function(
   which1 <- grep('1$', names(pars)) # For r1
   which2 <- grep('2$', names(pars)) # For r2
   which3 <- grep('3$', names(pars)) # For r3
-  which5 <- grep('5$', names(pars)) # For a to u transfer at specific times, incorporation, will be applied once only!
+  which4 <- grep('4$', names(pars)) # For a to u transfer at specific times, incorporation, will be applied once only!
 
   names(pars) <- gsub('[0-9]$', '', names(pars))
 
-  if(!all(ww <- sort(c(which0, which1, which2, which3, which5)) == 1:length(pars))) {
+  if(!all(ww <- sort(c(which0, which1, which2, which3, which4)) == 1:length(pars))) {
     stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
   }
 
@@ -221,13 +221,13 @@ ALFAM2mod <- function(
   if(length(which1) > 0) dat[, "__r1"] <- calcPParms(pars[which1], dat)                  else dat[, "__r1"] <- 0
   if(length(which2) > 0) dat[, "__r2"] <- calcPParms(pars[which2], dat)                  else dat[, "__r2"] <- 0
   if(length(which3) > 0) dat[, "__r3"] <- calcPParms(pars[which3], dat)                  else dat[, "__r3"] <- 0
-  # f5 only calculated where it is already 0 (not default of 1)
-  if(length(which5) > 0) dat[dat[, "__f5"] == 0, "__f5"] <- calcPParms(pars[which5], dat[dat[, "__f5"] == 0, ], tr = 'logistic') ##else dat[, "__f5"] <- 1
+  # f4 only calculated where it is already 0 (not default of 1)
+  if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
   # split dat into groups
   s.dat <- split(dat, dat$`__group`)
 
-  if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f5")]))) {
+  if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
     cat('Missing values in predictors:\n')
     print(apply(dat[, unique(names(pars[!grepl('^int', names(pars))]))], 2, function(x) sum(is.na(x))))
     stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
@@ -250,13 +250,13 @@ ALFAM2mod <- function(
     e.list[do.nr] <- parallel::clusterApply(cl, s.dat[do.nr], function(sub.dat){
       data.frame(group = sub.dat[!sub.dat$`__add.row`, "__group"], 
                  calcEmis(ct = sub.dat[, time.name],
-                          # Calculate a0 and u0 (f5 transfers done in calcEmis())
+                          # Calculate a0 and u0 (f4 transfers done in calcEmis())
                           a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
                           u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
                           r1 = sub.dat[, "__r1"],
                           r2 = sub.dat[, "__r2"],
                           r3 = sub.dat[, "__r3"],
-                          f5 = sub.dat[, "__f5"],
+                          f4 = sub.dat[, "__f4"],
                           drop.rows = sub.dat$`__add.row` & !add.incorp.rows),
                  row.names = NULL, check.names = FALSE)    
     })
@@ -280,13 +280,13 @@ ALFAM2mod <- function(
       # calculate emission
       ce <- calcEmis(
         ct = sub.dat[, time.name],
-        # Calculate a0 and u0 (f5 transfers done in calcEmis())
+        # Calculate a0 and u0 (f4 transfers done in calcEmis())
         a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
         u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
         r1 = sub.dat[, "__r1"],
         r2 = sub.dat[, "__r2"],
         r3 = sub.dat[, "__r3"],
-        f5 = sub.dat[, "__f5"], drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
+        f4 = sub.dat[, "__f4"], drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
 
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "orig.order"], 
