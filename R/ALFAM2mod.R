@@ -173,12 +173,12 @@ ALFAM2mod <- function(
           ins.dat <- sub.dat[ct.ind, ]
           ins.dat[, time.name] <- incorp.time[i] 
           ins.dat$`__add.row` <- TRUE
-          sub.dat[ct.ind - 1, '__f5'] <- 0
+          sub.dat[ct.ind, '__f5'] <- 0
           dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
 
         } else {
 
-          sub.dat[ct.ind - 1, '__f5'] <- 0
+          sub.dat[ct.ind, '__f5'] <- 0
           dat <- rbind(dat[dat$`__group` != i, ], sub.dat)          
 
         }
