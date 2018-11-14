@@ -95,6 +95,9 @@ ALFAM2mod <- function(
   dat$`__add.row` <- FALSE 
 
 
+  # Default f5 value (for no incorporation in group, or incorporation only later)
+  dat[, '__f5'] <- 1
+
   # Sort out incorporation
   if(!is.null(time.incorp)) {
 
@@ -161,7 +164,8 @@ ALFAM2mod <- function(
           ins.dat <- sub.dat[1, ]
           ins.dat[, time.name] <- incorp.time[i] 
           ins.dat$`__add.row` <- TRUE
-          dat <- rbind(dat, ins.dat)          
+          sub.dat[1, '__f5'] <- 0
+          dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
 
         } else if(incorp.time[i] != ct[ct.ind - 1]){
 
@@ -169,7 +173,13 @@ ALFAM2mod <- function(
           ins.dat <- sub.dat[ct.ind, ]
           ins.dat[, time.name] <- incorp.time[i] 
           ins.dat$`__add.row` <- TRUE
-          dat <- rbind(dat, ins.dat)          
+          sub.dat[ct.ind - 1, '__f5'] <- 0
+          dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
+
+        } else {
+
+          sub.dat[ct.ind - 1, '__f5'] <- 0
+          dat <- rbind(dat[dat$`__group` != i, ], sub.dat)          
 
         }
 
@@ -184,22 +194,6 @@ ALFAM2mod <- function(
 
   # Sort 
   dat <- dat[order(dat$`__group`, dat[, time.name]), ]
-
-  # Default f5 value (for no incorporation in group, or incorporation only later)
-  dat[, '__f5'] <- 1
-
-  # Allow f5 value only for intervals that have a *start* time (end time of previous interval) equal to incorp.time
-  if(!is.null(time.incorp)) {
-
-    # Loop through groups with incorporation (incorp.time != NA)
-    for(i in u.group[!is.na(incorp.time)]) {
-      ng <- nrow(dat[dat$`__group` == i, ])
-      dat[dat$`__group` == i & c(0, dat[-ng, time.name]) == incorp.time[i], '__f5'] <- 0
-      # Incorp FALSE unless previous interval ends at incorp.time
-      dat[dat$`__group` == i & c(0, dat[-ng, time.name]) < incorp.time[i], inc.ex] <- FALSE 
-    }
-
-  }
 
   # Drop parameters for missing predictors
   p.orig <- pars
