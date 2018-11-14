@@ -148,11 +148,14 @@ ALFAM2mod <- function(
         ct <- sub.dat[, time.name]
 
         # Find where incorporation occurs
-        # NTS: Christoph, do you want to remove the "-1"? 
-        ct.ind <- which(ct > incorp.time[i])[1] - 1
+        ct.ind <- which(ct > incorp.time[i])[1]
 
-        # Add rows        
-        if(ct.ind == 0){
+        # Add rows
+        if(is.na(ct.ind)){
+        
+          warning("incorporation takes place after the end of the last interval and will be ignored")
+        
+        } else if(ct.ind == 1){
 
           # Use predictor values from first row
           ins.dat <- sub.dat[1, ]
@@ -160,14 +163,10 @@ ALFAM2mod <- function(
           ins.dat$`__add.row` <- TRUE
           dat <- rbind(dat, ins.dat)          
 
-        } else if(ct.ind == length(ct)){
-
-          warning("incorporation takes place after the end of the last interval and will be ignored")
-
-        } else {
+        } else if(incorp.time[i] != ct[ct.ind - 1]){
 
           # Insert a row before incorp, interval ends at incorp.time
-          ins.dat <- sub.dat[ct.ind + 1, ]
+          ins.dat <- sub.dat[ct.ind, ]
           ins.dat[, time.name] <- incorp.time[i] 
           ins.dat$`__add.row` <- TRUE
           dat <- rbind(dat, ins.dat)          
