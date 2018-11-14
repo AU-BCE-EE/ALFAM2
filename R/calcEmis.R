@@ -29,19 +29,11 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
     uti <- (1 - f5[i]) * ati0 + uti0
 
     # Calculate pools at *end* of ct[i]
-    if(r2[i] > 0) { # These don't work well for r2 == 0
-      a[i] <- ati*exp(-(r1[i] + r2[i])*ddt[i])
-      u[i] <- (
-                exp(-r3[i]*ddt[i]) *
-                (-ati*r2[i] + ati*exp((-r1[i]-r2[i])* ddt[i]+r3[i]*ddt[i])* r2[i] - r1[i]*uti - r2[i]*uti + r3[i]*uti)
-              )/(-r1[i]-r2[i]+r3[i]) 
-      e[i] <- eti + (uti - u[i]) +  (ati - a[i])
-    } else {
-      a[i] <- ati*exp(-r1[i]*ddt[i])
-      u[i] <- uti*exp(-r3[i]*ddt[i])
-      e[i] <- eti + (uti - u[i]) +  (ati - a[i])
-    }
+    a[i] <- ati*exp(-(r1[i] + r2[i])*ddt[i])
+    u[i] <- exp(-r3[i]*ddt[i]) * (r2[i] * ati * (exp((-r1[i]-r2[i]+r3[i]) * ddt[i]) - 1)/(-r1[i]-r2[i]+r3[i]) + uti)
+    e[i] <- eti + (uti - u[i]) +  (ati - a[i])
 
+    # save pools for next step
     ati0 <- a[i]
     uti0 <- u[i]
     eti <- e[i]
@@ -63,5 +55,3 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
 
   return(out)
 }
-
-
