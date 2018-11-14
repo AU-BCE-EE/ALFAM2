@@ -43,6 +43,7 @@ ALFAM2mod <- function(
   n.cpus = 1
   ) {
 
+
   # NTS: Work needed here. 
   # Add checks for all arguments
   checkArgClassValue(dat, expected.class = 'data.frame')
@@ -109,11 +110,11 @@ ALFAM2mod <- function(
       # Do they exist?
       inc.ex <- inc.names[inc.names %in% names(dat)]
 
-      # Unique groups
-      u.group <- unique(dat$`__group`)
 
       # Get times and types
       if(is.numeric(time.incorp)){
+        # Unique groups
+        u.group <- unique(dat$`__group`)
         # Repeat time.incorp values to match number of groups
         incorp.time <- rep(time.incorp, length(u.group))[seq_along(u.group)] # NTS: why is [] needed?
         names(incorp.time) <- u.group
@@ -126,13 +127,8 @@ ALFAM2mod <- function(
       if(length(inc.ex) == 0){
         warning("No matching column for incorporation parameter(s): ", paste(inc.names, collapse = ", "), ". Skipping incorporation.")
         time.incorp <- NULL
-      } ##else {
-        ### set incorporation column to FALSE before incorp.time
-        ##for(i in seq_along(u.group)){
-        ##  # for each group
-        ##  dat[dat$group == u.group[i] & dat[, time.name] < incorp.time[i], inc.ex] <- FALSE
-        ##}
-      ##}
+      }
+
     } else {
       warning("No incorporation parameter estimates have been provided. Skipping incorporation.")
       time.incorp <- NULL
@@ -143,7 +139,7 @@ ALFAM2mod <- function(
     if(!is.null(time.incorp)) {
 
       # Loop through groups with incorporation (incorp.time != NA)
-      for(i in u.group[!is.na(incorp.time)]) {
+      for(i in names(incorp.time)[!is.na(incorp.time)]) {
 
         sub.dat <- dat[dat$`__group` == i, ]
 
