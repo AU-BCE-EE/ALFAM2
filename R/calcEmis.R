@@ -15,8 +15,8 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
   ddt <- diff(c(0, ct))
 
   # Initial values
-  ati <- a0
-  uti <- u0
+  ati0 <- a0
+  uti0 <- u0
   eti <- 0
 
   # Then calculate pools at end of ddt[1]
@@ -25,8 +25,8 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
   for(i in 1:l) {
 
     # Make incorporation transfer (at *start* of interval) (if none then f5 = 1 and ati = a[i])
-    ati <- f5[i] * ati
-    uti <- (1 - f5[i]) * ati + uti
+    ati <- f5[i] * ati0
+    uti <- (1 - f5[i]) * ati0 + uti0
 
     # Calculate pools at *end* of ct[i]
     if(r2[i] > 0) { # These don't work well for r2 == 0
@@ -42,8 +42,8 @@ calcEmis <- function(ct, a0, u0, r1, r2, r3, f5, drop.rows) {
       e[i] <- eti + (uti - u[i]) +  (ati - a[i])
     }
 
-    ati <- a[i]
-    uti <- u[i]
+    ati0 <- a[i]
+    uti0 <- u[i]
     eti <- e[i]
 
   }
