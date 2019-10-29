@@ -7,30 +7,31 @@ Predict Ammonia Emission from Field-Applied Manure
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 An implementation of the ALFAM2 model for predicting ammonia emission from field-applied manure. 
-The model is described in Hafner et al. (in preparation). 
+The model is described in Hafner et al. (2018). 
 }
 
 \usage{
 ALFAM2mod(dat, 
-    pars = c(
-             int0           = -0.91400,
-             int1           = -1.16256,
-             int2           = -1.02444,
-             int3           = -2.92947,
-             app.methodos0  = -0.98384,
-             app.rate0      = -0.01602,
-             man.dm0        =  0.40164,
-             incorpdeep5    = -3.08108,
-             incorpshallow5 = -0.91376,
-             app.methodbc1  =  0.62870,
-             man.dm1        = -0.07974,
-             air.temp1      =  0.04909,
-             wind.1m1       =  0.04876,
-             air.temp3      =  0.01344,
-             incorpdeep3    = -0.74621,
-             app.methodos3  = -0.20088,
-             rain.rate2     =  0.38434
-             ), 
+  pars = c(int0           = -0.7364889,
+           int1           = -1.1785848,
+           int2           = -0.9543731,
+           int3           = -2.9012937,
+           app.methodos0  = -1.1717859,
+           app.rate0      = -0.0134681,
+           man.dm0        =  0.407466,
+           incorpdeep4    = -3.6477259,
+           incorpshallow4 = -0.4121023,
+           app.methodbc1  =  0.6283396,
+           man.dm1        = -0.075822,
+           air.temp1      =  0.0492777,
+           wind.2m1       =  0.0486651,
+           man.ph1        =  0.5327231,
+           air.temp3      =  0.0152419,
+           incorpdeep3    = -0.3838862,
+           app.methodos3  = -0.122883,
+           man.ph3        =  0.2663616,
+           rain.rate2     =  0.4327281,
+           rain.cum3      = -0.0300936), 
     app.name = 'TAN.app', time.name = 'ct',
     time.incorp = NULL,group = NULL, center = TRUE,
     cmns = c(app.rate  = 40, 
@@ -43,9 +44,10 @@ ALFAM2mod(dat,
              crop.z = 10),
     check.NA = TRUE, 
     pass.col = NULL, 
-    incorp.names = c('^incorp', 'deep', 'shallow'),
+    incorp.names = c('incorp', 'deep', 'shallow'),
     add.incorp.rows = FALSE, 
-    parallel = FALSE,n.cpus = 1
+    parallel = FALSE,
+    n.cpus = 1
       )
 }
 %- maybe also 'usage' for other objects documented here.
@@ -118,6 +120,9 @@ ALFAM2mod(dat,
   }
 }
 \references{
+  Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484.
+
+  The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
 }
 \author{
