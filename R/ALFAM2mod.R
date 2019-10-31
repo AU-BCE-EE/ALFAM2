@@ -41,6 +41,7 @@ ALFAM2mod <- function(
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
   add.incorp.rows = FALSE, 
+  warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1
   ) {
@@ -198,7 +199,7 @@ ALFAM2mod <- function(
   ppnames <- gsub('[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
-  if(any(!predpres)) {
+  if(any(!predpres) & warn) {
     warning('Missing predictors. These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = ', '))
   }
 

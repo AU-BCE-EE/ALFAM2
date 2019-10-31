@@ -46,6 +46,7 @@ ALFAM2mod(dat,
     pass.col = NULL, 
     incorp.names = c('incorp', 'deep', 'shallow'),
     add.incorp.rows = FALSE, 
+    warn = TRUE,
     parallel = FALSE,
     n.cpus = 1
       )
@@ -90,6 +91,9 @@ ALFAM2mod(dat,
   \item{add.incorp.rows}{
     function will add additional rows that exactly match the incorporation time(s) (no more than one per level of \code{group}) if they are not already present. Should these be returned or left out (default)?
 }
+  \item{warn}{
+    set to FALSE to suppress some warnings.
+}  
   \item{parallel}{
     should parallel processing be used? Helpful for very large \code{dat}.
 }
