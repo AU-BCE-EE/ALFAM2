@@ -1,0 +1,311 @@
+%% Next 2 lines needed for non-Sweave vignettes
+%\VignetteEngine{knitr::knitr} 
+%\VignetteIndexEntry{Getting started with the ALFAM2 package}
+
+\documentclass{article}
+
+%%\usepackage[version=3]{mhchem} %chemical formulas
+\usepackage[colorlinks = true, urlcolor = blue]{hyperref} % Must be loaded as the last package
+
+<<include=FALSE, cache=FALSE>>=
+library(knitr)
+#opts_chunk$set(cache=FALSE,tidy=FALSE,highlight=FALSE)
+opts_chunk$set(cache = FALSE, tidy = FALSE, fig.align = "center")
+library(ALFAM2)
+  options(width=75)
+@
+
+\title{Getting started with the ALFAM2 package}
+\author{Sasha D. Hafner (\texttt{sasha.hafner@eng.au.dk})}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The ALFAM2 project is on ammonia volatilization (emission) from field-applied manure, and includes two main products: a database with volatilization measurements and a model for estimating volatilization.
+The model, which is described in detail in \cite{afmod2019}, is the focus of the ALFAM2 R package and this document.
+The ALFAM2 package is an add-on package for R, which is an environment for statistical computing. 
+With the model, it is possible to predict average volatilization rate and cumulative emission over time, as affected by application method, weather, and manure characteristics.
+This document provides an introduction to the use of the model, and is aimed for users who are new to R.
+Those with some knowledge of R can skip Section 2.
+
+\subsection{Excel or R?}
+The ALFAM2 model is available in an Excel spreadsheet in addition to the R package that is described in this document.
+If you would just like to know cumulative emission for a few scenarios with constant conditions, the Excel model is a good choice.
+But to work with many different scenarios, or when weather changes over time (e.g., wind or rain), or if you are interested in emission dynamics and not just final cumulative emission, you should use the R package.
+You can use the ALFAM2 package without much knowledge of R.
+If you are not currently an R user, but you plan on using the ALFAM2 model extensively, it is worthwhile to learn a little bit about R and use the ALFAM2 package, instead of the less efficient Excel spreadsheet model.
+
+\section{Some basics for new R users}
+The information given in this section should be enough for new users to then jump in at Section 3 and use the model (albeit with a lack of understanding about some of the code).
+For a better understanding, check out the sources mentioned below.
+
+\subsection{Getting started with R}
+To use R it must be installed on your computer.
+You can download R and find installation instructions from here: \url{https://www.r-project.org/}.
+And while not required, it is convenient to have a good script editor, and the RStudio IDE (integrated development environment) is a good choice.
+It can be downloaded from here: \url{https://rstudio.com/products/rstudio/download/}.
+
+To use the ALFAM2 package, you will need to install the package, and then call up the function. 
+In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and export data.
+For information on these tasks and more, there are many free resources online. 
+I recommend this book I use for a course on R: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
+Alternatively, the instructions given below should be sufficient.
+
+\subsection{Installing the ALFAM2 package}
+The ALFAM2 package is available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
+Installation of packages from GitHub requires a package called devtools.
+You can run the code below to install devtools and ALFAM2.
+
+First, install devtools from CRAN.
+
+<<eval=FALSE>>=
+install.packages("devtools")
+@
+
+Then load the package,
+
+<<eval=FALSE>>=
+library(devtools)
+@
+
+and install the ALFAM2 package from GitHub.
+
+<<eval=FALSE>>=
+install_github("sashahafner/ALFAM2")
+@
+
+Alternatively, to avoid loading devtools, use this syntax.
+
+<<eval=FALSE>>=
+devtools::install_github("sashahafner/ALFAM2")
+@
+
+These steps only need to be carried out once.
+
+Finally, every time you open R to use the ALFAM2 package, it must be loaded.
+
+<<>>=
+library(ALFAM2)
+@
+
+\section{Using the \texttt{ALFAM2mod()} function}
+The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{ALFAM2mod()}
+Here its use is shown in a few examples.
+
+\subsection{Cumulative emission for a single scenario}
+The function has several arguments, as shown below.
+
+<<>>=
+args(ALFAM2mod)
+@
+
+But most have default values.
+All that is required to make predictions is some input data, given in the \texttt{dat} argument.
+In this example, let's assume we are interested in manure application by broadcast when manure had 8\% dry matter (DM), total TAN application is 50 kg/ha, wind is 3 m/s, and air temperature is 20$^\circ$C.
+
+First we need to create a data frame with the input data.
+
+<<>>=
+dat1 <- data.frame(ctime = 72, TAN.app = 50, man.dm = 8, 
+                   air.temp = 20, wind.2m = 3, 
+                   app.methodbc = TRUE)
+dat1
+@
+
+Our predictor variable values are in the columns \texttt{man.dm} and the following ones.
+The names for the predictor variables must match those names used in the model parameters, which can be seen above in the argument list.
+(The numbers that are included in the parameter vector indicate a primary parameter--these are not to be included in the names of predictor variables.)
+Time, in hours, is given in the column named \texttt{ctime} here, for cumulative time (although any name can be used).
+
+And now we can call the model function, using default values for most other arguments.
+We can predict cumulative emission after 3 days (72 hours) with the following call.
+
+<<>>=
+pred1 <- ALFAM2mod(dat1, app.name = 'TAN.app', time.name = 'ctime')
+@
+
+The warning message just tells us that the call included some parameters with no associated predictor variables in our data frame given in the \texttt{dat} argument.
+This is discussed more below.
+We will turn off the warning in the examples below.
+
+Let's look at the predictions.
+
+<<>>=
+pred1
+@
+
+The most interesting columns here are called \texttt{e}, which has cumulative emission in the same units as TAN application, and \texttt{er}, which has relative cumulative emission, as a fraction of applied TAN.
+So in this example, 48\% of applied TAN is predicted to be lost by volatilization.
+
+The warning message above is related to an important point: Any excluded predictors are effectively assumed to be at their reference levels.
+The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
+The default application method is trailing hose.
+Predictor values for the default scenario can be found in the \texttt(cmns) argument (for centering means).
+
+\subsection{Adding incorporation}
+To include incorporation, we need to add a couple columns to our data frame.
+First let's make a new data frame for the example.
+
+<<>>=
+dat2 <- dat1
+@
+
+And add the two new columns.
+Here we are specifying that deep incorporation happens after 0.5 hours.
+
+<<>>=
+dat2$incorpdeep <- TRUE
+dat2$t.incorp <- 0.5
+dat2
+@
+
+<<>>=
+pred2 <- ALFAM2mod(dat2, app.name = "TAN.app", time.name = "ctime", 
+                   time.incorp = "t.incorp", warn = FALSE)
+pred2
+@
+
+Here we see that with incorporation, emission drops to 15\% of applied TAN.
+Shallow incorporation has less of an effect.
+
+<<>>=
+dat3 <- dat1
+dat3$incorpshallow <- TRUE
+dat3$t.incorp <- 0.5
+dat3
+@
+
+<<>>=
+pred3 <- ALFAM2mod(dat3, app.name = "TAN.app", time.name = "ctime", 
+                   time.incorp = "t.incorp", warn = FALSE)
+pred3
+@
+
+\subsection{Multiple scenarios in a single call}
+A single function call can be used for multiple scenarios.
+For example, perhaps we would like to compare 5 different incoporation times.
+First let's create a new data frame that contains this information.
+We will need to add a new column with a grouping variable also.
+
+<<>>=
+dat4 <- data.frame(scenario = 1:5, ctime = 72, TAN.app = 50, 
+                   man.dm = 8, air.temp = 20, wind.2m = 4, 
+                   app.methodbc = TRUE,
+                   incorpdeep = TRUE, 
+                   t.incorp = c(0.1, 0.5, 1, 6, 24))
+dat4
+@
+
+It may seem strange to have a \texttt{scenario} column--isn't it clear that each row is a different scenario?
+The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change.
+
+Let's run the model for these 5 scenarios.
+
+<<>>=
+pred4 <- ALFAM2mod(dat4, app.name = "TAN.app", time.name = "ctime", 
+                   time.incorp = "t.incorp", group = "scenario", warn = FALSE)
+pred4
+@
+
+We can see that predicted emission doubles as incorporation time goes from 0.5 to 1.0 h.
+
+Scenarios could differ in any way. 
+Below, both temperature and application method vary.
+
+<<>>=
+dat5 <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
+                   man.dm = 8, air.temp = 10 + (0:2 * 10), 
+                   wind.2m = 3,
+                   app.methodbc = c(TRUE, FALSE, FALSE),
+                   app.methodos = c(FALSE, FALSE, TRUE)
+                   )
+dat5
+@
+
+<<>>=
+pred5 <- ALFAM2mod(dat5, app.name = "TAN.app", time.name = "ctime", 
+                   group = "scenario", warn = FALSE)
+pred5
+@
+
+\subsection{Volatilization dynamics}
+All the calls above returned results for a single time per scenario.
+The function also predicts dynamics.
+If your interest is final cumulative emission, it is not necessary to look at dynamics.
+The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions are constant.
+Where needed for incorporation, the function will add an interval, but this is excluded from the results by default (see \texttt{add.incorp.rows} argument).
+
+Let's assume we have some high resolution measurements of weather conditions.
+We'll create some data to represent this below.
+
+
+<<>>=
+dat6 <- data.frame(ctime = 0:36*2, TAN.app = 100, man.dm = 8, 
+                   air.temp = 7 + 7*sin(0:36*2 * 2*pi/24) + rnorm(37, 0, 2), 
+                   wind = 10^(0.5 + 0.4*sin(0:36*2 * 2*pi/24) + 
+                              rnorm(37, 0, 0.12)), 
+                   app.methodbc = TRUE)
+plot(air.temp ~ ctime, data = dat6, type = 'o', col = 'gray45')
+plot(wind ~ ctime, data = dat6, type = 'o', col = 'blue')
+@
+
+Predictions are made as above.
+By default, multiple rows in \texttt{dat} are assumed to all below to the same series (same plot, same emission trial).
+(This is the reason the \texttt{group} argument was needed above.)
+
+<<>>=
+pred6 <- ALFAM2mod(dat6, app.name = 'TAN.app', time.name = 'ctime',
+                   warn = FALSE)
+@
+
+Cumulative emission and average interval flux are plotted below.
+
+<<>>=
+plot(e ~ ct, data = pred6, type = 'o', xlab = 'Time (h)', 
+     ylab = 'Cumulative emission (kg/ha)')
+plot(j ~ ct, data = pred6, type = 's', log = 'y', col = 'red', 
+     xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
+@
+
+\subsection{Data import and export}
+Any of the results shown above can be exported as with any data frame in R.
+The simplest function for this is \texttt{write.csv()}.
+The following call will create a comma delimited text file that can be opened with spreadsheet or text editor programs.
+
+<<eval=FALSE>>=
+write.csv(pred6, 'pred6.csv', row.names = FALSE)
+@
+
+Alternatives include \texttt{write.csv2}, \texttt{write.table}, and any of the various functions in add-on packages for writing to Excel files.
+
+Except for simple scenarios, it is not very efficient to create data frame for entering predictor variable values.
+Especially when using the model in association with emission measurements, a more typical approach will be to read data into R from a file.
+The simplest approach here is to use the \texttt{read.csv()} function or some of the related functions.
+Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
+See the book mentioned above for details.
+
+\subsection{More with the ALFAM2 model}
+Dynamic predictions can be combined with multiple scenarios, although this is not shown here. 
+In fact, the only difference between these dynamic calls and the simple examples given above is the number of measurement intervals.
+
+All the calls in this document used the default parameter values (the ``average'' ALFAM2 model, given in Table 2 of \cite{afmod2019}).
+However, it is possible to use completely different parameter values for the same parameters, or even different secondary parameters.
+These are set with the \texttt{pars} argument.
+
+For large datasets, or parameter estimation (where the \texttt{ALFAM2mod()} function is called many times), parallel processing will be helpful. 
+See the \texttt{parallel} argument.
+ 
+\bibliographystyle{plain}  
+\begin{thebibliography}{1}
+
+\bibitem{afmod2019}
+Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G.
+\newblock A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. 
+\newblock {\em Atmospheric Environment}, 199:474-484, 2018.
+\newblock https://doi.org/10.1016/j.atmosenv.2018.11.034
+
+\end{thebibliography}
+\end{document}
+
