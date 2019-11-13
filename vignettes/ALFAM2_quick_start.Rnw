@@ -139,10 +139,10 @@ Variable name & Description             & Units          & Notes             &  
 \end{tabular}
 \end{table}
 
-Model parameter values for the ``average'' ALFAM2 model can be fonud in the default value of the \texttt{pars} argument. 
+Model parameter values for the ``average'' ALFAM2 model can be found in the default value of the \texttt{pars} argument. 
 Comparing the names for these values to the variable names given in Table 1, you can see an additional number added to the end of the parameters. 
 These numbers indicate a primary parameter.
-So, for exapmle, the (secondary) parameter \texttt{wind.2m1}, which is 0.0487 s/m by default, is used in the calculation of the primary parameter $r_1$.
+So, for example, the (secondary) parameter \texttt{wind.2m1}, which is 0.0487 s/m by default, is used in the calculation of the primary parameter $r_1$.
 The most important message here is a simple one: names for predictor variables can be taken from the names given in the default \texttt{pars} argument value, but be sure to omit the last digit.
 
 By design, any time a predictor variable is omitted when \texttt{ALFAM2Mod()} is called, the reference level or value is assumed for that variable.
@@ -166,7 +166,7 @@ dat1
 Our predictor variable values are in the columns \texttt{man.dm} and the following ones.
 The names for the predictor variables must match those names used in the model parameters, which can be seen above in the argument list.
 (The numbers that are included in the parameter vector indicate a primary parameter--these are not to be included in the names of predictor variables.)
-Time, in hours, is given in the column named \texttt{ctime} here, for cumulative time (although any name can be used).
+Time, in hours after application, is given in the column named \texttt{ctime} here, for cumulative time (although any name can be used).
 
 And now we can call the model function, using default values for most other arguments.
 We can predict cumulative emission after 3 days (72 hours) with the following call.
@@ -231,7 +231,7 @@ pred3
 
 \subsection{Multiple scenarios in a single call}
 A single function call can be used for multiple scenarios.
-For example, perhaps we would like to compare 5 different incoporation times.
+For example, perhaps we would like to compare 5 different incorporation times.
 First let's create a new data frame that contains this information.
 We will need to add a new column with a grouping variable also.
 
