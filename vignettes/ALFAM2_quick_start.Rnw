@@ -280,7 +280,8 @@ pred5
 All the calls above returned results for a single time per scenario.
 The function also predicts dynamics.
 If your interest is final cumulative emission, it is not necessary to look at dynamics.
-The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions are constant.
+The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions (e.g., wind or air temperature) are constant.
+However, if detailed temporal weather data are available, running the model with with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
 Where needed for incorporation, the function will add an interval, but this is excluded from the results by default (see \texttt{add.incorp.rows} argument).
 
 Let's assume we have some high resolution measurements of weather conditions.
@@ -311,9 +312,36 @@ Cumulative emission and average interval flux are plotted below.
 <<>>=
 plot(e ~ ct, data = pred6, type = 'o', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
-plot(j ~ ct, data = pred6, type = 's', log = 'y', col = 'red', 
+plot(j ~ ct, data = pred6, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 @
+
+Dynamics in the case of incorporation may be interesting.
+The additional interval required internally because incorporation does not line up exactly with an interval in the input data frame can be returned in the output by using the \texttt{add.incorp.rows} argument.
+But recall that this has not effect on cumulative emission.
+
+<<>>=
+dat7 <- dat6
+dat7$incorpdeep <- TRUE
+dat7$t.incorp <- 6.5
+@
+
+<<>>=
+pred7 <- ALFAM2mod(dat7, app.name = 'TAN.app', time.name = 'ctime',
+                   time.incorp = 't.incorp', warn = FALSE, add.incorp.rows = TRUE)
+@
+
+<<>>=
+plot(e ~ ct, data = pred7, type = 'o', xlab = 'Time (h)', 
+     ylab = 'Cumulative emission (kg/ha)')
+abline(v = 6.5, col = 'blue')
+plot(j ~ ct, data = pred7, type = 'S', log = 'y', col = 'red', 
+     xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
+abline(v = 6.5, col = 'blue')
+write.csv(pred7, 'x.csv', row.names = FALSE)
+@
+
+The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
 
 \subsection{Data import and export}
 Any of the results shown above can be exported as with any data frame in R.
