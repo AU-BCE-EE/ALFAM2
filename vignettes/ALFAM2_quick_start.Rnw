@@ -12,7 +12,7 @@ library(knitr)
 #opts_chunk$set(cache=FALSE,tidy=FALSE,highlight=FALSE)
 opts_chunk$set(cache = FALSE, tidy = FALSE, fig.align = "center")
 library(ALFAM2)
-  options(width=75)
+  options(width=65)
 @
 
 \title{Getting started with the ALFAM2 package}
@@ -38,7 +38,7 @@ You can use the ALFAM2 package without much knowledge of R.
 If you are not currently an R user, but you plan on using the ALFAM2 model extensively, it is worthwhile to learn a little bit about R and use the ALFAM2 package, instead of the less efficient Excel spreadsheet model.
 
 \section{Some basics for new R users}
-The information given in this section should be enough for new users to then jump in at Section 3 and use the model (albeit with a lack of understanding about some of the code).
+The information given in this section should be enough for new R users to install the package and learn enough about R to start using the model (albeit with a lack of understanding about some of the code) as described in Section 3.
 For a better understanding, check out the sources mentioned below.
 
 \subsection{Getting started with R}
@@ -90,19 +90,68 @@ Finally, every time you open R to use the ALFAM2 package, it must be loaded.
 library(ALFAM2)
 @
 
-\section{Using the \texttt{ALFAM2mod()} function}
+\section{The \texttt{ALFAM2mod()} function}
 The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{ALFAM2mod()}
-Here its use is shown in a few examples.
+After an explanation of the function, its use is shown in a few examples.
 
-\subsection{Cumulative emission for a single scenario}
+\subsection{Overview of the function}
+The \texttt{ALFAM2()} function can be used for predicting average volatilization rate and cumulative emission over time.
 The function has several arguments, as shown below.
 
 <<>>=
 args(ALFAM2mod)
 @
 
-But most have default values.
-All that is required to make predictions is some input data, given in the \texttt{dat} argument.
+You can find more details on the arguments (as well as examples) in the help file.
+As with any R function, you can open the file with \texttt{?}:
+
+<<eval=FALSE>>=
+?ALFAM2mod
+@
+
+But the most important arguments are described here.
+Most arguments have default values, and the only one that is required to make predictions is the \texttt{dat} argument, which is a data frame containing some input data, i.e., values of predictor variables over time.
+The \texttt{dat} data frame can contain any number of rows (each representing a time interval), but must contain a column with cumulative time in hours, and the name of this column is indicated with \texttt{time.name}.
+Typically the data frame will have predictor variables as well, for example, manure dry matter, application method, air temperature, or wind speed.
+The name of the predictor columns are used to link predictor variables to model parameters, which are set by the \texttt{pars} argument. 
+Usually the default values, based on the measurements in the ALFAM2 database, should be used.
+Predictor variables and their default names are given in Table 1 below.
+
+\begin{table}[]
+  \caption{The possible default predictor variables that can be used with \texttt{ALFAM2mod()}, in the order they appear in the \texttt{pars} argument.}
+\begin{tabular}{lllll}
+\hline
+Variable name & Description             & Units          & Notes             &  \\
+\hline
+  \texttt{int}           & Intercept terms         & None           &                   &  \\
+  \texttt{app.methodos}  & Open slot application   & None (logical) & Binary variable   &  \\
+  \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
+  \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
+\texttt{incorpdeep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
+\texttt{incorpshallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
+  \texttt{app.methodbc}  & Broadcast application   & None (logical) & Binary variable   &  \\
+  \texttt{air.temp}      & Air tempreature         & $^\circ$C      &                   &  \\
+  \texttt{wind.2m}       & Wind speed (at 2 m)     & m/s            &                   &  \\
+  \texttt{man.ph}        & Manure pH               & pH units       & For acidification &  \\
+  \texttt{rain.rate}     & Rainfall rate           & mm/h           &                   &  \\
+  \texttt{rain.cum}      & Cumulative rain         & mm             &                   &  \\
+\hline
+\end{tabular}
+\end{table}
+
+Model parameter values for the ``average'' ALFAM2 model can be fonud in the default value of the \texttt{pars} argument. 
+Comparing the names for these values to the variable names given in Table 1, you can see an additional number added to the end of the parameters. 
+These numbers indicate a primary parameter.
+So, for exapmle, the (secondary) parameter \texttt{wind.2m1}, which is 0.0487 s/m by default, is used in the calculation of the primary parameter $r_1$.
+The most important message here is a simple one: names for predictor variables can be taken from the names given in the default \texttt{pars} argument value, but be sure to omit the last digit.
+
+By design, any time a predictor variable is omitted when \texttt{ALFAM2Mod()} is called, the reference level or value is assumed for that variable.
+The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
+Predictor values for the default scenario can be found in the \texttt(cmns) argument (for centering means, see help file).
+The default application method is trailing hose.
+The \texttt{cmns} argument is used for centering predictor variables, and this approach facilities the behavior described above.
+
+\subsection{Cumulative emission for a single scenario}
 In this example, let's assume we are interested in manure application by broadcast when manure had 8\% dry matter (DM), total TAN application is 50 kg/ha, wind is 3 m/s, and air temperature is 20$^\circ$C.
 
 First we need to create a data frame with the input data.
@@ -140,9 +189,6 @@ The most interesting columns here are called \texttt{e}, which has cumulative em
 So in this example, 48\% of applied TAN is predicted to be lost by volatilization.
 
 The warning message above is related to an important point: Any excluded predictors are effectively assumed to be at their reference levels.
-The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
-The default application method is trailing hose.
-Predictor values for the default scenario can be found in the \texttt(cmns) argument (for centering means).
 
 \subsection{Adding incorporation}
 To include incorporation, we need to add a couple columns to our data frame.
@@ -280,8 +326,8 @@ write.csv(pred6, 'pred6.csv', row.names = FALSE)
 
 Alternatives include \texttt{write.csv2}, \texttt{write.table}, and any of the various functions in add-on packages for writing to Excel files.
 
-Except for simple scenarios, it is not very efficient to create data frame for entering predictor variable values.
-Especially when using the model in association with emission measurements, a more typical approach will be to read data into R from a file.
+Except for simple scenarios, it is not very efficient to create a data frame for entering predictor variable values.
+A more typical approach will be to read data into R from a file, especially when using the model in association with emission measurements.
 The simplest approach here is to use the \texttt{read.csv()} function or some of the related functions.
 Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
 See the book mentioned above for details.
