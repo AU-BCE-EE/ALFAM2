@@ -145,7 +145,7 @@ These numbers indicate a primary parameter.
 So, for example, the (secondary) parameter \texttt{wind.2m1}, which is 0.0487 s/m by default, is used in the calculation of the primary parameter $r_1$.
 The most important message here is a simple one: names for predictor variables can be taken from the names given in the default \texttt{pars} argument value, but be sure to omit the last digit.
 
-By design, any time a predictor variable is omitted when \texttt{ALFAM2Mod()} is called, the reference level or value is assumed for that variable.
+By design, any time a predictor variable is omitted when \texttt{ALFAM2mod()} is called, the reference level or value is assumed for that variable.
 The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
 Predictor values for the default scenario can be found in the \texttt(cmns) argument (for centering means, see help file).
 The default application method is trailing hose.
