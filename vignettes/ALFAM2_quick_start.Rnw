@@ -16,7 +16,7 @@ library(ALFAM2)
 @
 
 \title{Getting started with the ALFAM2 package}
-\author{Sasha D. Hafner (\texttt{sasha.hafner@eng.au.dk})}
+\author{Sasha D. Hafner (\texttt{sasha.hafner@eng.au.dk}) and Christoph Haeni}
 
 \begin{document}
 
