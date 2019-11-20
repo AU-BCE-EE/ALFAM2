@@ -370,6 +370,9 @@ These are set with the \texttt{pars} argument.
 
 For large datasets, or parameter estimation (where the \texttt{ALFAM2mod()} function is called many times), parallel processing will be helpful. 
 See the \texttt{parallel} argument.
+
+\section*{Acknowledgements}
+Christoph Haeni and Johanna Maria Pedersen carefully read earlier drafts of this vignette and provided very helpful suggestions. Thank you!
  
 \bibliographystyle{plain}  
 \begin{thebibliography}{1}
