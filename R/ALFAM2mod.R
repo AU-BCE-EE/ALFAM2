@@ -73,7 +73,7 @@ ALFAM2mod <- function(
   # Rename pass-through column if pass-through requested
   # NTS: why?
   if(!is.null(pass.col)) {
-    dat[, paste0("pass_me.through_", pass.col)] <- dat[, pass.col]
+    names(dat)[match(pass.col, names(dat))] <- paste0("__pass_col_", pass.col)
   }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
@@ -312,7 +312,7 @@ ALFAM2mod <- function(
 
   # Add pass-through column if requested
   if(!is.null(pass.col)) {
-    e <- data.frame(setNames(dat[!(dat$`__add.row` & !add.incorp.rows), paste0("pass_me.through_", pass.col)], pass.col), e)
+    e <- data.frame(setNames(dat[!(dat$`__add.row` & !add.incorp.rows), paste0("__pass_col_", pass.col), drop = FALSE], pass.col), e)
   }
 
   return(e)
