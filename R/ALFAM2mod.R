@@ -85,7 +85,7 @@ ALFAM2mod <- function(
   if(is.null(group)) {
     dat$`__group` <- 'a' 
   } else {
-    dat$`__group` <- as.character(dat[, group])
+    dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = "//")
   }
 
   # Center numeric predictors
@@ -298,19 +298,13 @@ ALFAM2mod <- function(
 
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "orig.order"], 
-                                group = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "__group"], ce, row.names = NULL, check.names = FALSE)
+                                sub.dat[, group, drop = FALSE],
+                                ce, row.names = NULL, check.names = FALSE)
     } 
   }
 
   # rbind e.list to data.frame
   e <- do.call("rbind", e.list)
-
-  # rename 'group' column
-  if(!is.null(group)){
-    names(e)[2] <- group
-  } else {
-    e$group <- NULL
-  }
 
   # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
   e <- e[order(e$orig.order), -1]
