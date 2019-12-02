@@ -73,7 +73,12 @@ ALFAM2mod <- function(
   # Rename pass-through column if pass-through requested
   # NTS: why?
   if(!is.null(pass.col)) {
-    names(dat)[match(pass.col, names(dat))] <- paste0("__pass_col_", pass.col)
+    pass.col <- intersect(pass.col, names(dat))
+    if(length(pass.col) > 0) {
+      names(dat)[match(pass.col, names(dat))] <- paste0("__pass_col_", pass.col)
+    } else {
+      pass.col <- NULL
+    }
   }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
