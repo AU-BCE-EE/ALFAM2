@@ -70,16 +70,8 @@ ALFAM2mod <- function(
   # -> possibly extend names as done below?
   # Yup! Will work on.
 
-  # Rename pass-through column if pass-through requested
-  # NTS: why?
-  if(!is.null(pass.col)) {
-    pass.col <- intersect(pass.col, names(dat))
-    if(length(pass.col) > 0) {
-      names(dat)[match(pass.col, names(dat))] <- paste0("__pass_col_", pass.col)
-    } else {
-      pass.col <- NULL
-    }
-  }
+  # Remove non-existent columns if pass-through requested
+  pass.col <- intersect(pass.col, names(dat))
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
@@ -298,6 +290,7 @@ ALFAM2mod <- function(
 
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "orig.order"], 
+                                sub.dat[, pass.col, drop = FALSE],
                                 sub.dat[, group, drop = FALSE],
                                 ce, row.names = NULL, check.names = FALSE)
     } 
@@ -307,14 +300,7 @@ ALFAM2mod <- function(
   e <- do.call("rbind", e.list)
 
   # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
-  e <- e[order(e$orig.order), -1]
-
-  # Add pass-through column if requested
-  if(!is.null(pass.col)) {
-    e <- data.frame(setNames(dat[!(dat$`__add.row` & !add.incorp.rows), paste0("__pass_col_", pass.col), drop = FALSE], pass.col), e)
-  }
-
-  return(e)
+  e[order(e$orig.order), -1]
 
 }
 
