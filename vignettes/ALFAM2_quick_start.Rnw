@@ -1,6 +1,7 @@
 %% Next 2 lines needed for non-Sweave vignettes
 %\VignetteEngine{knitr::knitr} 
 %\VignetteIndexEntry{Getting started with the ALFAM2 package}
+%\VignetteEncoding{UTF-8}
 
 \documentclass{article}
 
