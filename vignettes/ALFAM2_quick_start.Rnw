@@ -75,7 +75,9 @@ Then load the package,
 library(devtools)
 @
 
-and install the ALFAM2 package from GitHub.
+and install the ALFAM2 package from GitHub.\footnote{
+  To install this vignette (and any others that may be added in the future), you need to add \texttt{build_vignettes = TRUE}, so, for example, use this: \texttt{devtools::install_github('sashahafner/ALFAM2', build_vignettes = TRUE)}.
+}
 
 <<eval=FALSE>>=
 install_github("sashahafner/ALFAM2")
