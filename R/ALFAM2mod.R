@@ -43,7 +43,8 @@ ALFAM2mod <- function(
   add.incorp.rows = FALSE, 
   warn = TRUE,
   parallel = FALSE, 
-  n.cpus = 1
+  n.cpus = 1,
+  ...                 # Additional predictor variables with fixed values for all times
   ) {
 
 
@@ -72,6 +73,12 @@ ALFAM2mod <- function(
 
   # Remove non-existent columns if pass-through requested
   pass.col <- intersect(pass.col, names(dat))
+
+  # Add predictor variables if given in "..." optional arguments
+  if (!missing(...)) {
+    ovars <- list(...)
+    dat <- data.frame(dat, ovars)
+  }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
