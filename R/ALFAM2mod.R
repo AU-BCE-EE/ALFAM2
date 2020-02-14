@@ -5,26 +5,26 @@
 
 ALFAM2mod <- function(
   dat, 
-  pars = c(int0           = -0.7364889,
-           int1           = -1.1785848,
-           int2           = -0.9543731,
-           int3           = -2.9012937,
-           app.methodos0  = -1.1717859,
-           app.rate0      = -0.0134681,
-           man.dm0        =  0.407466,
-           incorpdeep4    = -3.6477259,
-           incorpshallow4 = -0.4121023,
-           app.methodbc1  =  0.6283396,
-           man.dm1        = -0.075822,
-           air.temp1      =  0.0492777,
-           wind.2m1       =  0.0486651,
-           man.ph1        =  0.5327231,
-           air.temp3      =  0.0152419,
-           incorpdeep3    = -0.3838862,
-           app.methodos3  = -0.122883,
-           man.ph3        =  0.2663616,
-           rain.rate2     =  0.4327281,
-           rain.cum3      = -0.0300936), 
+  pars = c(int.f0            = -0.7364889,
+           int.r1            = -1.1785848,
+           int.r2            = -0.9543731,
+           int.r3            = -2.9012937,
+           app.mthd.os.f0    = -1.1717859,
+           app.rate.f0       = -0.0134681,
+           man.dm.f0         =  0.407466,
+           incorp.deep.f4    = -3.6477259,
+           incorp.shallow.f4 = -0.4121023,
+           app.mthd.bc.r1    =  0.6283396,
+           man.dm.r1         = -0.075822,
+           air.temp.r1       =  0.0492777,
+           wind.2m.r1        =  0.0486651,
+           man.ph.r1         =  0.5327231,
+           air.temp.r3       =  0.0152419,
+           incorp.deep.r3    = -0.3838862,
+           app.mthd.os.r3    = -0.122883,
+           man.ph.r3         =  0.2663616,
+           rain.rate.r2      =  0.4327281,
+           rain.cum.r3       = -0.0300936), 
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, # NULL with no incorporation, otherwise numeric or column name. If column name value should be NA for no incorporation (w groups)
@@ -59,9 +59,9 @@ ALFAM2mod <- function(
     pars <- unlist(pars)
   }
 
-  # Continue with change, switch order for names that start with e.g. f0 or r3
+  # Continue with pars conversion, switch order for names that start with e.g. f0 or r3
   if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(pars)))){
-    names(pars)[chg.nms] <- gsub("^[fr]([0-4])[.](.*)", "\\2\\1", names(pars)[chg.nms])
+    names(pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(pars)[chg.nms])
   }
 
   # Check that all names for pars end with a number
@@ -102,7 +102,6 @@ ALFAM2mod <- function(
   # Extend dat data frame with incorporation time if needed
   dat$`__add.row` <- FALSE 
 
-
   # Default f4 value (for no incorporation in group, or incorporation only later)
   dat[, '__f4'] <- 1
 
@@ -110,7 +109,7 @@ ALFAM2mod <- function(
   if(!is.null(time.incorp)) {
 
     # Get actual incorporation parameter names (if any) from parameters
-    inc.names <- unique(gsub("[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
+    inc.names <- unique(gsub("\\.{1}[rf]{1}[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
 
     if(length(inc.names) > 0){
 
@@ -200,7 +199,7 @@ ALFAM2mod <- function(
 
   # Drop parameters for missing predictors
   p.orig <- pars
-  ppnames <- gsub('[0-9]$', '', names(pars))
+  ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
   if(any(!predpres) & warn) {
@@ -214,7 +213,7 @@ ALFAM2mod <- function(
   which3 <- grep('3$', names(pars)) # For r3
   which4 <- grep('4$', names(pars)) # For a to u transfer at specific times, incorporation, will be applied once only!
 
-  names(pars) <- gsub('[0-9]$', '', names(pars))
+  names(pars) <- gsub('\\.[rf][0-9]$', '', names(pars))
 
   if(!all(ww <- sort(c(which0, which1, which2, which3, which4)) == 1:length(pars))) {
     stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
@@ -281,7 +280,7 @@ ALFAM2mod <- function(
       sub.dat <- s.dat[[i]]
       # Check for duplicate ct
       if(any(duplicated(sub.dat[!sub.dat$`__add.row`, time.name]))) {
-        stop('Look for 998123b in pmod.R. Duplicated ct values.')
+        stop('Look for 998123b in function code. Duplicated ct values.')
       }
 
       # calculate emission

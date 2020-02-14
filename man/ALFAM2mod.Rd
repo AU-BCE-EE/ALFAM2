@@ -16,19 +16,19 @@ ALFAM2mod(dat,
            int1           = -1.1785848,
            int2           = -0.9543731,
            int3           = -2.9012937,
-           app.methodos0  = -1.1717859,
+           app.mthd.os0  = -1.1717859,
            app.rate0      = -0.0134681,
            man.dm0        =  0.407466,
-           incorpdeep4    = -3.6477259,
-           incorpshallow4 = -0.4121023,
-           app.methodbc1  =  0.6283396,
+           incorp.deep4    = -3.6477259,
+           incorp.shallow4 = -0.4121023,
+           app.mthd.bc1  =  0.6283396,
            man.dm1        = -0.075822,
            air.temp1      =  0.0492777,
            wind.2m1       =  0.0486651,
            man.ph1        =  0.5327231,
            air.temp3      =  0.0152419,
-           incorpdeep3    = -0.3838862,
-           app.methodos3  = -0.122883,
+           incorp.deep3    = -0.3838862,
+           app.mthd.os3  = -0.122883,
            man.ph3        =  0.2663616,
            rain.rate2     =  0.4327281,
            rain.cum3      = -0.0300936), 
@@ -144,7 +144,7 @@ Sasha D. Hafner
 \examples{
 # Example 1
 # Create predictor variable data
-dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.methodbc = TRUE)
+dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 
 # Run model, using default parameter values
 pred1 <- ALFAM2mod(dat1, app.name = 'TAN.app', time.name = 'ctime')
@@ -154,7 +154,7 @@ plot(e ~ ct, data = pred1, type = 'o')
 # Example 2
 # Add incorporation (can occur at any time)
 dat2 <- dat1
-dat2$incorpdeep <- TRUE
+dat2$incorp.deep <- TRUE
 dat2$t.incorp <- 4
 
 pred2 <- ALFAM2mod(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
@@ -164,14 +164,14 @@ lines(e ~ ct, data = pred2, type = 'o', col = 'red')
 
 # Example 3
 # Time step doesn't matter
-dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.methodbc = TRUE)
+dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 pred3 <- ALFAM2mod(dat3, app.name = 'TAN.app', time.name = 'ctime')
 lines(e ~ ct, data = pred3, type = 'o', col = 'blue')
 
 # Example 4
 # Incorporation does not need to occur at end of interval
 dat4 <- dat3
-dat4$incorpdeep <- TRUE
+dat4$incorp.deep <- TRUE
 dat4$t.incorp <- 4
 pred4 <- ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
 lines(e ~ ct, data = pred4, type = 'o', col = 'orange')
@@ -184,7 +184,7 @@ ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, add.
 
 # Example 5
 # Function accepts multiple groups
-dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, app.methodbc = TRUE, t.incorp = 4)
+dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, app.mthd.bc = TRUE, t.incorp = 4)
 pred5 <- ALFAM2mod(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', time.incorp = 't.incorp')
 pred5
 
