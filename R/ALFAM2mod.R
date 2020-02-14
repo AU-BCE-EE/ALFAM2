@@ -284,6 +284,7 @@ ALFAM2mod <- function(
       }
 
       # calculate emission
+      drop.rows <- (sub.dat$`__add.row` & !add.incorp.rows)
       ce <- calcEmis(
         ct = sub.dat[, time.name],
         # Calculate a0 and u0 (f4 transfers done in calcEmis())
@@ -292,12 +293,12 @@ ALFAM2mod <- function(
         r1 = sub.dat[, "__r1"],
         r2 = sub.dat[, "__r2"],
         r3 = sub.dat[, "__r3"],
-        f4 = sub.dat[, "__f4"], drop.rows = sub.dat$`__add.row` & !add.incorp.rows)
+        f4 = sub.dat[, "__f4"], drop.rows = drop.rows)
 
       # add group
-      e.list[[i]] <- data.frame(orig.order = sub.dat[!(sub.dat$`__add.row` & !add.incorp.rows), "orig.order"], 
-                                sub.dat[, pass.col, drop = FALSE],
-                                sub.dat[, group, drop = FALSE],
+      e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
+                                sub.dat[!drop.rows, pass.col, drop = FALSE],
+                                sub.dat[!drop.rows, group, drop = FALSE],
                                 ce, row.names = NULL, check.names = FALSE)
     } 
   }
