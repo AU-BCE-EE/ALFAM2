@@ -12,44 +12,47 @@ The model is described in Hafner et al. (2018).
 
 \usage{
 ALFAM2mod(dat, 
-  pars = c(int0           = -0.7364889,
-           int1           = -1.1785848,
-           int2           = -0.9543731,
-           int3           = -2.9012937,
-           app.mthd.os0  = -1.1717859,
-           app.rate0      = -0.0134681,
-           man.dm0        =  0.407466,
-           incorp.deep4    = -3.6477259,
-           incorp.shallow4 = -0.4121023,
-           app.mthd.bc1  =  0.6283396,
-           man.dm1        = -0.075822,
-           air.temp1      =  0.0492777,
-           wind.2m1       =  0.0486651,
-           man.ph1        =  0.5327231,
-           air.temp3      =  0.0152419,
-           incorp.deep3    = -0.3838862,
-           app.mthd.os3  = -0.122883,
-           man.ph3        =  0.2663616,
-           rain.rate2     =  0.4327281,
-           rain.cum3      = -0.0300936), 
-    app.name = 'TAN.app', time.name = 'ct',
-    time.incorp = NULL,group = NULL, center = TRUE,
-    cmns = c(app.rate  = 40, 
-             man.dm = 6, 
-             man.tan = 1.2, 
-             man.ph = 7.5, 
-             air.temp = 13, 
-             wind.1m = 2.7, 
-             lwind = 0.43, 
-             crop.z = 10),
-    check.NA = TRUE, 
-    pass.col = NULL, 
-    incorp.names = c('incorp', 'deep', 'shallow'),
-    add.incorp.rows = FALSE, 
-    warn = TRUE,
-    parallel = FALSE,
-    n.cpus = 1
-      )
+  dat, 
+  pars = c(int.f0            = -0.7364889,
+           int.r1            = -1.1785848,
+           int.r2            = -0.9543731,
+           int.r3            = -2.9012937,
+           app.mthd.os.f0    = -1.1717859,
+           app.rate.f0       = -0.0134681,
+           man.dm.f0         =  0.407466,
+           incorp.deep.f4    = -3.6477259,
+           incorp.shallow.f4 = -0.4121023,
+           app.mthd.bc.r1    =  0.6283396,
+           man.dm.r1         = -0.075822,
+           air.temp.r1       =  0.0492777,
+           wind.2m.r1        =  0.0486651,
+           man.ph.r1         =  0.5327231,
+           air.temp.r3       =  0.0152419,
+           incorp.deep.r3    = -0.3838862,
+           app.mthd.os.r3    = -0.122883,
+           man.ph.r3         =  0.2663616,
+           rain.rate.r2      =  0.4327281,
+           rain.cum.r3       = -0.0300936), 
+  app.name = 'TAN.app', 
+  time.name = 'ct', 
+  time.incorp = NULL, 
+  group = NULL, 
+  center = TRUE, 
+  cmns = c(app.rate  = 40, 
+           man.dm    =  6.0, 
+           man.tan   =  1.2, 
+           man.ph    =  7.5, 
+           air.temp  = 13, 
+           wind.2m   =  2.7, 
+           crop.z    = 10), 
+  check.NA = TRUE, 
+  pass.col = NULL, 
+  incorp.names = c('incorp', 'deep', 'shallow'),
+  add.incorp.rows = FALSE, 
+  warn = TRUE,
+  parallel = FALSE, 
+  n.cpus = 1,
+  ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -90,6 +93,7 @@ ALFAM2mod(dat,
 }
   \item{add.incorp.rows}{
     function will add additional rows that exactly match the incorporation time(s) (no more than one per level of \code{group}) if they are not already present. Should these be returned or left out (default)?
+    Length one logical vector.
 }
   \item{warn}{
     set to FALSE to suppress some warnings.
@@ -98,7 +102,11 @@ ALFAM2mod(dat,
     should parallel processing be used? Helpful for very large \code{dat}.
 }
   \item{n.cpus}{
-    numeric. Defines the number of cores if \code{parallel} is \code{TRUE}.
+    numeric. Defines the number of cores used if \code{parallel} is \code{TRUE}.
+}
+  \item{...}{
+    additional optional arguments as length-one vectors that set values of fixed predictor variables.
+    See examples.
 }
 }
 \details{
