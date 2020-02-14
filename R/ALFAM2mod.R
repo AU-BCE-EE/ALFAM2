@@ -65,7 +65,7 @@ ALFAM2mod <- function(
   }
 
   # Check that all names for pars end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding number (0 to 4) at the name endings (e.g. int0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
+  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
   # -> possibly extend names as done below?
@@ -203,7 +203,8 @@ ALFAM2mod <- function(
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
   if(any(!predpres) & warn) {
-    warning('Missing predictors. These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = ', '))
+    warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
+            'These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = ', '))
   }
 
   # Associate (secondary) parameters with primary parameters (r1, etc.)

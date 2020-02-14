@@ -159,6 +159,15 @@ pred1 <- ALFAM2mod(dat1, app.name = 'TAN.app', time.name = 'ctime')
 pred1
 plot(e ~ ct, data = pred1, type = 'o')
 
+# For fixed variables (constant over time), they can be given as optional argument.
+dat1b <- data.frame(ctime = 0:12*4)
+
+# Run model, using default parameter values
+pred1b <- ALFAM2mod(dat1b, app.name = 'TAN.app', time.name = 'ctime', TAN.app = 100, 
+                    man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
+all.equal(pred1, pred1b)
+
+
 # Example 2
 # Add incorporation (can occur at any time)
 dat2 <- dat1
