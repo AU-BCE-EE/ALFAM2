@@ -232,6 +232,7 @@ ALFAM2mod <- function(
   if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
   # split dat into groups
+  dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
   s.dat <- split(dat, dat$`__group`)
 
   if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
@@ -244,33 +245,35 @@ ALFAM2mod <- function(
   if(parallel) {
 
     # starting cluster and trigger stop on.exit
-    cl <- parallel::makeCluster(n.cpus, type = "SOCK")
+    cl <- parallel::makeCluster(n.cpus, type = "PSOCK")
     on.exit(parallel::stopCluster(cl))
 
     # sorting input for efficiency
     s.nr <- sapply(s.dat, nrow)
     do.nr <- order(s.nr, decreasing = TRUE)
-    e.list <- vector("list", length(s.dat))
+
+    # split indices
+    split_ind <- lapply(seq_along(cl) , function(x){
+      out <- seq(0, length(do.nr), by = length(cl)) + x
+      do.nr[out[out <= length(do.nr)]]
+    })
+
+    # prepare export    
+    s.list <- lapply(s.dat, function(x) x[, c("orig.order", "__drop.row", 
+      time.name, app.name, "__f0", "__r1", "__r2", "__r3", "__f4")])
+    split_list <- lapply(split_ind, function(x) s.list[x])
 
     # do parallel
-    # parallel::clusterExport(cl, c("calcEmis", "time.name", "app.name")) 
-    e.list[do.nr] <- parallel::clusterApply(cl, s.dat[do.nr], function(sub.dat){
-      data.frame(group = sub.dat[!sub.dat$`__add.row`, "__group"], 
-                 calcEmis(ct = sub.dat[, time.name],
-                          # Calculate a0 and u0 (f4 transfers done in calcEmis())
-                          a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
-                          u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
-                          r1 = sub.dat[, "__r1"],
-                          r2 = sub.dat[, "__r2"],
-                          r3 = sub.dat[, "__r3"],
-                          f4 = sub.dat[, "__f4"],
-                          drop.rows = sub.dat$`__add.row` & !add.incorp.rows),
-                 row.names = NULL, check.names = FALSE)    
-    })
+    e.list <- parallel::clusterApply(cl, split_list, .wrap_calcEmis)
 
     # stop cluster and empty on.exit
     parallel::stopCluster(cl)
     on.exit()
+
+    # rbind & merge
+    e0 <- do.call("rbind", e.list)
+    e <- merge(dat, e0, by = "orig.order")[,
+      c("orig.order", group, pass.col, names(e0)[-1])]
 
   } else {
 
@@ -285,7 +288,7 @@ ALFAM2mod <- function(
       }
 
       # calculate emission
-      drop.rows <- (sub.dat$`__add.row` & !add.incorp.rows)
+      drop.rows <- sub.dat$`__drop.row`
       ce <- calcEmis(
         ct = sub.dat[, time.name],
         # Calculate a0 and u0 (f4 transfers done in calcEmis())
@@ -298,17 +301,20 @@ ALFAM2mod <- function(
 
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
-                                sub.dat[!drop.rows, pass.col, drop = FALSE],
                                 sub.dat[!drop.rows, group, drop = FALSE],
-                                ce, row.names = NULL, check.names = FALSE)
-    } 
+                                sub.dat[!drop.rows, pass.col, drop = FALSE],
+                                ce, 
+                                row.names = NULL, check.names = FALSE)
+    }
+
+    # rbind e.list to data.frame
+    e <- do.call("rbind", e.list)
   }
 
-  # rbind e.list to data.frame
-  e <- do.call("rbind", e.list)
-
   # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
-  e[order(e$orig.order), -1]
+  out <- e[order(e$orig.order), -1]
+  row.names(out) <- seq.int(nrow(out))
+  out
 
 }
 
