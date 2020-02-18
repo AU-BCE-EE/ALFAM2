@@ -273,7 +273,7 @@ ALFAM2mod <- function(
     # rbind & merge
     e0 <- do.call("rbind", e.list)
     e <- merge(dat, e0, by = "orig.order")[,
-      c("orig.order", group, pass.col, names(e0)[-1])]
+      c("orig.order", group, names(e0)[-1], pass.col)]
 
   } else {
 
@@ -302,8 +302,8 @@ ALFAM2mod <- function(
       # add group
       e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
                                 sub.dat[!drop.rows, group, drop = FALSE],
-                                sub.dat[!drop.rows, pass.col, drop = FALSE],
                                 ce, 
+                                sub.dat[!drop.rows, pass.col, drop = FALSE],
                                 row.names = NULL, check.names = FALSE)
     }
 
