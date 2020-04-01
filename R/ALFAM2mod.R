@@ -93,7 +93,7 @@ ALFAM2mod <- function(
     c_cols <- names(cmns)[names(cmns) %in% names(dat)]
 
     # center
-    if(length(c_cols)) dat[, c_cols] <- sweep(dat[, c_cols], 2, cmns[c_cols])
+    if(length(c_cols)) dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, cmns[c_cols])
   }
 
   # Original order (for sorting before return)
