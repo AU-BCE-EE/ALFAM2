@@ -7,11 +7,11 @@ Predict Ammonia Emission from Field-Applied Manure
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 An implementation of the ALFAM2 model for predicting ammonia emission from field-applied manure. 
-The model is described in Hafner et al. (2018). 
+The model is described in Hafner et al. (2019). 
 }
 
 \usage{
-ALFAM2mod(dat, 
+ALFAM2mod(
   dat, 
   pars = c(int.f0            = -0.7364889,
            int.r1            = -1.1785848,
