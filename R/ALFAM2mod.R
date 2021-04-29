@@ -204,7 +204,7 @@ ALFAM2mod <- function(
 
   if(any(!predpres) & warn) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
-            'These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = ', '))
+            'These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = '\n'))
   }
 
   # Associate (secondary) parameters with primary parameters (r1, etc.)
