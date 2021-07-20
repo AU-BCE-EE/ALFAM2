@@ -88,7 +88,7 @@ install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
 Alternatively, to avoid loading devtools, use this syntax.
 
 <<eval=FALSE>>=
-devtools::install_github("sashahafner/ALFAM2")
+devtools::install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
 @
 
 These steps only need to be carried out once.
@@ -98,6 +98,13 @@ Finally, every time you open R to use the ALFAM2 package, it must be loaded.
 <<>>=
 library(ALFAM2)
 @
+
+You can open this vignette with the following call.
+
+<<>>=
+vignette("ALFAM2-start")
+@
+
 
 \section{The \texttt{ALFAM2mod()} function}
 The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{ALFAM2mod()}
