@@ -1,6 +1,6 @@
 %% Next 2 lines needed for non-Sweave vignettes
 %\VignetteEngine{knitr::knitr} 
-%\VignetteIndexEntry{Getting started with the ALFAM2 package}
+%\VignetteIndexEntry{ALFAM2-start}
 %\VignetteKeyword{ALFAM2}
 %\VignetteKeyword{NH3}
 %\VignetteKeyword{slurry}
