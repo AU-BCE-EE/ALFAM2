@@ -46,4 +46,4 @@ vignette("ALFAM2-start")
 Please use the Issues page.
 
 # Project information
-See (this page)[www.alfam.dk] for information and more resources.
+See www.alfam.dk for information and more resources.
