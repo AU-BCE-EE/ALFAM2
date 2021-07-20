@@ -20,6 +20,15 @@ Then install ALFAM2.
 devtools::install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
 ```
 
+# Latest version
+To update ALFAM2 to the latest version, run the following two commands in R.
+This assumes that devtools is installed and you want the *latest* version of ALFAM2.
+
+```
+remove.packages("ALFAM2")
+devtools::install_github("sashahafner/ALFAM2", ref = "dev", build_vignettes = TRUE)
+```
+
 # Package use
 Once the package is installed, load it.
 
