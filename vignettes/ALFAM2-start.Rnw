@@ -1,6 +1,6 @@
 %% Next 2 lines needed for non-Sweave vignettes
 %\VignetteEngine{knitr::knitr} 
-%\VignetteIndexEntry{ALFAM2-start}
+%\VignetteIndexEntry{Getting started with the ALFAM2 package}
 %\VignetteKeyword{ALFAM2}
 %\VignetteKeyword{NH3}
 %\VignetteKeyword{slurry}
@@ -76,11 +76,13 @@ library(devtools)
 @
 
 and install the ALFAM2 package from GitHub.\footnote{
-  To install this vignette (and any others that may be added in the future), you need to add \texttt{build\_vignettes = TRUE}, so, for example, use this: \texttt{devtools::install\_github('sashahafner/ALFAM2', build\_vignettes = TRUE)}.
+  Some additional notes.
+  To install this vignette (and any others that may be added in the future), you need to add \texttt{build\_vignettes = TRUE}, so, for example, use this: \texttt{devtools::install\_github("sashahafner/ALFAM2", build\_vignettes = TRUE)}.
+  To get the latest version of the package, add the argument \texttt{ref = "dev"}.
 }
 
 <<eval=FALSE>>=
-install_github("sashahafner/ALFAM2")
+install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
 @
 
 Alternatively, to avoid loading devtools, use this syntax.
