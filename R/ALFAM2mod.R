@@ -27,7 +27,7 @@ ALFAM2mod <- function(
            rain.cum.r3       = -0.0300936), 
   app.name = 'TAN.app', 
   time.name = 'ct', 
-  time.incorp = NULL, # NULL with no incorporation, otherwise numeric or column name. If column name value should be NA for no incorporation (w groups)
+  time.incorp = NULL, # NULL with no incorporation, otherwise numeric value or column name. If column name value should be NA for no incorporation (w groups)
   group = NULL, 
   center = TRUE, 
   cmns = c(app.rate  = 40, 
@@ -44,7 +44,7 @@ ALFAM2mod <- function(
   warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
-  ...                 # Additional predictor variables with fixed values for all times
+  ...                 # Additional predictor variables with fixed values for all times (all rows)
   ) {
 
 
@@ -53,6 +53,14 @@ ALFAM2mod <- function(
   checkArgClassValue(dat, expected.class = 'data.frame')
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
+
+  # Tell user whether default or user-supplied parameters are in use
+  if (missing(pars)) {
+    message('Default parameters (version 1) are being used.')
+  } else {
+    message('User-supplied parameters are being used.')
+  }
+  # NTS: Also print par list?
 
   # If pars was given as list, change to vector
   if(is.list(pars)) {
@@ -204,7 +212,8 @@ ALFAM2mod <- function(
 
   if(any(!predpres) & warn) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
-            'These secondary parameters have been dropped: ', paste(names(p.orig)[!predpres], collapse = '\n'))
+            'These secondary parameters have been dropped:\n  ', paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
+            'These secondary parameters are being used:\n  ', paste(names(p.orig)[predpres], collapse = '\n  '), '\n')
   }
 
   # Associate (secondary) parameters with primary parameters (r1, etc.)
