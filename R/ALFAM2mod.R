@@ -122,8 +122,7 @@ ALFAM2mod <- function(
     if(length(inc.names) > 0){
 
       # Do they exist?
-      inc.ex <- inc.names[inc.names %in% names(dat)]
-
+      inc.ex <- intersect(inc.names, names(dat))
 
       # Get times and types
       if(is.numeric(time.incorp)){
@@ -133,7 +132,7 @@ ALFAM2mod <- function(
         incorp.time <- rep(time.incorp, length(u.group))[seq_along(u.group)] # NTS: why is [] needed?
         names(incorp.time) <- u.group
       } else {
-        # Get time.incorp column entries
+        # Get time.incorp column entries (first row, so rows underneath could have time.incorp = NA etc., all ignored
         incorp.time <- tapply(dat[, time.incorp], dat$`__group`, "[", 1)
       }
 
@@ -144,7 +143,7 @@ ALFAM2mod <- function(
       }
 
     } else {
-      warning("No incorporation parameter estimates have been provided. Skipping incorporation.")
+      warning("No incorporation parameters have been provided. Skipping incorporation.")
       time.incorp <- NULL
     }
 
@@ -157,7 +156,7 @@ ALFAM2mod <- function(
 
         sub.dat <- dat[dat$`__group` == i, ]
 
-        # Extract cumulative time time
+        # Extract cumulative time
         ct <- sub.dat[, time.name]
 
         # Find where incorporation occurs
@@ -166,9 +165,11 @@ ALFAM2mod <- function(
         # Add rows
         if(is.na(ct.ind)){
         
-          warning("incorporation takes place after the end of the last interval and will be ignored")
+          warning('Incorporation takes place after the end of the last interval and will be ignored (group ', i, ').')
         
         } else if(ct.ind == 1){
+
+          message('Incorporation applied (for group ', i, ').')
 
           # Use predictor values from first row
           ins.dat <- sub.dat[1, ]
@@ -195,6 +196,12 @@ ALFAM2mod <- function(
 
         # Set incorp variables to FALSE for time <= incorp.time (incorp then applied at start of next interval)
         dat[dat$`__group` == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
+
+      }
+
+      # Also set incorp to FALSE for all rows within groups with incorp.time = NA
+      for(i in names(incorp.time)[is.na(incorp.time)]) {
+        dat[dat$`__group` == i & is.na(incorp.time[i]), inc.ex] <- FALSE
 
       }
 
