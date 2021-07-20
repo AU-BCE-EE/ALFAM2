@@ -209,7 +209,7 @@ And add the two new columns.
 Here we are specifying that deep incorporation happens after 0.5 hours.
 
 <<>>=
-dat2$incorpdeep <- TRUE
+dat2$incorp.deep <- TRUE
 dat2$t.incorp <- 0.5
 dat2
 @
@@ -225,7 +225,7 @@ Shallow incorporation has less of an effect.
 
 <<>>=
 dat3 <- dat1
-dat3$incorpshallow <- TRUE
+dat3$incorp.shallow <- TRUE
 dat3$t.incorp <- 0.5
 dat3
 @
@@ -246,13 +246,15 @@ We will need to add a new column with a grouping variable also.
 dat4 <- data.frame(scenario = 1:5, ctime = 72, TAN.app = 50, 
                    man.dm = 8, air.temp = 20, wind.2m = 4, 
                    app.mthd.bc = TRUE,
-                   incorpdeep = TRUE, 
-                   t.incorp = c(0.1, 0.5, 1, 6, 24))
+                   incorp.deep = TRUE, 
+                   t.incorp = c(0.1, 1, 6, 24, Inf))
 dat4
 @
 
 It may seem strange to have a \texttt{scenario} column--isn't it clear that each row is a different scenario?
 The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change.
+Note that there is no incorporation for scenario 5.
+We could also specify this behavior with \texttt{t.incorp = NA} (this would provide identical results, but for package v0.3.2 and prior, this approach did not work correctly unless \texttt{incorp.deep} was set to FALSE).
 
 Let's run the model for these 5 scenarios.
 
@@ -263,6 +265,7 @@ pred4
 @
 
 We can see that predicted emission doubles as incorporation time goes from 0.5 to 1.0 h.
+And incorporation after 24, or really even 6, hours is not much better than no incorporation!
 
 Scenarios could differ in any way. 
 Below, both temperature and application method vary.
@@ -289,7 +292,7 @@ The function also predicts dynamics.
 If your interest is final cumulative emission, it is not necessary to look at dynamics.
 The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions (e.g., wind or air temperature) are constant.
 However, if detailed temporal weather data are available, running the model with with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
-Where needed for incorporation, the function will add an interval, but this is excluded from the results by default (see \texttt{add.incorp.rows} argument).
+Where needed for incorporation calculations, the function will add an interval (row), but these rows are excluded from the results by default (set the \texttt{add.incorp.rows} argument to \texttt{TRUE} to show them).
 
 Let's assume we have some high resolution measurements of weather conditions.
 We'll create some data to represent this below.
@@ -345,7 +348,6 @@ abline(v = 6.5, col = 'blue')
 plot(j ~ ct, data = pred7, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 abline(v = 6.5, col = 'blue')
-write.csv(pred7, 'x.csv', row.names = FALSE)
 @
 
 The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
@@ -379,7 +381,7 @@ For large datasets, or parameter estimation (where the \texttt{ALFAM2mod()} func
 See the \texttt{parallel} argument.
 
 \section*{Acknowledgements}
-Christoph Haeni and Johanna Maria Pedersen carefully read earlier drafts of this vignette and provided very helpful suggestions. Thank you!
+Christoph Haeni, Johanna Maria Pedersen, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
  
 \bibliographystyle{plain}  
 \begin{thebibliography}{1}
