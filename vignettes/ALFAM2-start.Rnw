@@ -143,8 +143,8 @@ Variable name & Description             & Units          & Notes             &  
   \texttt{app.mthd.os}  & Open slot application   & None (logical) & Binary variable   &  \\
   \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
   \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
-\texttt{incorpdeep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
-\texttt{incorpshallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
+\texttt{incorp.deep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
+\texttt{incorp.shallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
   \texttt{app.mthd.bc}  & Broadcast application   & None (logical) & Binary variable   &  \\
   \texttt{air.temp}      & Air tempreature         & $^\circ$C      &                   &  \\
   \texttt{wind.2m}       & Wind speed (at 2 m)     & m/s            &                   &  \\
@@ -278,6 +278,7 @@ And incorporation after 24, or really even 6, hours is not much better than no i
 
 Scenarios could differ in any way. 
 Below, both temperature and application method vary.
+For scenario 2, application method is not explicitly specified, which means it is the default--trailing hose.
 
 <<>>=
 dat5 <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
@@ -341,7 +342,7 @@ But recall that this has not effect on cumulative emission.
 
 <<>>=
 dat7 <- dat6
-dat7$incorpdeep <- TRUE
+dat7$incorp.deep <- TRUE
 dat7$t.incorp <- 6.5
 @
 
