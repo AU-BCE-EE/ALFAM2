@@ -232,7 +232,7 @@ ALFAM2mod <- function(
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
   s.dat <- split(dat, dat$`__group`)
 
-  if(check.NA && sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
+  if(check.NA && any(sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f4")])))) {
     cat('Missing values in predictors:\n')
     print(apply(dat[, unique(names(pars[!grepl('^int', names(pars))]))], 2, function(x) sum(is.na(x))))
     stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
