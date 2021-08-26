@@ -142,6 +142,7 @@ Variable name & Description             & Units          & Notes             &  
   \texttt{int}           & Intercept terms         & None           &                   &  \\
   \texttt{app.mthd.os}  & Open slot application   & None (logical) & Binary variable   &  \\
   \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
+  \texttt{app.rate.ni}   & Manure app. rate (no injection) & t/ha           &                   &  \\
   \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
 \texttt{incorp.deep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
 \texttt{incorp.shallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
@@ -155,13 +156,21 @@ Variable name & Description             & Units          & Notes             &  
 \end{tabular}
 \end{table}
 
-Model parameter values for the ``average'' ALFAM2 model can be found in the default value of the \texttt{pars} argument. 
-Comparing the names for these values to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
+Default model parameters and numeric values in the \texttt{ALFAM2pars02} object (``Set 2'') should generally be used. 
+(An earlier version (``Set 1'') are available in \texttt{ALFAM2pars01}. Derivation of these is described in Hafner et al. (2019).) 
+Comparing the contents of \texttt{ALFAM2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
+
+<<>>=
+ALFAM2pars02
+@
+
 These numbers indicate a primary parameter.
-So, for example, the (secondary) parameter \texttt{wind.2m.r1}, which is 0.0487 s/m by default, is used in the calculation of the primary parameter $r_1$.
+So, for example, the (secondary) parameter \texttt{wind.2m.r1}, which is 0.15 s/m by default, is used in the calculation of the primary parameter $r_1$.
 The most important message here is a simple one: names for predictor variables can be taken from the names given in the default \texttt{pars} argument value, but be sure to omit the last three characters (a ".", a number, and a letter).
 
-By design, any time a predictor variable is omitted when \texttt{ALFAM2mod()} is called, the reference level or value is assumed for that variable.
+By design, any time a predictor variable is omitted when \texttt{ALFAM2mod()} is called, the reference level or value is assumed for that variable.\footnote{
+One exception is \texttt{app.rate.ni}.
+}
 The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
 Predictor values for the default scenario can be found in the \texttt(cmns) argument (for centering means, see help file).
 The default application method is trailing hose.
@@ -180,8 +189,8 @@ dat1
 @
 
 Our predictor variable values are in the columns \texttt{man.dm} and the following ones.
-The names for the predictor variables must match those names used in the model parameters, which can be seen above in the argument list.
-(The numbers that are included in the parameter vector indicate a primary parameter--these are not to be included in the names of predictor variables.)
+The names for the predictor variables must match those names used in the model parameters, which can be seen by checking the parameter object contents (see just above).
+
 Time, in hours after application, is given in the column named \texttt{ctime} here, for cumulative time (although any name can be used).
 
 And now we can call the model function, using default values for most other arguments.
