@@ -31,7 +31,7 @@ test_that("Time step has no effect on result even with incorporation", {
 test_that("add.incorp.rows adds a row", {
   
   dat0 <- data.frame(ctime = 48, TAN.app = 100)
-  dat0$incorpdeep <- TRUE
+  dat0$incorp.deep <- TRUE
   dat0$t.incorp <- 4
   pred0 <- ALFAM2mod(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', add.incorp.rows = TRUE)
 
