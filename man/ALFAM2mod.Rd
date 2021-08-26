@@ -236,8 +236,10 @@ ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, add.
 
 # Example 5
 # Function accepts multiple groups
-dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, app.mthd.bc = TRUE, t.incorp = 4)
-pred5 <- ALFAM2mod(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', time.incorp = 't.incorp')
+dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, 
+                   app.mthd.bc = TRUE, t.incorp = 4)
+pred5 <- ALFAM2mod(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', 
+                   time.incorp = 't.incorp')
 pred5
 
 
