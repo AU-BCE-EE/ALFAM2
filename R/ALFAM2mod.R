@@ -37,7 +37,7 @@ ALFAM2mod <- function(
 
   # Tell user whether default or user-supplied parameters are in use
   if (missing(pars)) {
-    message('Default parameters (version 1) are being used.')
+    message('Default parameters (Set 2) are being used.')
   } else {
     message('User-supplied parameters are being used.')
   }
