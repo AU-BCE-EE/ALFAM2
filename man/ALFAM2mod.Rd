@@ -1,5 +1,7 @@
 \name{ALFAM2mod}
 \alias{ALFAM2mod}
+\alias{ALFAM2pars01}
+\alias{ALFAM2pars02}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
@@ -13,7 +15,7 @@ The model is described in Hafner et al. (2019).
 \usage{
 ALFAM2mod(
   dat, 
-  pars = pars02, 
+  pars = ALFAM2pars02, 
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, 
@@ -41,7 +43,7 @@ ALFAM2mod(
     data frame containing values for predictor variables
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). See examples.
+    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). See details.
 }
   \item{app.name}{
     name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha)
@@ -91,8 +93,60 @@ ALFAM2mod(
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+  Parameter sets are provided for convenience. Both are numeric vectors. Set 1 (\code{ALFAM2pars01}) (Hafner et al., 2019) contains the following:
+  \code{
+         c(int.f0            = -0.7364889,
+           int.r1            = -1.1785848,
+           int.r2            = -0.9543731,
+           int.r3            = -2.9012937,
+           app.mthd.os.f0    = -1.1717859,
+           app.rate.f0       = -0.0134681,
+           man.dm.f0         =  0.407466,
+           incorp.deep.f4    = -3.6477259,
+           incorp.shallow.f4 = -0.4121023,
+           app.mthd.bc.r1    =  0.6283396,
+           man.dm.r1         = -0.075822,
+           air.temp.r1       =  0.0492777,
+           wind.2m.r1        =  0.0486651,
+           man.ph.r1         =  0.5327231,
+           air.temp.r3       =  0.0152419,
+           incorp.deep.r3    = -0.3838862,
+           app.mthd.os.r3    = -0.122883,
+           man.ph.r3         =  0.2663616,
+           rain.rate.r2      =  0.4327281,
+           rain.cum.r3       = -0.0300936) 
+  }
+
+  For Set 2, some parameters were removed, and others added, and all values changed at least slightly.
+  Calculation of this set is described in a report on Danish emission factors (forthcoming).
+  \code{
+         c(int.f0            = -0.605683,
+           app.mthd.os.f0    = -1.74351,
+           app.rate.ni.f0    = -0.0111490,
+           man.dm.f0         = 0.399670,
+           man.source.pig.f0 = -0.592028,
+           app.mthd.cs.f0    = -7.63373,
+           int.r1            = -0.939215,
+           app.mthd.bc.r1    = 0.793524,
+           man.dm.r1         = -0.139881,
+           air.temp.r1       = 0.0735427,
+           wind.2m.r1        = 0.150267,
+           app.mthd.ts.r1    = -0.459071,
+           ts.cereal.hght.r1 = -0.244712,
+           man.ph.r1         = 0.665,
+           int.r2            = -1.79919,
+           rain.rate.r2      = 0.394022,
+           int.r3            = -3.22841,
+           app.mthd.bc.r3    = 0.561540,
+           app.mthd.cs.r3    = -0.666474,
+           man.ph.r3         = 0.238,
+           incorp.shallow.f4 = -0.964967,
+           incorp.shallow.r3 = -0.580527,
+           incorp.deep.f4    = -3.69495,
+           incorp.deep.r3    = -1.26570)
+  }
 }
+
 \value{
   A data frame with the same number of rows as \code{dat} (unless \code{add.incorp.rows = TRUE}).
   Deafult columns are:
