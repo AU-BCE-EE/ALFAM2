@@ -36,12 +36,14 @@ ALFAM2mod <- function(
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
   # Tell user whether default or user-supplied parameters are in use
-  if (missing(pars)) {
-    message('Default parameters (Set 2) are being used.')
-  } else {
-    message('User-supplied parameters are being used.')
+  if (warn) {
+    if (missing(pars)) {
+      message('Default parameters (Set 2) are being used.')
+    } else {
+      message('User-supplied parameters are being used.')
+    }
+    # NTS: Also print par list?
   }
-  # NTS: Also print par list?
 
   # If pars was given as list, change to vector
   if(is.list(pars)) {
@@ -119,12 +121,16 @@ ALFAM2mod <- function(
 
       # Check if columns exist
       if(length(inc.ex) == 0){
-        warning("No matching column for incorporation parameter(s): ", paste(inc.names, collapse = ", "), ". Skipping incorporation.")
+        if (warn) {
+          warning("No matching column for incorporation parameter(s): ", paste(inc.names, collapse = ", "), ". Skipping incorporation.")
+        }
         time.incorp <- NULL
       }
 
     } else {
-      warning("No incorporation parameters have been provided. Skipping incorporation.")
+      if (warn) {
+        warning("No incorporation parameters have been provided. Skipping incorporation.")
+      }
       time.incorp <- NULL
     }
 
@@ -146,11 +152,15 @@ ALFAM2mod <- function(
         # Add rows
         if(is.na(ct.ind)){
         
-          warning('Incorporation takes place after the end of the last interval and will be ignored (group ', i, ').')
+          if (warn) {
+            warning('Incorporation takes place after the end of the last interval and will be ignored (group ', i, ').')
+          }
         
         } else if(ct.ind == 1){
 
-          message('Incorporation applied (for group ', i, ').')
+          if (warn) {
+            message('Incorporation applied (for group ', i, ').')
+          }
 
           # Use predictor values from first row
           ins.dat <- sub.dat[1, ]
@@ -200,8 +210,10 @@ ALFAM2mod <- function(
 
   if(any(!predpres) & warn) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
-            'These secondary parameters have been dropped:\n  ', paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
-            'These secondary parameters are being used:\n  ', paste(names(p.orig)[predpres], collapse = '\n  '), '\n')
+            'These secondary parameters have been dropped:\n  ', 
+            paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
+            'These secondary parameters are being used:\n  ', 
+            paste(names(p.orig)[predpres], collapse = '\n  '), '\n')
   }
 
   # Associate (secondary) parameters with primary parameters (r1, etc.)

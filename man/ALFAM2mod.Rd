@@ -79,7 +79,7 @@ ALFAM2mod(
     Length one logical vector.
 }
   \item{warn}{
-    set to FALSE to suppress some warnings.
+    set to \code{FALSE} to suppress some warnings and messages.
 }  
   \item{parallel}{
     should parallel processing be used? Helpful for very large \code{dat}.
