@@ -164,8 +164,8 @@ Variable name & Description             & Units          & Notes             &  
 \end{table}
 
 Default model parameters and numeric values in the \texttt{ALFAM2pars02} object (``Set 2'') should generally be used. 
-For information on how these values were calculated, see the report on calculation of Danish emission factors (Hafner et al. 2021).
-(An earlier version (``Set 1'') are available in \texttt{ALFAM2pars01}. Derivation of these is described in Hafner et al. (2019).) 
+For information on how these values were calculated, see the report on calculation of Danish emission factors \cite{efreport2021}.
+(An earlier version (``Set 1'') are available in \texttt{ALFAM2pars01}. Derivation of these is described in the 2019 paper \cite{afmod2019}.) 
 Comparing the contents of \texttt{ALFAM2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
 
 <<>>=
@@ -418,6 +418,12 @@ Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont
 \newblock A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. 
 \newblock {\em Atmospheric Environment}, 199:474-484, 2018.
 \newblock https://doi.org/10.1016/j.atmosenv.2018.11.034
+
+\bibitem{efreport2021}
+Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. 
+\newblock Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. 
+\newblock Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. 
+\newblock https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf
 
 \end{thebibliography}
 \end{document}
