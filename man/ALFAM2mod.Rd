@@ -15,7 +15,7 @@ The model is described in Hafner et al. (2019).
 \usage{
 ALFAM2mod(
   dat, 
-  pars = ALFAM2pars02, 
+  pars = ALFAM2::ALFAM2pars02, 
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, 
@@ -43,7 +43,7 @@ ALFAM2mod(
     data frame containing values for predictor variables
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). See details.
+    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = ALFAM2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to include a package check problem, the package name is included by default. See details for more information.
 }
   \item{app.name}{
     name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha)
