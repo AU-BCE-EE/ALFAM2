@@ -137,7 +137,7 @@ Usually the default values, based on the measurements in the ALFAM2 database, sh
 Predictor variables and their default names are given in Table 1 below.
 
 \begin{table}[]
-  \caption{Default predictor variables that can be used with \texttt{ALFAM2mod()}, as given in the \texttt{ALFAM2pars02} or \textttt{ALFAM2pars01} objects.}
+  \caption{Default predictor variables that can be used with \texttt{ALFAM2mod()}, as given in the \texttt{ALFAM2pars02} or \texttt{ALFAM2pars01} objects.}
 \begin{tabular}{lllll}
 \hline
 Variable name & Description             & Units          & Notes             &  \\
