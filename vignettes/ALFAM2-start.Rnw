@@ -49,14 +49,17 @@ For a better understanding, check out the sources mentioned below.
 \subsection{Getting started with R}
 To use R it must be installed on your computer.
 You can download R and find installation instructions from here: \url{https://www.r-project.org/}.
-And while not required, it is convenient to have a good script editor, and the RStudio IDE (integrated development environment) is a good choice.
+And while not required, it is convenient to have a good script editor.
+The RStudio IDE (integrated development environment) is a good (and very popular) choice.
 It can be downloaded from here: \url{https://rstudio.com/products/rstudio/download/}.
 
 To use the ALFAM2 package, you will need to install the package, and then call up the function. 
 In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and export data.
 For information on these tasks and more, there are many free resources online. 
 I recommend this book I use for a course on R: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
-Alternatively, the instructions given below should be sufficient.
+CRAN provides various manuals, including a good introduction: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
+RStudio also provides various materials for learning R, although the focus is skewed toward packages developed by RStudio employees: \url{https://education.rstudio.com/learn/}.
+Alternatively, the instructions given below may be sufficient.
 
 \subsection{Installing the ALFAM2 package}
 The ALFAM2 package is available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
@@ -77,8 +80,8 @@ library(devtools)
 
 and install the ALFAM2 package from GitHub.\footnote{
   Some additional notes.
-  To install this vignette (and any others that may be added in the future), you need to add \texttt{build\_vignettes = TRUE}, so, for example, use this: \texttt{devtools::install\_github("sashahafner/ALFAM2", build\_vignettes = TRUE)}.
-  To get the latest version of the package, add the argument \texttt{ref = "dev"}.
+  You need the \texttt{build\_vignettes = TRUE} bit to install this vignette that you are now reading (and any others that may be added in the future).
+  To get the latest version of the package (possible bugs, incomplete testing, and all), add the argument \texttt{ref = "dev"}.
 }
 
 <<eval=FALSE>>=
@@ -101,7 +104,7 @@ library(ALFAM2)
 
 You can open this vignette with the following call.
 
-<<>>=
+<<eval=FALSE>>=
 vignette("ALFAM2-start")
 @
 
@@ -134,29 +137,34 @@ Usually the default values, based on the measurements in the ALFAM2 database, sh
 Predictor variables and their default names are given in Table 1 below.
 
 \begin{table}[]
-  \caption{The possible default predictor variables that can be used with \texttt{ALFAM2mod()}, in the order they appear in the \texttt{pars} argument.}
+  \caption{Default predictor variables that can be used with \texttt{ALFAM2mod()}, as given in the \texttt{ALFAM2pars02} or \textttt{ALFAM2pars01} objects.}
 \begin{tabular}{lllll}
 \hline
 Variable name & Description             & Units          & Notes             &  \\
 \hline
   \texttt{int}           & Intercept terms         & None           &                   &  \\
   \texttt{app.mthd.os}  & Open slot application   & None (logical) & Binary variable   &  \\
+  \texttt{app.mthd.cs}  & Closed slot application   & None (logical) & Binary variable   &  \\
+  \texttt{app.mthd.bc}  & Broadcast application   & None (logical) & Binary variable   &  \\
+  \texttt{app.mthd.ts}  & Trailing shoe application   & None (logical) & Binary variable   &  \\
   \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
-  \texttt{app.rate.ni}   & Manure app. rate (no injection) & t/ha           &                   &  \\
+  \texttt{app.rate.ni}   & Manure app. rate (excluding (no) injection) & t/ha           &                   &  \\
   \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
+  \texttt{man.ph}        & Manure pH               & pH units       & For acidification &  \\
+  \texttt{man.source.pig}        & Pig manure    & None (logical)  & Binary variable    &  \\
 \texttt{incorp.deep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
 \texttt{incorp.shallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
-  \texttt{app.mthd.bc}  & Broadcast application   & None (logical) & Binary variable   &  \\
   \texttt{air.temp}      & Air tempreature         & $^\circ$C      &                   &  \\
   \texttt{wind.2m}       & Wind speed (at 2 m)     & m/s            &                   &  \\
-  \texttt{man.ph}        & Manure pH               & pH units       & For acidification &  \\
   \texttt{rain.rate}     & Rainfall rate           & mm/h           &                   &  \\
   \texttt{rain.cum}      & Cumulative rain         & mm             &                   &  \\
+  \texttt{cereal.hght}      & Cereal height         & cm             &                   &  \\
 \hline
 \end{tabular}
 \end{table}
 
 Default model parameters and numeric values in the \texttt{ALFAM2pars02} object (``Set 2'') should generally be used. 
+For information on how these values were calculated, see the report on calculation of Danish emission factors (Hafner et al. 2021).
 (An earlier version (``Set 1'') are available in \texttt{ALFAM2pars01}. Derivation of these is described in Hafner et al. (2019).) 
 Comparing the contents of \texttt{ALFAM2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
 
@@ -238,7 +246,7 @@ pred2 <- ALFAM2mod(dat2, app.name = "TAN.app", time.name = "ctime",
 pred2
 @
 
-Here we see that with incorporation, emission drops to 15\% of applied TAN.
+Here we see that with incorporation, emission drops to \Sexpr{round(100 * pred2$er[1])}\% of applied TAN.
 Shallow incorporation has less of an effect.
 
 <<>>=
@@ -258,7 +266,7 @@ pred3
 A single function call can be used for multiple scenarios.
 For example, perhaps we would like to compare 5 different incorporation times.
 First let's create a new data frame that contains this information.
-We will need to add a new column with a grouping variable also.
+We will need to add a new column with a grouping variable also, to let \texttt{ALFAM2mod()} know that each row represents a different scenario.
 
 <<>>=
 dat4 <- data.frame(scenario = 1:5, ctime = 72, TAN.app = 50, 
@@ -272,7 +280,7 @@ dat4
 It may seem strange to have a \texttt{scenario} column--isn't it clear that each row is a different scenario?
 The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change.
 Note that there is no incorporation for scenario 5.
-We could also specify this behavior with \texttt{t.incorp = NA} (this would provide identical results, but for package v0.3.2 and prior, this approach did not work correctly unless \texttt{incorp.deep} was set to FALSE).
+We could also specify this behavior with \texttt{t.incorp = NA}.\footnote{Rhis would provide identical results, but for package v0.3.2 and prior, this approach did not work correctly unless \texttt{incorp.deep} was set to FALSE.}
 
 Let's run the model for these 5 scenarios.
 
@@ -282,7 +290,7 @@ pred4 <- ALFAM2mod(dat4, app.name = "TAN.app", time.name = "ctime",
 pred4
 @
 
-We can see that predicted emission doubles as incorporation time goes from 0.5 to 1.0 h.
+We can see that predicted emission increases substantially as incorporation time goes up.
 And incorporation after 24, or really even 6, hours is not much better than no incorporation!
 
 Scenarios could differ in any way. 
@@ -318,6 +326,7 @@ We'll create some data to represent this below.
 
 
 <<>>=
+set.seed(1201)
 dat6 <- data.frame(ctime = 0:36*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:36*2 * 2*pi/24) + rnorm(37, 0, 2), 
                    wind = 10^(0.5 + 0.4*sin(0:36*2 * 2*pi/24) + 
@@ -328,8 +337,7 @@ plot(wind ~ ctime, data = dat6, type = 'o', col = 'blue')
 @
 
 Predictions are made as above.
-By default, multiple rows in \texttt{dat} are assumed to all below to the same series (same plot, same emission trial).
-(This is the reason the \texttt{group} argument was needed above.)
+By default, multiple rows in \texttt{dat} are assumed to all below to the same scenario (same plot, same emission trial).\footnote{This is the reason the \texttt{group} argument was needed above.}
 
 <<>>=
 pred6 <- ALFAM2mod(dat6, app.name = 'TAN.app', time.name = 'ctime',
@@ -347,7 +355,7 @@ plot(j ~ ct, data = pred6, type = 'S', log = 'y', col = 'red',
 
 Dynamics in the case of incorporation may be interesting.
 The additional interval required internally because incorporation does not line up exactly with an interval in the input data frame can be returned in the output by using the \texttt{add.incorp.rows} argument.
-But recall that this has not effect on cumulative emission.
+But recall that this has no effect on cumulative emission.
 
 <<>>=
 dat7 <- dat6
@@ -392,7 +400,7 @@ See the book mentioned above for details.
 Dynamic predictions can be combined with multiple scenarios, although this is not shown here. 
 In fact, the only difference between these dynamic calls and the simple examples given above is the number of measurement intervals.
 
-All the calls in this document used the default parameter values (the ``average'' ALFAM2 model, given in Table 2 of \cite{afmod2019}).
+All the calls in this document used the default parameter values.
 However, it is possible to use completely different parameter values for the same parameters, or even different secondary parameters.
 These are set with the \texttt{pars} argument.
 

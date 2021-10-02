@@ -118,7 +118,7 @@ ALFAM2mod(
   }
 
   For Set 2, some parameters were removed, and others added, and all values changed at least slightly.
-  Calculation of this set is described in a report on Danish emission factors (forthcoming).
+  Calculation of this set is described in a report on Danish emission factors (Hafner et al., 2021).
   \code{
          c(int.f0            = -0.605683,
            app.mthd.os.f0    = -1.74351,
@@ -168,6 +168,8 @@ ALFAM2mod(
 }
 \references{
   Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484.
+
+  Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
 
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
@@ -242,6 +244,8 @@ pred5 <- ALFAM2mod(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'fie
                    time.incorp = 't.incorp')
 pred5
 
+# See vignette for more examples. Run:
+# vignette("ALFAM2-start")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
