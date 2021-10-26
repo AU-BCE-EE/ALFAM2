@@ -38,6 +38,7 @@ ALFAM2mod <- function(
 
   # Prepare input data (dummy variables)
   dat <- prepDat(dat, value = 'data')
+  dum <- prepDat(dat, value = 'dummy')
 
   # Tell user whether default or user-supplied parameters are in use
   if (warn) {
@@ -329,7 +330,7 @@ ALFAM2mod <- function(
   row.names(out) <- seq.int(nrow(out))
 
   if (!add.incorp.rows & prep) {
-    out <- cbind(prepDat(dat, value = 'dum'), out)
+    out <- cbind(dum, out)
   }
 
   return(out)
