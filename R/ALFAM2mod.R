@@ -37,9 +37,11 @@ ALFAM2mod <- function(
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
   # Prepare input data (dummy variables)
-  dum <- prepDat(dat, value = 'dummy')
-  #dat <- prepDat(dat, value = 'data')
-  dat <- cbind(dat, dum)
+  if (prep) {
+    dum <- prepDat(dat, value = 'dummy')
+    #dat <- prepDat(dat, value = 'data')
+    dat <- cbind(dat, dum)
+  }
 
   # Tell user whether default or user-supplied parameters are in use
   if (warn) {
