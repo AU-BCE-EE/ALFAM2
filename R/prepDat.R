@@ -63,7 +63,7 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     }
   }
 
-  dum <- dat[, 1:ndum + ncc]
+  dum <- dat[, 1:ndum + ncc, drop = FALSE]
 
   if (value == 'dummy') return(dum)
 
