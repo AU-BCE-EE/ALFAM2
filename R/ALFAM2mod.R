@@ -23,6 +23,7 @@ ALFAM2mod <- function(
   incorp.names = c('incorp', 'deep', 'shallow'),
   add.incorp.rows = FALSE, 
   warn = TRUE,
+  prep = FALSE,
   parallel = FALSE, 
   n.cpus = 1,
   ...                 # Additional predictor variables with fixed values for all times (all rows)
@@ -34,6 +35,9 @@ ALFAM2mod <- function(
   checkArgClassValue(dat, expected.class = 'data.frame')
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
+
+  # Prepare input data (dummy variables)
+  dat <- prepDat(dat, value = 'data')
 
   # Tell user whether default or user-supplied parameters are in use
   if (warn) {
@@ -323,7 +327,12 @@ ALFAM2mod <- function(
   # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
   out <- e[order(e$orig.order), -1]
   row.names(out) <- seq.int(nrow(out))
-  out
+
+  if (!add.incorp.rows & prep) {
+    out <- cbind(prepDat(dat, value = 'dum'), out)
+  }
+
+  return(out)
 
 }
 
