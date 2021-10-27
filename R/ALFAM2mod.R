@@ -116,7 +116,7 @@ ALFAM2mod <- function(
       inc.ex <- intersect(inc.names, names(dat))
 
       # If multiple incoporation dummy variables are 1 for any row, throw error
-      if (any(rowSums(dat[, inc.ex]) > 1)) {
+      if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
         stop('Multiple incorporation types specified in the same row--this cannot be done with ALFAM2mod().')
       }
 
@@ -152,7 +152,7 @@ ALFAM2mod <- function(
     if(!is.null(time.incorp)) {
 
       # Loop through groups with incorporation (incorp.time != NA)
-      for(i in names(incorp.time)[!is.na(incorp.time) & rowSums(dat[, inc.ex]) > 0]) {
+      for(i in names(incorp.time)[!is.na(incorp.time) & rowSums(dat[, inc.ex, drop = FALSE]) > 0]) {
 
         sub.dat <- dat[dat$`__group` == i, ]
 
