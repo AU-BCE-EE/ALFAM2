@@ -127,9 +127,9 @@ ALFAM2mod <- function(
         incorp.time <- tapply(dat[, time.incorp], dat$`__group`, "[", 1)
       }
 
-      # Get number of incorp columns by group
+      # Get number of incorp columns by group for 1) checking that there is not more than 1 applied, 2) skipping incorp when there is none (even when t.incorp may have a value)
       n.incorp.vals <- rowSums(dat[, inc.ex, drop = FALSE])
-      n.incorp.cols <- tapply(n.incorp.vals, dat$`__group`, "[", 1)
+      n.incorp.vals.grp <- tapply(n.incorp.vals, dat$`__group`, "[", 1)
 
       # If multiple incoporation dummy variables are 1 for any row, throw error
       if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
@@ -156,7 +156,7 @@ ALFAM2mod <- function(
     if(!is.null(time.incorp)) {
 
       # Loop through groups with incorporation (incorp.time != NA)
-      for(i in names(incorp.time)[!is.na(incorp.time) & n.incorp.cols > 0]) {
+      for(i in names(incorp.time)[!is.na(incorp.time) & n.incorp.vals.grp > 0]) {
 
         sub.dat <- dat[dat$`__group` == i, ]
 
