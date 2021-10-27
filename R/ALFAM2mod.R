@@ -129,7 +129,7 @@ ALFAM2mod <- function(
 
       # Get number of incorp columns by group
       n.incorp.vals <- rowSums(dat[, inc.ex, drop = FALSE])
-      n.incorp.cols <- tapply(n.incorp.vals, dat$`__group`, , "[", 1)
+      n.incorp.cols <- tapply(n.incorp.vals, dat$`__group`, "[", 1)
 
       # If multiple incoporation dummy variables are 1 for any row, throw error
       if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
