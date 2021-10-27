@@ -1,0 +1,2904 @@
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2020.10.3)  27 OCT 2021 10:35
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**ALFAM2-start.tex
+(./ALFAM2-start.tex
+LaTeX2e <2020-02-02> patch level 2
+L3 programming layer <2020-02-14>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+)
+\c@part=\count163
+\c@section=\count164
+\c@subsection=\count165
+\c@subsubsection=\count166
+\c@paragraph=\count167
+\c@subparagraph=\count168
+\c@figure=\count169
+\c@table=\count170
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen134
+)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2020/01/14 v7.00d Hypertext links for LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2019/12/15 v1.24 LaTeX kernel commands for general use (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2019/11/07 v1.0c TeX engine tests
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2019/11/24 v0.31 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode not found.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texlive/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2019/11/29 v3.13 Key value format for package options (HO)
+)
+\@linkdim=\dimen135
+\Hy@linkcounter=\count171
+\Hy@pagecounter=\count172
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2020/01/14 v7.00d Hyperref: PDFDocEncoding definition (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count173
+Package hyperref Info: Option `colorlinks' set `true' on input line 4421.
+Package hyperref Info: Hyper figures OFF on input line 4547.
+Package hyperref Info: Link nesting OFF on input line 4552.
+Package hyperref Info: Hyper index ON on input line 4555.
+Package hyperref Info: Plain pages OFF on input line 4562.
+Package hyperref Info: Backreferencing OFF on input line 4567.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4800.
+\c@Hy@tempcnt=\count174
+
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5159.
+\XeTeXLinkMargin=\dimen136
+
+(/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count175
+\Field@Width=\dimen137
+\Fld@charsize=\dimen138
+Package hyperref Info: Hyper figures OFF on input line 6430.
+Package hyperref Info: Link nesting OFF on input line 6435.
+Package hyperref Info: Hyper index ON on input line 6438.
+Package hyperref Info: backreferencing OFF on input line 6445.
+Package hyperref Info: Link coloring ON on input line 6448.
+Package hyperref Info: Link coloring with OCG OFF on input line 6455.
+Package hyperref Info: PDF/A mode OFF on input line 6460.
+LaTeX Info: Redefining \ref on input line 6500.
+LaTeX Info: Redefining \pageref on input line 6504.
+
+(/usr/share/texlive/texmf-dist/tex/generic/atbegshi/atbegshi.sty
+Package: atbegshi 2019/12/05 v1.19 At begin shipout hook (HO)
+)
+\Hy@abspage=\count176
+\c@Item=\count177
+\c@Hfootnote=\count178
+)
+Package hyperref Info: Driver (autodetected): hxetex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hxetex.def
+File: hxetex.def 2020/01/14 v7.00d Hyperref driver for XeTeX
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2020/01/14 v7.00d Hyperref: PDF Unicode definition (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
+)
+)
+\pdfm@box=\box45
+\c@Hy@AnnotLevel=\count179
+\HyField@AnnotCount=\count180
+\Fld@listcount=\count181
+\c@bookmark@seq@number=\count182
+
+(/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
+
+(/usr/share/texlive/texmf-dist/tex/latex/atveryend/atveryend.sty
+Package: atveryend 2019-12-11 v1.11 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+)
+(/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+86.
+)
+\Hy@SectionHShift=\skip49
+)
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-xdvipdfmx.def
+File: l3backend-xdvipdfmx.def 2020-02-03 L3 backend support: xdvipdfmx
+\g__graphics_track_int=\count183
+\l__pdf_internal_box=\box46
+\g__pdf_backend_object_int=\count184
+\g__pdf_backend_annotation_int=\count185
+)
+(./ALFAM2-start.aux)
+\openout1 = `ALFAM2-start.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 2
+0.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+\AtBeginShipoutBox=\box47
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2019/11/23 v1.2a Standard LaTeX Color (DPC)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: xetex.def on input line 147.
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/xetex.def
+File: xetex.def 2017/06/24 v5.0h Graphics/color driver for xetex
+))
+Package hyperref Info: Link coloring ON on input line 20.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
+
+(/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count186
+)
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
+\@outlinefile=\write3
+\openout3 = `ALFAM2-start.out'.
+
+
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 23.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 23.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 23.
+
+Overfull \hbox (73.16405pt too wide) in paragraph at lines 23--23
+ [][] 
+ []
+
+(/usr/share/texlive/texmf-dist/tex/generic/stringenc/se-ascii-print.def
+File: se-ascii-print.def 2019/11/29 v1.12 stringenc: Printable ASCII characters
+
+)
+
+LaTeX Warning: Citation `afmod2019' on page 1 undefined on input line 26.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 45.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 45.
+[1
+
+]
+
+./ALFAM2-start.tex:65: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.65 \begin{knitrout}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:66: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.66 ...}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:66: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.66 ...0.969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:67: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.67 \begin{alltt}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:68: Undefined control sequence.
+l.68 \hlkwd
+           {install.packages}\hlstd{(}\hlstr{"devtools"}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:68: Undefined control sequence.
+l.68 \hlkwd{install.packages}\hlstd
+                                   {(}\hlstr{"devtools"}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:68: Undefined control sequence.
+l.68 \hlkwd{install.packages}\hlstd{(}\hlstr
+                                            {"devtools"}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:68: Undefined control sequence.
+l.68 ...packages}\hlstd{(}\hlstr{"devtools"}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:69: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.69 \end{alltt}
+                
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:70: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.70 \end{kframe}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:71: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.71 \end{knitrout}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:75: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.75 \begin{knitrout}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:76: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.76 ...}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:76: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.76 ...0.969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:77: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.77 \begin{alltt}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:78: Undefined control sequence.
+l.78 \hlkwd
+           {library}\hlstd{(devtools)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:78: Undefined control sequence.
+l.78 \hlkwd{library}\hlstd
+                          {(devtools)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:79: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.79 \end{alltt}
+                
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:80: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.80 \end{kframe}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:81: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.81 \end{knitrout}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:89: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.89 \begin{knitrout}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:90: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.90 ...}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:90: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.90 ...0.969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:91: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.91 \begin{alltt}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 \hlkwd
+           {install_github}\hlstd{(}\hlstr{"sashahafner/ALFAM2"}\hlstd{,} \h...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Missing $ inserted.
+<inserted text> 
+                $
+l.92 \hlkwd{install_
+                    github}\hlstd{(}\hlstr{"sashahafner/ALFAM2"}\hlstd{,} \h...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./ALFAM2-start.tex:92: Extra }, or forgotten $.
+l.92 \hlkwd{install_github}
+                           \hlstd{(}\hlstr{"sashahafner/ALFAM2"}\hlstd{,} \h...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 \hlkwd{install_github}\hlstd
+                                 {(}\hlstr{"sashahafner/ALFAM2"}\hlstd{,} \h...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 \hlkwd{install_github}\hlstd{(}\hlstr
+                                          {"sashahafner/ALFAM2"}\hlstd{,} \h...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 ...hlstd{(}\hlstr{"sashahafner/ALFAM2"}\hlstd
+                                                  {,} \hlkwc{build_vignettes...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 ...lstr{"sashahafner/ALFAM2"}\hlstd{,} \hlkwc
+                                                  {build_vignettes} \hlstd{=...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 ..."}\hlstd{,} \hlkwc{build_vignettes} \hlstd
+                                                  {=} \hlnum{TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 ...} \hlkwc{build_vignettes} \hlstd{=} \hlnum
+                                                  {TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:92: Undefined control sequence.
+l.92 ...ld_vignettes} \hlstd{=} \hlnum{TRUE}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:93: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.93 \end{alltt}
+                
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:93: Missing $ inserted.
+<inserted text> 
+                $
+l.93 \end{alltt}
+                
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./ALFAM2-start.tex:93: Missing } inserted.
+<inserted text> 
+                }
+l.93 \end{alltt}
+                
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+./ALFAM2-start.tex:94: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.94 \end{kframe}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:95: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.95 \end{knitrout}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:99: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.99 \begin{knitrout}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:100: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.100 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:100: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.100 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:101: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.101 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 \hlstd
+            {devtools}\hlopt{::}\hlkwd{install_github}\hlstd{(}\hlstr{"sasha...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 \hlstd{devtools}\hlopt
+                            {::}\hlkwd{install_github}\hlstd{(}\hlstr{"sasha...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 \hlstd{devtools}\hlopt{::}\hlkwd
+                                      {install_github}\hlstd{(}\hlstr{"sasha...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Missing $ inserted.
+<inserted text> 
+                $
+l.102 \hlstd{devtools}\hlopt{::}\hlkwd{install_
+                                               github}\hlstd{(}\hlstr{"sasha...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./ALFAM2-start.tex:102: Extra }, or forgotten $.
+l.102 ...devtools}\hlopt{::}\hlkwd{install_github}
+                                                  \hlstd{(}\hlstr{"sashahafn...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ...ls}\hlopt{::}\hlkwd{install_github}\hlstd
+                                                  {(}\hlstr{"sashahafner/ALF...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ...{::}\hlkwd{install_github}\hlstd{(}\hlstr
+                                                  {"sashahafner/ALFAM2"}\hls...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ...lstd{(}\hlstr{"sashahafner/ALFAM2"}\hlstd
+                                                  {,} \hlkwc{build_vignettes...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ...str{"sashahafner/ALFAM2"}\hlstd{,} \hlkwc
+                                                  {build_vignettes} \hlstd{=...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ...}\hlstd{,} \hlkwc{build_vignettes} \hlstd
+                                                  {=} \hlnum{TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ... \hlkwc{build_vignettes} \hlstd{=} \hlnum
+                                                  {TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:102: Undefined control sequence.
+l.102 ...d_vignettes} \hlstd{=} \hlnum{TRUE}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:103: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.103 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:103: Missing $ inserted.
+<inserted text> 
+                $
+l.103 \end{alltt}
+                 
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./ALFAM2-start.tex:103: Missing } inserted.
+<inserted text> 
+                }
+l.103 \end{alltt}
+                 
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+./ALFAM2-start.tex:104: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.104 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:105: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.105 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:111: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.111 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:112: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.112 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:112: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.112 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:113: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.113 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:114: Undefined control sequence.
+l.114 \hlkwd
+            {library}\hlstd{(ALFAM2)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:114: Undefined control sequence.
+l.114 \hlkwd{library}\hlstd
+                           {(ALFAM2)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:115: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.115 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:116: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.116 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:117: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.117 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:121: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.121 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:122: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.122 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:122: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.122 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:123: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.123 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:124: Undefined control sequence.
+l.124 \hlkwd
+            {vignette}\hlstd{(}\hlstr{"ALFAM2-start"}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:124: Undefined control sequence.
+l.124 \hlkwd{vignette}\hlstd
+                            {(}\hlstr{"ALFAM2-start"}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:124: Undefined control sequence.
+l.124 \hlkwd{vignette}\hlstd{(}\hlstr
+                                     {"ALFAM2-start"}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:124: Undefined control sequence.
+l.124 ...tte}\hlstd{(}\hlstr{"ALFAM2-start"}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:125: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.125 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:126: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.126 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:127: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.127 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 130.
+[2]
+
+./ALFAM2-start.tex:138: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.138 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:139: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.139 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:139: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.139 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:140: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.140 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:141: Undefined control sequence.
+l.141 \hlkwd
+            {args}\hlstd{(ALFAM2mod)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:141: Undefined control sequence.
+l.141 \hlkwd{args}\hlstd
+                        {(ALFAM2mod)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:142: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.142 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (12.0pt too wide) in paragraph at lines 152--152
+[]\TU/lmtt/m/n/10 ## function (dat, pars = ALFAM2::ALFAM2pars02, app.name = "TA
+N.app",[] 
+ []
+
+
+Overfull \hbox (38.25pt too wide) in paragraph at lines 152--152
+[]\TU/lmtt/m/n/10 ##     time.name = "ct", time.incorp = NULL, group = NULL, ce
+nter = TRUE,[] 
+ []
+
+
+Overfull \hbox (27.75pt too wide) in paragraph at lines 152--152
+[]\TU/lmtt/m/n/10 ##     cmns = c(app.rate = 40, man.dm = 6, man.tan = 1.2, man
+.ph = 7.5,[] 
+ []
+
+
+Overfull \hbox (27.75pt too wide) in paragraph at lines 152--152
+[]\TU/lmtt/m/n/10 ##         air.temp = 13, wind.2m = 2.7, crop.z = 10), check.
+NA = TRUE,[] 
+ []
+
+
+Overfull \hbox (22.5pt too wide) in paragraph at lines 152--152
+[]\TU/lmtt/m/n/10 ##     pass.col = NULL, incorp.names = c("incorp", "deep", "s
+hallow"),[] 
+ []
+
+
+Overfull \hbox (54.0pt too wide) in paragraph at lines 152--152
+[]\TU/lmtt/m/n/10 ##     add.incorp.rows = FALSE, warn = TRUE, prep = FALSE, pa
+rallel = FALSE,[] 
+ []
+
+
+./ALFAM2-start.tex:153: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:154: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.154 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:159: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.159 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:160: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.160 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:160: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.160 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:161: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:162: Undefined control sequence.
+l.162 \hlopt
+            {?}\hlstd{ALFAM2mod}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:162: Undefined control sequence.
+l.162 \hlopt{?}\hlstd
+                     {ALFAM2mod}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:163: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.163 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:164: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.164 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:165: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.165 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 175.
+
+
+Overfull \hbox (122.38008pt too wide) in paragraph at lines 177--200
+[][] 
+ []
+
+
+LaTeX Warning: Citation `efreport2021' on page 3 undefined on input line 203.
+
+
+LaTeX Warning: Citation `afmod2019' on page 3 undefined on input line 204.
+
+
+./ALFAM2-start.tex:207: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.207 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:208: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.208 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:208: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.208 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:209: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.209 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:210: Undefined control sequence.
+l.210 \hlstd
+            {ALFAM2pars02}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:211: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.211 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[3]
+
+./ALFAM2-start.tex:230: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.230 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:231: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.231 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Citation `afmod2019' on page 4 undefined on input line 240.
+
+[4]
+
+./ALFAM2-start.tex:250: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.250 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:251: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.251 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:251: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.251 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:252: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.252 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 \hlstd
+            {dat1} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{ctime} \hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 \hlstd{dat1} \hlkwb
+                         {<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{ctime} \hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 \hlstd{dat1} \hlkwb{<-} \hlkwd
+                                    {data.frame}\hlstd{(}\hlkwc{ctime} \hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...dat1} \hlkwb{<-} \hlkwd{data.frame}\hlstd
+                                                  {(}\hlkwc{ctime} \hlstd{=}...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...kwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc
+                                                  {ctime} \hlstd{=} \hlnum{7...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...{data.frame}\hlstd{(}\hlkwc{ctime} \hlstd
+                                                  {=} \hlnum{72}\hlstd{,} \h...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...e}\hlstd{(}\hlkwc{ctime} \hlstd{=} \hlnum
+                                                  {72}\hlstd{,} \hlkwc{TAN.a...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...}\hlkwc{ctime} \hlstd{=} \hlnum{72}\hlstd
+                                                  {,} \hlkwc{TAN.app} \hlstd...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...ime} \hlstd{=} \hlnum{72}\hlstd{,} \hlkwc
+                                                  {TAN.app} \hlstd{=} \hlnum...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...hlnum{72}\hlstd{,} \hlkwc{TAN.app} \hlstd
+                                                  {=} \hlnum{50}\hlstd{,} \h...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...hlstd{,} \hlkwc{TAN.app} \hlstd{=} \hlnum
+                                                  {50}\hlstd{,} \hlkwc{man.d...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...hlkwc{TAN.app} \hlstd{=} \hlnum{50}\hlstd
+                                                  {,} \hlkwc{man.dm} \hlstd{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...app} \hlstd{=} \hlnum{50}\hlstd{,} \hlkwc
+                                                  {man.dm} \hlstd{=} \hlnum{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...\hlnum{50}\hlstd{,} \hlkwc{man.dm} \hlstd
+                                                  {=} \hlnum{8}\hlstd{,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ...\hlstd{,} \hlkwc{man.dm} \hlstd{=} \hlnum
+                                                  {8}\hlstd{,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:253: Undefined control sequence.
+l.253 ... \hlkwc{man.dm} \hlstd{=} \hlnum{8}\hlstd
+                                                  {,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254                    \hlkwc
+                               {air.temp} \hlstd{=} \hlnum{20}\hlstd{,} \hlk...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254                    \hlkwc{air.temp} \hlstd
+                                                {=} \hlnum{20}\hlstd{,} \hlk...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254 ...        \hlkwc{air.temp} \hlstd{=} \hlnum
+                                                  {20}\hlstd{,} \hlkwc{wind....
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254 ...lkwc{air.temp} \hlstd{=} \hlnum{20}\hlstd
+                                                  {,} \hlkwc{wind.2m} \hlstd...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254 ...emp} \hlstd{=} \hlnum{20}\hlstd{,} \hlkwc
+                                                  {wind.2m} \hlstd{=} \hlnum...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254 ...hlnum{20}\hlstd{,} \hlkwc{wind.2m} \hlstd
+                                                  {=} \hlnum{3}\hlstd{,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254 ...hlstd{,} \hlkwc{wind.2m} \hlstd{=} \hlnum
+                                                  {3}\hlstd{,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:254: Undefined control sequence.
+l.254 ...\hlkwc{wind.2m} \hlstd{=} \hlnum{3}\hlstd
+                                                  {,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:255: Undefined control sequence.
+l.255                    \hlkwc
+                               {app.mthd.bc} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:255: Undefined control sequence.
+l.255 ...               \hlkwc{app.mthd.bc} \hlstd
+                                                  {=} \hlnum{TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:255: Undefined control sequence.
+l.255 ...     \hlkwc{app.mthd.bc} \hlstd{=} \hlnum
+                                                  {TRUE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:255: Undefined control sequence.
+l.255 ...app.mthd.bc} \hlstd{=} \hlnum{TRUE}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:256: Undefined control sequence.
+l.256 \hlstd
+            {dat1}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:257: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.257 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:262: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.262 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:263: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.263 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:273: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.273 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:274: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.274 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:274: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.274 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:275: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.275 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 \hlstd
+            {pred1} \hlkwb{<-} \hlkwd{ALFAM2mod}\hlstd{(dat1,} \hlkwc{app.na...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 \hlstd{pred1} \hlkwb
+                          {<-} \hlkwd{ALFAM2mod}\hlstd{(dat1,} \hlkwc{app.na...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 \hlstd{pred1} \hlkwb{<-} \hlkwd
+                                     {ALFAM2mod}\hlstd{(dat1,} \hlkwc{app.na...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...pred1} \hlkwb{<-} \hlkwd{ALFAM2mod}\hlstd
+                                                  {(dat1,} \hlkwc{app.name} ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...-} \hlkwd{ALFAM2mod}\hlstd{(dat1,} \hlkwc
+                                                  {app.name} \hlstd{=} \hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...od}\hlstd{(dat1,} \hlkwc{app.name} \hlstd
+                                                  {=} \hlstr{'TAN.app'}\hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...(dat1,} \hlkwc{app.name} \hlstd{=} \hlstr
+                                                  {'TAN.app'}\hlstd{,} \hlkw...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...p.name} \hlstd{=} \hlstr{'TAN.app'}\hlstd
+                                                  {,} \hlkwc{time.name} \hls...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...lstd{=} \hlstr{'TAN.app'}\hlstd{,} \hlkwc
+                                                  {time.name} \hlstd{=} \hls...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...N.app'}\hlstd{,} \hlkwc{time.name} \hlstd
+                                                  {=} \hlstr{'ctime'}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...std{,} \hlkwc{time.name} \hlstd{=} \hlstr
+                                                  {'ctime'}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:276: Undefined control sequence.
+l.276 ...ime.name} \hlstd{=} \hlstr{'ctime'}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:277: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.277 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:280: LaTeX Error: Undefined color `messagecolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ...mily\noindent\itshape\color{messagecolor}
+                                                  {\#\# Default parameters (...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:282: LaTeX Error: Undefined color `warningcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.282 {\ttfamily\noindent\color{warningcolor}
+                                             {\#\# Warning in ALFAM2mod(dat1...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:282: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.282 ...r3\\\#\# \ \ app.mthd.bc.r3}}\end{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:283: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.283 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (38.25pt too wide) in paragraph at lines 282--284
+\TU/lmtt/m/n/10 ## Warning in ALFAM2mod(dat1, app.name = "TAN.app", time.name =
+ "ctime"):
+ []
+
+[5]
+
+./ALFAM2-start.tex:291: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.291 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:292: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.292 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:292: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.292 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:293: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.293 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:294: Undefined control sequence.
+l.294 \hlstd
+            {pred1}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:295: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.295 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:302: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.302 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:303: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:314: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.314 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:315: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.315 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:315: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.315 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:316: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.316 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:317: Undefined control sequence.
+l.317 \hlstd
+            {dat2} \hlkwb{<-} \hlstd{dat1}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:317: Undefined control sequence.
+l.317 \hlstd{dat2} \hlkwb
+                         {<-} \hlstd{dat1}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:317: Undefined control sequence.
+l.317 \hlstd{dat2} \hlkwb{<-} \hlstd
+                                    {dat1}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:318: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.318 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:319: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.319 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:320: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.320 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:325: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.325 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:326: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.326 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:326: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.326 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:327: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.327 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:328: Undefined control sequence.
+l.328 \hlstd
+            {dat2}\hlopt{$}\hlstd{incorp.deep} \hlkwb{<-} \hlnum{TRUE}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:328: Undefined control sequence.
+l.328 \hlstd{dat2}\hlopt
+                        {$}\hlstd{incorp.deep} \hlkwb{<-} \hlnum{TRUE}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:328: Extra }, or forgotten $.
+<recently read> }
+                 
+l.328 \hlstd{dat2}\hlopt{$}
+                           \hlstd{incorp.deep} \hlkwb{<-} \hlnum{TRUE}
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+./ALFAM2-start.tex:328: Undefined control sequence.
+l.328 \hlstd{dat2}\hlopt{$}\hlstd
+                                 {incorp.deep} \hlkwb{<-} \hlnum{TRUE}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:328: Undefined control sequence.
+l.328 ...{dat2}\hlopt{$}\hlstd{incorp.deep} \hlkwb
+                                                  {<-} \hlnum{TRUE}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:328: Undefined control sequence.
+l.328 ...t{$}\hlstd{incorp.deep} \hlkwb{<-} \hlnum
+                                                  {TRUE}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:329: Undefined control sequence.
+l.329 \hlstd
+            {dat2}\hlopt{$}\hlstd{t.incorp} \hlkwb{<-} \hlnum{0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:329: Undefined control sequence.
+l.329 \hlstd{dat2}\hlopt
+                        {$}\hlstd{t.incorp} \hlkwb{<-} \hlnum{0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:329: Missing } inserted.
+<inserted text> 
+                }
+l.329 \hlstd{dat2}\hlopt{$
+                          }\hlstd{t.incorp} \hlkwb{<-} \hlnum{0.5}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./ALFAM2-start.tex:329: Undefined control sequence.
+l.329 \hlstd{dat2}\hlopt{$}\hlstd
+                                 {t.incorp} \hlkwb{<-} \hlnum{0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:329: Undefined control sequence.
+l.329 \hlstd{dat2}\hlopt{$}\hlstd{t.incorp} \hlkwb
+                                                  {<-} \hlnum{0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:329: Undefined control sequence.
+l.329 ...lopt{$}\hlstd{t.incorp} \hlkwb{<-} \hlnum
+                                                  {0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:330: Undefined control sequence.
+l.330 \hlstd
+            {dat2}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:331: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.331 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (1.5pt too wide) in paragraph at lines 337--337
+[]\TU/lmtt/m/n/10 ##   ctime TAN.app man.dm air.temp wind.2m app.mthd.bc incorp
+.deep[] 
+ []
+
+
+Overfull \hbox (1.5pt too wide) in paragraph at lines 337--337
+[]\TU/lmtt/m/n/10 ## 1    72      50      8       20       3        TRUE       
+ TRUE[] 
+ []
+
+
+./ALFAM2-start.tex:338: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.338 \end{kframe}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:339: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.339 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:341: LaTeX Error: Environment knitrout undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.341 \begin{knitrout}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:342: LaTeX Error: Undefined color `fgcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.342 ...{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+                                                  \begin{kframe}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:342: LaTeX Error: Environment kframe undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.342 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:343: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.343 \begin{alltt}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 \hlstd
+            {pred2} \hlkwb{<-} \hlkwd{ALFAM2mod}\hlstd{(dat2,} \hlkwc{app.na...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 \hlstd{pred2} \hlkwb
+                          {<-} \hlkwd{ALFAM2mod}\hlstd{(dat2,} \hlkwc{app.na...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 \hlstd{pred2} \hlkwb{<-} \hlkwd
+                                     {ALFAM2mod}\hlstd{(dat2,} \hlkwc{app.na...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...pred2} \hlkwb{<-} \hlkwd{ALFAM2mod}\hlstd
+                                                  {(dat2,} \hlkwc{app.name} ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...-} \hlkwd{ALFAM2mod}\hlstd{(dat2,} \hlkwc
+                                                  {app.name} \hlstd{=} \hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...od}\hlstd{(dat2,} \hlkwc{app.name} \hlstd
+                                                  {=} \hlstr{"TAN.app"}\hlst...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...(dat2,} \hlkwc{app.name} \hlstd{=} \hlstr
+                                                  {"TAN.app"}\hlstd{,} \hlkw...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...p.name} \hlstd{=} \hlstr{"TAN.app"}\hlstd
+                                                  {,} \hlkwc{time.name} \hls...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...lstd{=} \hlstr{"TAN.app"}\hlstd{,} \hlkwc
+                                                  {time.name} \hlstd{=} \hls...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...N.app"}\hlstd{,} \hlkwc{time.name} \hlstd
+                                                  {=} \hlstr{"ctime"}\hlstd{,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...std{,} \hlkwc{time.name} \hlstd{=} \hlstr
+                                                  {"ctime"}\hlstd{,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:344: Undefined control sequence.
+l.344 ...ime.name} \hlstd{=} \hlstr{"ctime"}\hlstd
+                                                  {,}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345                    \hlkwc
+                               {time.incorp} \hlstd{=} \hlstr{"t.incorp"}\hl...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ...               \hlkwc{time.incorp} \hlstd
+                                                  {=} \hlstr{"t.incorp"}\hls...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ...     \hlkwc{time.incorp} \hlstd{=} \hlstr
+                                                  {"t.incorp"}\hlstd{,} \hlk...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ...ncorp} \hlstd{=} \hlstr{"t.incorp"}\hlstd
+                                                  {,} \hlkwc{warn} \hlstd{=}...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ...std{=} \hlstr{"t.incorp"}\hlstd{,} \hlkwc
+                                                  {warn} \hlstd{=} \hlnum{FA...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ...{"t.incorp"}\hlstd{,} \hlkwc{warn} \hlstd
+                                                  {=} \hlnum{FALSE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ..."}\hlstd{,} \hlkwc{warn} \hlstd{=} \hlnum
+                                                  {FALSE}\hlstd{)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ALFAM2-start.tex:345: Undefined control sequence.
+l.345 ...hlkwc{warn} \hlstd{=} \hlnum{FALSE}\hlstd
+                                                  {)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:346: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.346 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (1.87401pt too wide) in paragraph at lines 344--347
+[]\TU/lmr/m/n/10 pred2 <- ALFAM2mod(dat2, app.name = ”TAN.app”, time.name = ”ct
+ime”,
+ []
+
+[6]
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 349.
+
+
+./ALFAM2-start.tex:349: LaTeX Error: Undefined color `errorcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.349 ...amily\noindent\bfseries\color{errorcolor}
+                                                  {\#\# Error in rowSums(dat...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:349: LaTeX Error: Environment alltt undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.349 ...of at least two dimensions}}\begin{alltt}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./ALFAM2-start.tex:350: Undefined control sequence.
+l.350 \hlstd
+            {pred2}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+./ALFAM2-start.tex:351: LaTeX Error: \begin{document} ended by \end{alltt}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.351 \end{alltt}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (13.75pt too wide) in paragraph at lines 349--352
+\TU/lmtt/b/n/10 ## Error in rowSums(dat[, inc.ex]): 'x' must be an array of at 
+least
+ []
+
+
+./ALFAM2-start.tex:354: LaTeX Error: Undefined color `errorcolor'.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.354 ...amily\noindent\bfseries\color{errorcolor}
+                                                  {\#\# Error in eval(expr, ...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./ALFAM2-start.tex:354: LaTeX Error: \begin{document} ended by \end{kframe}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.354 ...): object 'pred2' not found}}\end{kframe}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./ALFAM2-start.tex:355: LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.355 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+)
+! Emergency stop.
+<*> ALFAM2-start.tex
+                    
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 8126 strings out of 479819
+ 118840 string characters out of 5895846
+ 373728 words of memory out of 5000000
+ 25170 multiletter control sequences out of 15000+600000
+ 535562 words of font info for 50 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 34i,9n,45p,889b,468s stack positions out of 5000i,500n,10000p,200000b,80000s
+Output written on ALFAM2-start.pdf (6 pages).
