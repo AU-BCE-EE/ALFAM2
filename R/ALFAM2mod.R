@@ -115,11 +115,6 @@ ALFAM2mod <- function(
       # Do they exist?
       inc.ex <- intersect(inc.names, names(dat))
 
-      # If multiple incoporation dummy variables are 1 for any row, throw error
-      if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
-        stop('Multiple incorporation types specified in the same row--this cannot be done with ALFAM2mod().')
-      }
-
       # Get times and types
       if(is.numeric(time.incorp)){
         # Unique groups
@@ -130,6 +125,14 @@ ALFAM2mod <- function(
       } else {
         # Get time.incorp column entries (first row, so rows underneath could have time.incorp = NA etc., all ignored
         incorp.time <- tapply(dat[, time.incorp], dat$`__group`, "[", 1)
+      }
+
+      # Get number of incorp columns by group
+      n.incorp.cols <- tapply(dat[, inc.ex], dat$`__group`, function(x) rowSums(x)[1])
+
+      # If multiple incoporation dummy variables are 1 for any row, throw error
+      if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
+        stop('Multiple incorporation types specified in the same row--this cannot be done with ALFAM2mod().')
       }
 
       # Check if columns exist
@@ -152,7 +155,7 @@ ALFAM2mod <- function(
     if(!is.null(time.incorp)) {
 
       # Loop through groups with incorporation (incorp.time != NA)
-      for(i in names(incorp.time)[!is.na(incorp.time) & rowSums(dat[, inc.ex, drop = FALSE]) > 0]) {
+      for(i in names(incorp.time)[!is.na(incorp.time) & n.incorp.cols > 0]) {
 
         sub.dat <- dat[dat$`__group` == i, ]
 
