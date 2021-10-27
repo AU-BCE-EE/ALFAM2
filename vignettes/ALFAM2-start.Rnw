@@ -148,7 +148,7 @@ Variable name & Description             & Units          & Notes             &  
   \texttt{app.mthd.bc}  & Broadcast application   & None (logical) & Binary variable   &  \\
   \texttt{app.mthd.ts}  & Trailing shoe application   & None (logical) & Binary variable   &  \\
   \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
-  \texttt{app.rate.ni}   & Manure app. rate (excluding (no) injection) & t/ha           &                   &  \\
+  \texttt{app.rate.ni}   & Manure app. rate (excluding ("no") injection) & t/ha           &                   &  \\
   \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
   \texttt{man.ph}        & Manure pH               & pH units       & For acidification &  \\
   \texttt{man.source.pig}        & Pig manure    & None (logical)  & Binary variable    &  \\
@@ -280,7 +280,7 @@ dat4
 It may seem strange to have a \texttt{scenario} column--isn't it clear that each row is a different scenario?
 The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change.
 Note that there is no incorporation for scenario 5.
-We could also specify this behavior with \texttt{t.incorp = NA}.\footnote{Rhis would provide identical results, but for package v0.3.2 and prior, this approach did not work correctly unless \texttt{incorp.deep} was set to FALSE.}
+We could also specify this behavior with \texttt{t.incorp = NA}.\footnote{This would provide identical results, but for package v0.3.2 and prior, this approach did not work correctly unless \texttt{incorp.deep} was set to FALSE.}
 
 Let's run the model for these 5 scenarios.
 
@@ -299,7 +299,7 @@ For scenario 2, application method is not explicitly specified, which means it i
 
 <<>>=
 dat5 <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
-                   man.dm = 8, air.temp = 10 + (0:2 * 10), 
+                   man.dm = 8, air.temp = 15,
                    wind.2m = 3,
                    app.mthd.bc = c(TRUE, FALSE, FALSE),
                    app.mthd.os = c(FALSE, FALSE, TRUE)
@@ -311,6 +311,60 @@ dat5
 pred5 <- ALFAM2mod(dat5, app.name = "TAN.app", time.name = "ctime", 
                    group = "scenario", warn = FALSE)
 pred5
+@
+
+\subsection{An easier approach for dummy variables}
+Most of the examples given above include "dummy variables", or multiple binary variables that together represent a factor.
+For example, \texttt{dat5} includes two columns (\texttt{app.mthd.bc} and \texttt{app.mthd.os}) to together represent application method.
+The package now (>=v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
+For example, we could duplicate the behavior of the call above with the following.
+
+<<>>=
+dat5b <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
+                    man.dm = 8, air.temp = 15,
+                    wind.2m = 3,
+                    app.mthd = c('bc', 'th', 'os')
+                   )
+dat5b
+@
+
+<<>>=
+pred5b <- ALFAM2mod(dat5b, app.name = "TAN.app", time.name = "ctime", 
+                    group = "scenario", warn = FALSE, prep = TRUE)
+pred5b
+@
+
+Note that \texttt{prep = TRUE} argument in the call above.
+Calculated emission is the same as in \texttt{pred5} above, but in \texttt{pred5b} we also have the dummy variables returned in the output.
+
+This data preparation option will automatically calculate dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
+For this automatic conversion to take place, column names and factor levels must match the relevant part of the parameter names.
+In the call immediately above, \texttt{app.mthd} matches the beginning of the parameter names \texttt{app.mthd.bc} etc., and the levels \texttt{bc} and \texttt{os} match the final part of these names.
+The level \texttt{th} has no match--it is (correctly) interpreteted as a reference level.
+
+Here is an example with incorporation.
+Let's check out the incorporation parameters first:
+
+<<>>=
+ALFAM2pars02[grepl('^incorp', names(ALFAM2pars02))]
+@
+
+So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.
+To show that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to , let's set to \texttt{4}. The function carries out incorporation only if \textit{both} variables incidate it should.} \texttt{warn = TRUE}.
+
+<<>>=
+dat6 <- data.frame(scenario = 1:6, ctime = 72, TAN.app = 100, 
+                    man.dm = 5, air.temp = 10, wind.2m = 2, 
+                    app.mthd = rep(c('bc', 'th'), each = 3),
+                    incorp = rep(c('none', 'shallow', 'deep'), 2),
+                    t.incorp = 4)
+dat6
+@
+
+<<>>=
+pred6 <- ALFAM2mod(dat6, app.name = "TAN.app", time.name = "ctime", 
+                   time.incorp = "t.incorp", group = "scenario", warn = TRUE, prep = TRUE)
+pred6
 @
 
 \subsection{Volatilization dynamics}
@@ -327,29 +381,29 @@ We'll create some data to represent this below.
 
 <<>>=
 set.seed(1201)
-dat6 <- data.frame(ctime = 0:36*2, TAN.app = 100, man.dm = 8, 
+dat7 <- data.frame(ctime = 0:36*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:36*2 * 2*pi/24) + rnorm(37, 0, 2), 
                    wind = 10^(0.5 + 0.4*sin(0:36*2 * 2*pi/24) + 
                               rnorm(37, 0, 0.12)), 
                    app.mthd.bc = TRUE)
-plot(air.temp ~ ctime, data = dat6, type = 'o', col = 'gray45')
-plot(wind ~ ctime, data = dat6, type = 'o', col = 'blue')
+plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
+plot(wind ~ ctime, data = dat7, type = 'o', col = 'blue')
 @
 
 Predictions are made as above.
 By default, multiple rows in \texttt{dat} are assumed to all below to the same scenario (same plot, same emission trial).\footnote{This is the reason the \texttt{group} argument was needed above.}
 
 <<>>=
-pred6 <- ALFAM2mod(dat6, app.name = 'TAN.app', time.name = 'ctime',
+pred7 <- ALFAM2mod(dat7, app.name = 'TAN.app', time.name = 'ctime',
                    warn = FALSE)
 @
 
 Cumulative emission and average interval flux are plotted below.
 
 <<>>=
-plot(e ~ ct, data = pred6, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ct, data = pred7, type = 'o', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
-plot(j ~ ct, data = pred6, type = 'S', log = 'y', col = 'red', 
+plot(j ~ ct, data = pred7, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 @
 
@@ -358,21 +412,21 @@ The additional interval required internally because incorporation does not line 
 But recall that this has no effect on cumulative emission.
 
 <<>>=
-dat7 <- dat6
-dat7$incorp.deep <- TRUE
-dat7$t.incorp <- 6.5
+dat8 <- dat7
+dat8$incorp.deep <- TRUE
+dat8$t.incorp <- 6.5
 @
 
 <<>>=
-pred7 <- ALFAM2mod(dat7, app.name = 'TAN.app', time.name = 'ctime',
+pred8 <- ALFAM2mod(dat8, app.name = 'TAN.app', time.name = 'ctime',
                    time.incorp = 't.incorp', warn = FALSE, add.incorp.rows = TRUE)
 @
 
 <<>>=
-plot(e ~ ct, data = pred7, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ct, data = pred8, type = 'o', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 abline(v = 6.5, col = 'blue')
-plot(j ~ ct, data = pred7, type = 'S', log = 'y', col = 'red', 
+plot(j ~ ct, data = pred8, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 abline(v = 6.5, col = 'blue')
 @
@@ -385,7 +439,7 @@ The simplest function for this is \texttt{write.csv()}.
 The following call will create a comma delimited text file that can be opened with spreadsheet or text editor programs.
 
 <<eval=FALSE>>=
-write.csv(pred6, 'pred6.csv', row.names = FALSE)
+write.csv(pred7, 'pred7.csv', row.names = FALSE)
 @
 
 Alternatives include \texttt{write.csv2}, \texttt{write.table}, and any of the various functions in add-on packages for writing to Excel files.
