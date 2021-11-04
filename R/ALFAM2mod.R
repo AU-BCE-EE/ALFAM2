@@ -22,8 +22,8 @@ ALFAM2mod <- function(
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
   add.incorp.rows = FALSE, 
-  warn = TRUE,
   prep = FALSE,
+  warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
   ...                 # Additional predictor variables with fixed values for all times (all rows)
