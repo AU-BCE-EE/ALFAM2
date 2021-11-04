@@ -32,6 +32,7 @@ ALFAM2mod(
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
   add.incorp.rows = FALSE, 
+  prep = FALSE,
   warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
@@ -78,6 +79,9 @@ ALFAM2mod(
     function will add additional rows that exactly match the incorporation time(s) (no more than one per level of \code{group}) if they are not already present. Should these be returned or left out (default)?
     Length one logical vector.
 }
+  \item{prep}{
+    set to \code{TRUE} to automatically prepare dummy variables from input data. If \code{FALSE} (default), any necessary dummay variables must be present in \code{dat}. See vignette.
+}  
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
 }  
