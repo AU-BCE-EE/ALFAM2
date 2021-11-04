@@ -3,8 +3,8 @@
 prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', source.name = 'man.source',
                     app.mthd.levels = list(ts = 'ts', 
                                            bc = c('broadcast', 'bc', 'broadspread', 'bredspredning', 'bredspredt'),
-                                           os = c('open slot injection', 'os', 'open-slot injection', 'shallow injection', 'nedfældning i græs'), 
-                                           cs = c('closed slot injection', 'cs', 'closed-slot injection', 'deep injection', 'nedfældning på sort jord')),
+                                           os = c('open slot injection', 'os', 'open-slot injection', 'shallow injection', 'nedf\u00E6ldning i gr\u00E6s'), 
+                                           cs = c('closed slot injection', 'cs', 'closed-slot injection', 'deep injection', 'nedf\u00E6ldning p\u00E5 sort jord')),
                     incorp.levels = list(shallow = c('shallow', 'harrow'), deep = c('deep', 'plough', 'plow', 'nedbringning')),
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
                     value = 'dummy'
