@@ -7,7 +7,7 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
                                            cs = c('closed slot injection', 'cs', 'closed-slot injection', 'deep injection', 'nedf\u00E6ldning p\u00E5 sort jord')),
                     incorp.levels = list(shallow = c('shallow', 'harrow'), deep = c('deep', 'plough', 'plow', 'nedbringning')),
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
-                    value = 'dummy'
+                    keep.all = FALSE
                     ) {
   ncc <- ncol(dat)
   ndum <- 0
@@ -63,14 +63,15 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     }
   }
 
-  dum <- dat[, 1:ndum + ncc, drop = FALSE]
+  if (keep.all) {
+    return(dat)
+  } else {
+    return(dat[, 1:ndum + ncc, drop = FALSE])
+  }
 
-  if (value == 'dummy') return(dum)
-
-  return(dat)
 }
 
 #dat <- data.frame(ct = 168, app.mthd = c('open slot injection', 'cs', 'bsth'), t.incorp = 12, incorp = c('none', 'shallow', 'deep'), man.source = 'pig')
 #dat
 #prepDat(dat)
-#prepDat(dat, value = 'dat')
+#prepDat(dat, keep.all = TRUE)

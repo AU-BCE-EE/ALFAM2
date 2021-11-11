@@ -38,8 +38,8 @@ ALFAM2mod <- function(
 
   # Prepare input data (dummy variables)
   if (prep) {
-    dum <- prepDat(dat, value = 'dummy')
-    #dat <- prepDat(dat, value = 'data')
+    dum <- prepDat(dat)
+    #dat <- prepDat(dat, keep.all = TRUE)
     dat <- cbind(dat, dum)
   }
 
