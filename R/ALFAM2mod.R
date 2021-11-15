@@ -298,7 +298,7 @@ ALFAM2mod <- function(
 
     # rbind & merge
     e0 <- do.call("rbind", e.list)
-    e <- merge(dat, e0, by = "orig.order")[,
+    e <- merge(dat, e0, by = c("orig.order", time.name))[,
       c("orig.order", group, names(e0)[-1], pass.col)]
 
   } else {
