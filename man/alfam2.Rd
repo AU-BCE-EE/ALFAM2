@@ -1,4 +1,5 @@
-\name{ALFAM2mod}
+\name{alfam2}
+\alias{alfam2}
 \alias{ALFAM2mod}
 \alias{ALFAM2pars01}
 \alias{ALFAM2pars02}
@@ -13,7 +14,7 @@ The model is described in Hafner et al. (2019).
 }
 
 \usage{
-ALFAM2mod(
+alfam2(
   dat, 
   pars = ALFAM2::ALFAM2pars02, 
   app.name = 'TAN.app', 
@@ -178,6 +179,9 @@ ALFAM2mod(
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
 }
+\note{
+  \code{ALFAM2mod()} is an alias for \code{alfam2}.
+}
 \author{
 Sasha D. Hafner
 }
@@ -196,7 +200,7 @@ Sasha D. Hafner
 dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 
 # Run model, using default parameter values
-pred1 <- ALFAM2mod(dat1, app.name = 'TAN.app', time.name = 'ctime')
+pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
 pred1
 plot(e ~ ct, data = pred1, type = 'o')
 
@@ -204,7 +208,7 @@ plot(e ~ ct, data = pred1, type = 'o')
 dat1b <- data.frame(ctime = 0:12*4)
 
 # Run model, using default parameter values
-pred1b <- ALFAM2mod(dat1b, app.name = 'TAN.app', time.name = 'ctime', TAN.app = 100, 
+pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime', TAN.app = 100, 
                     man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 all.equal(pred1, pred1b)
 
@@ -215,7 +219,7 @@ dat2 <- dat1
 dat2$incorp.deep <- TRUE
 dat2$t.incorp <- 4
 
-pred2 <- ALFAM2mod(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
+pred2 <- alfam2(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
 # See change in r3
 pred2
 lines(e ~ ct, data = pred2, type = 'o', col = 'red')
@@ -223,7 +227,7 @@ lines(e ~ ct, data = pred2, type = 'o', col = 'red')
 # Example 3
 # Time step doesn't matter
 dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
-pred3 <- ALFAM2mod(dat3, app.name = 'TAN.app', time.name = 'ctime')
+pred3 <- alfam2(dat3, app.name = 'TAN.app', time.name = 'ctime')
 lines(e ~ ct, data = pred3, type = 'o', col = 'blue')
 
 # Example 4
@@ -231,20 +235,20 @@ lines(e ~ ct, data = pred3, type = 'o', col = 'blue')
 dat4 <- dat3
 dat4$incorp.deep <- TRUE
 dat4$t.incorp <- 4
-pred4 <- ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
+pred4 <- alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
 lines(e ~ ct, data = pred4, type = 'o', col = 'orange')
 
 # Incorporation time can be numeric also (not very practical for groups)
-ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4)
+alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4)
 
 # To see incorporation time in output, use add.incorp.rows
-ALFAM2mod(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, add.incorp.rows = TRUE)
+alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, add.incorp.rows = TRUE)
 
 # Example 5
 # Function accepts multiple groups
 dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, 
                    app.mthd.bc = TRUE, t.incorp = 4)
-pred5 <- ALFAM2mod(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', 
+pred5 <- alfam2(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', 
                    time.incorp = 't.incorp')
 pred5
 

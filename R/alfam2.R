@@ -3,7 +3,7 @@
 # time.incorp is name of column with incorporation time. Only first value (in each group) is used.
 # group is name of group column, app.name is name of total pool (a0 + u0) column
 
-ALFAM2mod <- function(
+alfam2 <- ALFAM2mod <- function(
   dat, 
   pars = ALFAM2::ALFAM2pars02, 
   app.name = 'TAN.app', 

@@ -109,8 +109,8 @@ vignette("ALFAM2-start")
 @
 
 
-\section{The \texttt{ALFAM2mod()} function}
-The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{ALFAM2mod()}
+\section{The \texttt{alfam2()} function}
+The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{alfam2()}.\footnote{\texttt{ALFAM2mod()} is an alias, and can be used in place of \texttt{alfam2()} in all the examples.}
 After an explanation of the function, its use is shown in a few examples.
 
 \subsection{Overview of the function}
@@ -118,14 +118,14 @@ The \texttt{ALFAM2()} function can be used for predicting average volatilization
 The function has several arguments, as shown below.
 
 <<>>=
-args(ALFAM2mod)
+args(alfam2)
 @
 
 You can find more details on the arguments (as well as examples) in the help file.
 As with any R function, you can open the file with \texttt{?}:
 
 <<eval=FALSE>>=
-?ALFAM2mod
+?alfam2
 @
 
 But the most important arguments are described here.
@@ -137,7 +137,7 @@ Usually the default values, based on the measurements in the ALFAM2 database, sh
 Predictor variables and their default names are given in Table 1 below.
 
 \begin{table}[]
-  \caption{Default predictor variables that can be used with \texttt{ALFAM2mod()}, as given in the \texttt{ALFAM2pars02} or \texttt{ALFAM2pars01} objects.}
+  \caption{Default predictor variables that can be used with \texttt{alfam2()}, as given in the \texttt{ALFAM2pars02} or \texttt{ALFAM2pars01} objects.}
 \begin{tabular}{lllll}
 \hline
 Variable name & Description             & Units          & Notes             &  \\
@@ -176,7 +176,7 @@ These numbers indicate a primary parameter.
 So, for example, the (secondary) parameter \texttt{wind.2m.r1}, which is 0.15 s/m by default, is used in the calculation of the primary parameter $r_1$.
 The most important message here is a simple one: names for predictor variables can be taken from the names given in the default \texttt{pars} argument value, but be sure to omit the last three characters (a ".", a number, and a letter).
 
-By design, any time a predictor variable is omitted when \texttt{ALFAM2mod()} is called, the reference level or value is assumed for that variable.\footnote{
+By design, any time a predictor variable is omitted when \texttt{alfam2()} is called, the reference level or value is assumed for that variable.\footnote{
 One exception is \texttt{app.rate.ni}.
 }
 The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
@@ -205,7 +205,7 @@ And now we can call the model function, using default values for most other argu
 We can predict cumulative emission after 3 days (72 hours) with the following call.
 
 <<>>=
-pred1 <- ALFAM2mod(dat1, app.name = 'TAN.app', time.name = 'ctime')
+pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
 @
 
 The warning message just tells us that the call included some parameters with no associated predictor variables in our data frame given in the \texttt{dat} argument.
@@ -241,7 +241,7 @@ dat2
 @
 
 <<>>=
-pred2 <- ALFAM2mod(dat2, app.name = "TAN.app", time.name = "ctime", 
+pred2 <- alfam2(dat2, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
 pred2
 @
@@ -257,7 +257,7 @@ dat3
 @
 
 <<>>=
-pred3 <- ALFAM2mod(dat3, app.name = "TAN.app", time.name = "ctime", 
+pred3 <- alfam2(dat3, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
 pred3
 @
@@ -266,7 +266,7 @@ pred3
 A single function call can be used for multiple scenarios.
 For example, perhaps we would like to compare 5 different incorporation times.
 First let's create a new data frame that contains this information.
-We will need to add a new column with a grouping variable also, to let \texttt{ALFAM2mod()} know that each row represents a different scenario.
+We will need to add a new column with a grouping variable also, to let \texttt{alfam2()} know that each row represents a different scenario.
 
 <<>>=
 dat4 <- data.frame(scenario = 1:5, ctime = 72, TAN.app = 50, 
@@ -285,7 +285,7 @@ We could also specify this behavior with \texttt{t.incorp = NA}.\footnote{This w
 Let's run the model for these 5 scenarios.
 
 <<>>=
-pred4 <- ALFAM2mod(dat4, app.name = "TAN.app", time.name = "ctime", 
+pred4 <- alfam2(dat4, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", group = "scenario", warn = FALSE)
 pred4
 @
@@ -308,7 +308,7 @@ dat5
 @
 
 <<>>=
-pred5 <- ALFAM2mod(dat5, app.name = "TAN.app", time.name = "ctime", 
+pred5 <- alfam2(dat5, app.name = "TAN.app", time.name = "ctime", 
                    group = "scenario", warn = FALSE)
 pred5
 @
@@ -329,7 +329,7 @@ dat5b
 @
 
 <<>>=
-pred5b <- ALFAM2mod(dat5b, app.name = "TAN.app", time.name = "ctime", 
+pred5b <- alfam2(dat5b, app.name = "TAN.app", time.name = "ctime", 
                     group = "scenario", warn = FALSE, prep = TRUE)
 pred5b
 @
@@ -362,7 +362,7 @@ dat6
 @
 
 <<>>=
-pred6 <- ALFAM2mod(dat6, app.name = "TAN.app", time.name = "ctime", 
+pred6 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", group = "scenario", warn = TRUE, prep = TRUE)
 pred6
 @
@@ -394,7 +394,7 @@ Predictions are made as above.
 By default, multiple rows in \texttt{dat} are assumed to all below to the same scenario (same plot, same emission trial).\footnote{This is the reason the \texttt{group} argument was needed above.}
 
 <<>>=
-pred7 <- ALFAM2mod(dat7, app.name = 'TAN.app', time.name = 'ctime',
+pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
                    warn = FALSE)
 @
 
@@ -418,7 +418,7 @@ dat8$t.incorp <- 6.5
 @
 
 <<>>=
-pred8 <- ALFAM2mod(dat8, app.name = 'TAN.app', time.name = 'ctime',
+pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
                    time.incorp = 't.incorp', warn = FALSE, add.incorp.rows = TRUE)
 @
 
@@ -458,7 +458,7 @@ All the calls in this document used the default parameter values.
 However, it is possible to use completely different parameter values for the same parameters, or even different secondary parameters.
 These are set with the \texttt{pars} argument.
 
-For large datasets, or parameter estimation (where the \texttt{ALFAM2mod()} function is called many times), parallel processing will be helpful. 
+For large datasets, or parameter estimation (where the \texttt{alfam2()} function is called many times), parallel processing will be helpful. 
 See the \texttt{parallel} argument.
 
 \section*{Acknowledgements}
