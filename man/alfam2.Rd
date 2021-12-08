@@ -3,6 +3,8 @@
 \alias{ALFAM2mod}
 \alias{ALFAM2pars01}
 \alias{ALFAM2pars02}
+\alias{alfam2pars01}
+\alias{alfam2pars02}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
@@ -16,7 +18,7 @@ The model is described in Hafner et al. (2019).
 \usage{
 alfam2(
   dat, 
-  pars = ALFAM2::ALFAM2pars02, 
+  pars = ALFAM2::alfam2pars02, 
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, 
@@ -45,7 +47,7 @@ alfam2(
     data frame containing values for predictor variables
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = ALFAM2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to include a package check problem, the package name is included by default. See details for more information.
+    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to include a package check problem, the package name is included by default. See details for more information.
 }
   \item{app.name}{
     name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha)
@@ -98,7 +100,7 @@ alfam2(
 }
 }
 \details{
-  Parameter sets are provided for convenience. Both are numeric vectors. Set 1 (\code{ALFAM2pars01}) (Hafner et al., 2019) contains the following:
+  Parameter sets are provided for convenience. Both are numeric vectors. Set 1 (\code{alfam2pars01}) (Hafner et al., 2019) contains the following:
   \code{
          c(int.f0            = -0.7364889,
            int.r1            = -1.1785848,
@@ -181,6 +183,7 @@ alfam2(
 }
 \note{
   \code{ALFAM2mod()} is an alias for \code{alfam2}.
+  The parameter sets also have aliases with capital \code{ALFAM2}.
 }
 \author{
 Sasha D. Hafner

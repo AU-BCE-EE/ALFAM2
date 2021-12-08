@@ -137,7 +137,7 @@ Usually the default values, based on the measurements in the ALFAM2 database, sh
 Predictor variables and their default names are given in Table 1 below.
 
 \begin{table}[]
-  \caption{Default predictor variables that can be used with \texttt{alfam2()}, as given in the \texttt{ALFAM2pars02} or \texttt{ALFAM2pars01} objects.}
+  \caption{Default predictor variables that can be used with \texttt{alfam2()}, as given in the \texttt{alfam2pars02} or \texttt{alfam2pars01} objects.}
 \begin{tabular}{lllll}
 \hline
 Variable name & Description             & Units          & Notes             &  \\
@@ -163,13 +163,13 @@ Variable name & Description             & Units          & Notes             &  
 \end{tabular}
 \end{table}
 
-Default model parameters and numeric values in the \texttt{ALFAM2pars02} object (``Set 2'') should generally be used. 
+Default model parameters and numeric values in the \texttt{alfam2pars02} object (``Set 2'') should generally be used. 
 For information on how these values were calculated, see the report on calculation of Danish emission factors \cite{efreport2021}.
-(An earlier version (``Set 1'') are available in \texttt{ALFAM2pars01}. Derivation of these is described in the 2019 paper \cite{afmod2019}.) 
-Comparing the contents of \texttt{ALFAM2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
+(An earlier version (``Set 1'') are available in \texttt{alfam2pars01}. Derivation of these is described in the 2019 paper \cite{afmod2019}.) 
+Comparing the contents of \texttt{alfam2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
 
 <<>>=
-ALFAM2pars02
+alfam2pars02
 @
 
 These numbers indicate a primary parameter.
@@ -346,7 +346,7 @@ Here is an example with incorporation.
 Let's check out the incorporation parameters first:
 
 <<>>=
-ALFAM2pars02[grepl('^incorp', names(ALFAM2pars02))]
+alfam2pars02[grepl('^incorp', names(alfam2pars02))]
 @
 
 So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.

@@ -5,7 +5,7 @@
 
 alfam2 <- ALFAM2mod <- function(
   dat, 
-  pars = ALFAM2::ALFAM2pars02, 
+  pars = ALFAM2::alfam2pars02, 
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, # NULL with no incorporation, otherwise numeric value or column name. If column name value should be NA for no incorporation (w groups)
