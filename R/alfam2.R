@@ -37,7 +37,7 @@ alfam2 <- ALFAM2mod <- function(
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
   # Warning if cmns is changed
-  if (!identical(cmns, formals(alfam2)$cmns)) {
+  if (!identical(cmns, eval(formals(alfam2)$cmns))) {
     warning('You specified values for the cmns argument for centering means. Are you sure you want to do this?')
   }
 
