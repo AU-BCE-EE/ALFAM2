@@ -36,6 +36,11 @@ alfam2 <- ALFAM2mod <- function(
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
+  # Warning if cmns is changed
+  if (!missing(cmns)) {
+    warning('You specified values for the cmns argument for centering means. Are you sure you want to do this?')
+  }
+
   # Prepare input data (dummy variables)
   if (prep) {
     dum <- prepDat(dat, value = 'dummy')
