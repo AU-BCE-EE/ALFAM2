@@ -1,3 +1,3 @@
 import(parallel)
 importFrom("stats", "na.omit", "setNames")
-export(alfam2)
+export(alfam2, ALFAM2mod)
