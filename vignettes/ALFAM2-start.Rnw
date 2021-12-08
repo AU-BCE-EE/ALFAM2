@@ -350,7 +350,7 @@ alfam2pars02[grepl('^incorp', names(alfam2pars02))]
 @
 
 So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.
-To show that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to , let's set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
+To show that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
 
 <<>>=
 dat6 <- data.frame(scenario = 1:6, ctime = 72, TAN.app = 100, 
