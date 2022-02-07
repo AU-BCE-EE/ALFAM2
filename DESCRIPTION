@@ -1,8 +1,8 @@
 Package: ALFAM2
 Type: Package
 Title: Model and Data on Ammonia Emission from Field-Applied Manure
-Version: 1.5.5
-Date: 2021-12-08
+Version: 2.0
+Date: 2022-02-07
 Author: Sasha D. Hafner, Christoph Haeni
 Maintainer: Sasha D. Hafner <sasha.hafner@eng.au.dk>
 Depends: R (>= 3.5.0)

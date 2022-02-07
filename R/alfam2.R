@@ -38,7 +38,27 @@ alfam2 <- ALFAM2mod <- function(
 
   # Warning if cmns is changed
   if (!identical(cmns, eval(formals(alfam2)$cmns))) {
-    warning('You specified values for the cmns argument for centering means. Are you sure you want to do this?')
+    warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
+  }
+
+  # Warning if centering is turned off
+  if (!center) {
+    warning('You turned off centering by setting center = FALSE. Only use this option if you know what you are doing.')
+  }
+
+  # Check for specified columns after adding additional variables
+  # Add predictor variables if given in "..." optional arguments
+  if (!missing(...)) {
+    ovars <- list(...)
+    dat <- data.frame(dat, ovars)
+  }
+
+  if (!app.name %in% names(dat)) {
+    stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
+  }
+
+  if (!time.name %in% names(dat)) {
+    stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
   }
 
   # Prepare input data (dummy variables)
@@ -77,12 +97,6 @@ alfam2 <- ALFAM2mod <- function(
 
   # Remove non-existent columns if pass-through requested
   pass.col <- intersect(pass.col, names(dat))
-
-  # Add predictor variables if given in "..." optional arguments
-  if (!missing(...)) {
-    ovars <- list(...)
-    dat <- data.frame(dat, ovars)
-  }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
