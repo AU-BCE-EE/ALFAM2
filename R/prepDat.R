@@ -1,7 +1,7 @@
-# Prepare input data for ALFAM2mod()
+# Prepare input data for alfam2()/ALFAM2mod()
 
 prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', source.name = 'man.source',
-                    app.mthd.levels = list(ts = 'ts', 
+                    app.mthd.levels = list(ts = c('trailing shoe', 'ts', 'sl\u00E6besko'), 
                                            bc = c('broadcast', 'bc', 'broadspread', 'bredspredning', 'bredspredt'),
                                            os = c('open slot injection', 'os', 'open-slot injection', 'shallow injection', 'nedf\u00E6ldning i gr\u00E6s'), 
                                            cs = c('closed slot injection', 'cs', 'closed-slot injection', 'deep injection', 'nedf\u00E6ldning p\u00E5 sort jord')),
