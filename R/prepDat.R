@@ -63,9 +63,12 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     }
   }
 
-  dum <- dat[, 1:ndum + ncc, drop = FALSE]
-
-  if (value == 'dummy') return(dum)
+  if (ndum > 0) {
+    dum <- dat[, 1:ndum + ncc, drop = FALSE]
+    if (value == 'dummy') return(dum)
+  } else {
+    warning('You set prep = TRUE but there are no variables to convert to dummy variables!\nIgnoring prep = TRUE.') 
+  }
 
   return(dat)
 }

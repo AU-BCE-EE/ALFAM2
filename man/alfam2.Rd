@@ -83,7 +83,7 @@ alfam2(
     Length one logical vector.
 }
   \item{prep}{
-    set to \code{TRUE} to automatically prepare dummy variables from input data. If \code{FALSE} (default), any necessary dummay variables must be present in \code{dat}. See vignette.
+    set to \code{TRUE} to automatically prepare dummy variables from input data. If \code{FALSE} (default), any necessary dummay variables must already be present in \code{dat}. See vignette.
 }  
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
