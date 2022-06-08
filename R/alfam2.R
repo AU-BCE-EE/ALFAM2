@@ -276,8 +276,12 @@ alfam2 <- ALFAM2mod <- function(
   # f4 only calculated where it is already 0 (not default of 1)
   if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
-  # split dat into groups
+  # Add drop row indicator
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
+
+  # Pare down to essential columns
+  dat <- dat[, c('__group', 'orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
+  # Split into list of data frames
   s.dat <- split(dat, dat$`__group`)
 
   if(check.NA && any(sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f4")])))) {
