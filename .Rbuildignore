@@ -1,3 +1,5 @@
 ^make-Rda$
 ^schematic.png$
 ^LICENSE$
+^.*\.Rproj$
+^\.Rproj\.user$
