@@ -36,6 +36,8 @@ alfam2 <- ALFAM2mod <- function(
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
+  if (parallel) warning('parallel argument ignored >v2.1.3')
+
   # Warning if cmns is changed
   if (!identical(cmns, eval(formals(alfam2)$cmns))) {
     warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
@@ -290,75 +292,38 @@ alfam2 <- ALFAM2mod <- function(
     stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
   }
 
-  # Parallel
-  if(parallel) {
+  e.list <- vector("list", length(s.dat))
 
-    # starting cluster and trigger stop on.exit
-    cl <- parallel::makeCluster(n.cpus, type = "PSOCK")
-    on.exit(parallel::stopCluster(cl))
-
-    # sorting input for efficiency
-    s.nr <- sapply(s.dat, nrow)
-    do.nr <- order(s.nr, decreasing = TRUE)
-
-    # split indices
-    split_ind <- lapply(seq_along(cl) , function(x){
-      out <- seq(0, length(do.nr), by = length(cl)) + x
-      do.nr[out[out <= length(do.nr)]]
-    })
-
-    # prepare export    
-    s.list <- lapply(s.dat, function(x) x[, c("orig.order", "__drop.row", 
-      time.name, app.name, "__f0", "__r1", "__r2", "__r3", "__f4")])
-    split_list <- lapply(split_ind, function(x) s.list[x])
-
-    # do parallel
-    e.list <- parallel::clusterApply(cl, split_list, .wrap_calcEmis)
-
-    # stop cluster and empty on.exit
-    parallel::stopCluster(cl)
-    on.exit()
-
-    # rbind & merge
-    e0 <- do.call("rbind", e.list)
-    e <- merge(dat, e0, by = c("orig.order", time.name))[,
-      c("orig.order", group, names(e0)[-1], pass.col)]
-
-  } else {
-
-    e.list <- vector("list", length(s.dat))
-
-    for(i in seq_along(s.dat)) {
-      # get subset
-      sub.dat <- s.dat[[i]]
-      # Check for duplicate ct
-      if(any(duplicated(sub.dat[!sub.dat$`__add.row`, time.name]))) {
-        stop('Look for 998123b in function code. Duplicated ct values.')
-      }
-
-      # calculate emission
-      drop.rows <- sub.dat$`__drop.row`
-      ce <- calcEmis(
-        ct = sub.dat[, time.name],
-        # Calculate a0 and u0 (f4 transfers done in calcEmis())
-        a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
-        u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
-        r1 = sub.dat[, "__r1"],
-        r2 = sub.dat[, "__r2"],
-        r3 = sub.dat[, "__r3"],
-        f4 = sub.dat[, "__f4"], drop.rows = drop.rows)
-
-      # add group
-      e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
-                                sub.dat[!drop.rows, group, drop = FALSE],
-                                ce, 
-                                sub.dat[!drop.rows, pass.col, drop = FALSE],
-                                row.names = NULL, check.names = FALSE)
+  for(i in seq_along(s.dat)) {
+    # get subset
+    sub.dat <- s.dat[[i]]
+    # Check for duplicate ct
+    if(any(duplicated(sub.dat[!sub.dat$`__add.row`, time.name]))) {
+      stop('Look for 998123b in function code. Duplicated ct values.')
     }
 
-    # rbind e.list to data.frame
-    e <- do.call("rbind", e.list)
+    # calculate emission
+    drop.rows <- sub.dat$`__drop.row`
+    ce <- calcEmis(
+      ct = sub.dat[, time.name],
+      # Calculate a0 and u0 (f4 transfers done in calcEmis())
+      a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
+      u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
+      r1 = sub.dat[, "__r1"],
+      r2 = sub.dat[, "__r2"],
+      r3 = sub.dat[, "__r3"],
+      f4 = sub.dat[, "__f4"], drop.rows = drop.rows)
+
+    # add group
+    e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
+                              sub.dat[!drop.rows, group, drop = FALSE],
+                              ce, 
+                              sub.dat[!drop.rows, pass.col, drop = FALSE],
+                              row.names = NULL, check.names = FALSE)
   }
+
+  # rbind e.list to data.frame
+  e <- do.call("rbind", e.list)
 
   # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
   out <- e[order(e$orig.order), -1]
