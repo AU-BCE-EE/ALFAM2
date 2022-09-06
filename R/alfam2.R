@@ -36,6 +36,8 @@ alfam2 <- ALFAM2mod <- function(
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
+  if (nrow(dat) == 0) stop('dat has no rows!')
+
   if (parallel) warning('parallel argument ignored >v2.1.3')
 
   # Warning if cmns is changed
@@ -56,7 +58,7 @@ alfam2 <- ALFAM2mod <- function(
   }
 
   if (!app.name %in% names(dat)) {
-    stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
+    stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
   }
 
   if (!time.name %in% names(dat)) {
