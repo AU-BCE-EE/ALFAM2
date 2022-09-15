@@ -283,16 +283,18 @@ alfam2 <- ALFAM2mod <- function(
   # Add drop row indicator
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
 
-  # Pare down to essential columns
-  dat <- dat[, c('__group', 'orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
-  # Split into list of data frames
-  s.dat <- split(dat, dat$`__group`)
-
-  if(check.NA && any(sapply(s.dat, function(x) anyNA(x[, c("__f0", "__r1", "__r2", "__r3", "__f4")])))) {
+  # Missing values
+  if(check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
+    cat('Error!\n')
     cat('Missing values in predictors:\n')
     print(apply(dat[, unique(names(pars[!grepl('^int', names(pars))]))], 2, function(x) sum(is.na(x))))
     stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
   }
+
+  # Pare down to essential columns
+  dat <- dat[, c('__group', 'orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
+  # Split into list of data frames
+  s.dat <- split(dat, dat$`__group`)
 
   e.list <- vector("list", length(s.dat))
 
