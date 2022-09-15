@@ -4,6 +4,14 @@ Model for ammonia volatilization (loss) from field-applied manure.
 # Model schematic
 ![schematic](schematic.png)
 
+# Model description
+See the following paper for more details on the model.
+
+Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G., 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment 199: 474-484. <https://doi.org/10.1016/j.atmosenv.2018.11.034>
+
+Download a copy [here](https://drive.google.com/file/d/1UEzmjApe2kMs4CyX6dUQIqn0ZOZ8elV9/view?usp=sharing).
+
+
 # Installation
 Installation of packages from GitHub requires a package called devtools.
 You can run the code below to install devtools and ALFAM2.
