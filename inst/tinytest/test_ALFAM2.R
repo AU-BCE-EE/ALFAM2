@@ -58,6 +58,12 @@ dat1 <- data.frame(ctime = 48, TAN.app = 100)
 pred1 <- alfam2(dat1, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
 expect_equal(pred0, pred1)
 
+# Should get a warning if trying to use reserved names
+# It's hard to use a reserved name!
+dat0 <- data.frame(ctime = 48, TAN.app = 100)
+dat0$`__r1` <- 0
+expect_warning(alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE))
+
 
 # Tests are needed for groups and pass_cols
 # Also for some warnings (like missing predictor vars, changning centering means. . .

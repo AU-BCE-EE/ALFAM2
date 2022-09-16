@@ -83,7 +83,6 @@ alfam2 <- ALFAM2mod <- function(
     } else {
       message('User-supplied parameters are being used.')
     }
-    # NTS: Also print par list?
   }
 
   # If pars was given as list, change to vector
@@ -102,14 +101,19 @@ alfam2 <- ALFAM2mod <- function(
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
   # -> possibly extend names as done below?
   # Yup! Will work on.
+  reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', '__orig.order')
+  if (any(names(dat) %in% reserved.names)) {
+    warning('dat data frame has some columns with reserved names.\nYou can proceed, but there may be problems.\nBetter to remove/rename the offending columns: ', reserved.names[reserved.names %in% names(dat)])
+  }
 
-  # Remove non-existent columns if pass-through requested
+  # Remove non-existent pass.col columns if pass-through requested
   pass.col <- intersect(pass.col, names(dat))
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
     dat$`__group` <- 'a' 
   } else {
+    # NTS: what does next line do?
     dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = "//")
   }
 
@@ -123,7 +127,7 @@ alfam2 <- ALFAM2mod <- function(
   }
 
   # Original order (for sorting before return)
-  dat$orig.order <- 1:nrow(dat)
+  dat$`__orig.order` <- 1:nrow(dat)
 
   # Extend dat data frame with incorporation time if needed
   dat$`__add.row` <- FALSE 
@@ -296,7 +300,7 @@ alfam2 <- ALFAM2mod <- function(
   }
 
   # Pare down to essential columns
-  dat <- dat[, c('__group', 'orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
+  dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
   # Split into list of data frames
   s.dat <- split(dat, dat$`__group`)
 
@@ -326,7 +330,7 @@ alfam2 <- ALFAM2mod <- function(
     names(ce)[names(ce) == 'ct'] <- time.name
 
     # add group
-    e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
+    e.list[[i]] <- data.frame(`__orig.order` = sub.dat[!drop.rows, "__orig.order"], 
                               sub.dat[!drop.rows, group, drop = FALSE],
                               ce, 
                               sub.dat[!drop.rows, pass.col, drop = FALSE],
@@ -337,7 +341,7 @@ alfam2 <- ALFAM2mod <- function(
   e <- do.call("rbind", e.list)
 
   # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
-  out <- e[order(e$orig.order), -1]
+  out <- e[order(e$`__orig.order`), -1]
   row.names(out) <- seq.int(nrow(out))
 
   if (!add.incorp.rows & prep) {
