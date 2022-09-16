@@ -26,12 +26,16 @@ alfam2 <- ALFAM2mod <- function(
   warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
-  ...                 # Additional predictor variables with fixed values for all times (all rows)
+  ...                 # Additional predictor variables with fixed values for all times and groups (all rows)
   ) {
 
 
-  # NTS: Work needed here. 
-  # Add checks for all arguments
+  # Argument checks
+  # NTS: Work needed here, add checks for all arguments
+  # Convert data.table to data.frame
+  if (class(dat)[1] == 'data.table') {
+    dat <- as.data.frame(dat)
+  }
   checkArgClassValue(dat, expected.class = 'data.frame')
   checkArgClassValue(pars, expected.class = c('numeric', 'list'))
   checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
