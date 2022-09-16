@@ -322,6 +322,9 @@ alfam2 <- ALFAM2mod <- function(
       r3 = sub.dat[, "__r3"],
       f4 = sub.dat[, "__f4"], drop.rows = drop.rows)
 
+    # Change name of ct to what user specified
+    names(ce)[names(ce) == 'ct'] <- time.name
+
     # add group
     e.list[[i]] <- data.frame(orig.order = sub.dat[!drop.rows, "orig.order"], 
                               sub.dat[!drop.rows, group, drop = FALSE],
