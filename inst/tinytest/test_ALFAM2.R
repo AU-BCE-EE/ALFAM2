@@ -42,3 +42,12 @@ dat1 <- data.frame(nothing = NA)
 pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE, ctime = 48, TAN.app = 100, wind.2m = 1)
 expect_equal(pred0, pred1)
+
+# Incorporation can be set with a column name or fixed value
+dat0 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = 1, incorp.shallow = TRUE, t.incorp = 4)
+dat1 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = 1, incorp.shallow = TRUE)
+pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', warn = FALSE)
+pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, warn = FALSE)
+expect_equal(pred0, pred1)
+
+# Tests are needed for groups and pass_cols
