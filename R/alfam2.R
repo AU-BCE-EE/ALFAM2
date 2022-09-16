@@ -6,6 +6,7 @@
 alfam2 <- ALFAM2mod <- function(
   dat, 
   pars = ALFAM2::alfam2pars02, 
+  add.pars = NULL,
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, # NULL with no incorporation, otherwise numeric value or column name. If column name value should be NA for no incorporation (w groups)
@@ -94,6 +95,27 @@ alfam2 <- ALFAM2mod <- function(
   if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(pars)))){
     names(pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(pars)[chg.nms])
   }
+
+  # Additional pars that override or extend pars
+  if (!is.null(add.pars)) {
+    if (warn) {
+      message('Additional parameters were specified.')
+    }
+
+    # If add.pars was given as list, change to vector
+    if(is.list(add.pars)) {
+      add.pars <- unlist(add.pars)
+    }
+
+    # Continue with add.pars conversion as with pars above
+    if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(add.pars)))){
+      names(add.pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(add.pars)[chg.nms])
+    }
+
+    # Combine add.pars with pars, with add.pars overriding pars
+    pars <- c(add.pars, pars[!names(pars) %in% add.pars])
+  }
+
 
   # Check that all names for pars end with a number
   if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')

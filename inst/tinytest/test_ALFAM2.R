@@ -59,10 +59,18 @@ pred1 <- alfam2(dat1, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
 expect_equal(pred0, pred1)
 
 # Should get a warning if trying to use reserved names
-# It's hard to use a reserved name!
 dat0 <- data.frame(ctime = 48, TAN.app = 100)
+# It's hard to use a reserved name!
 dat0$`__r1` <- 0
 expect_warning(alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE))
+
+# Make sure add.pars changes output whether overriding or replacing
+dat0 <- data.frame(ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 10, wind.2m = 5, soil.type.clay = 1)
+pred0 <- alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+pred1 <- alfam2(dat0, add.pars = c(wind.2m.r1 = 1), app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+pred2 <- alfam2(dat0, add.pars = c(soil.type.clay.f0 = 1), app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+expect_false(identical(pred0, pred1))
+expect_false(identical(pred0, pred2))
 
 
 # Tests are needed for groups and pass_cols
