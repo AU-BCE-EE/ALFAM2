@@ -1,0 +1,44 @@
+
+# Time step has no effect on result ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dat0 <- data.frame(ctime = 48, TAN.app = 100)
+pred0 <- alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+
+dat1 <- data.frame(ctime = 0:48, TAN.app = 100)
+pred1 <- alfam2(dat1, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+
+expect_equal(pred0$er[1], pred1$er[49])
+
+
+# Time step has no effect on result even with incorporation ~~~~~~~~~~~~~~~~~~~~~~~
+dat0 <- data.frame(ctime = 48, TAN.app = 100)
+dat0$incorpdeep <- TRUE
+dat0$t.incorp <- 4
+pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', warn = FALSE)
+
+dat1 <- data.frame(ctime = 0:48, TAN.app = 100)
+dat1$incorpdeep <- TRUE
+dat1$t.incorp <- 4
+pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', warn = FALSE)
+
+expect_equal(pred0$er[1], pred1$er[49])
+
+
+# add.incorp.rows adds a row ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dat0 <- data.frame(ctime = 48, TAN.app = 100)
+dat0$incorp.deep <- TRUE
+dat0$t.incorp <- 4
+pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', add.incorp.rows = TRUE, warn = FALSE)
+
+expect_equal(length(pred0$er), 2)
+expect_equal(pred0$ct, c(4, 48))
+
+# NAs in input variables should throw an error ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dat0 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = c(1, NA))
+expect_error(alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE))
+
+# Predictor and other varibles can be added at end
+dat0 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = 1)
+dat1 <- data.frame(nothing = NA)
+pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
+pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE, ctime = 48, TAN.app = 100, wind.2m = 1)
+expect_equal(pred0, pred1)
