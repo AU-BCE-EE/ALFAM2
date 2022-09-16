@@ -50,11 +50,6 @@ alfam2 <- ALFAM2mod <- function(
     warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
   }
 
-  # Warning if centering is turned off
-  if (!center) {
-    warning('You turned off centering by setting center = FALSE. Only use this option if you know what you are doing.')
-  }
-
   # Check for specified columns after adding additional variables
   # Add predictor variables if given in "..." optional arguments
   if (!missing(...)) {
@@ -118,7 +113,7 @@ alfam2 <- ALFAM2mod <- function(
 
 
   # Check that all names for pars end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list as argument.')
+  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
 
   # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
   # -> possibly extend names as done below?
@@ -145,7 +140,13 @@ alfam2 <- ALFAM2mod <- function(
     c_cols <- names(cmns)[names(cmns) %in% names(dat)]
 
     # center
-    if(length(c_cols)) dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, cmns[c_cols])
+    if(length(c_cols)) {
+      dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = cmns[c_cols], scale = FALSE)
+      #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, cmns[c_cols])
+    }
+  } else {
+    # Warning if centering is turned off
+    warning('You turned off centering by setting center = FALSE. Only use this option if you know what you are doing.')
   }
 
   # Original order (for sorting before return)
