@@ -11,7 +11,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
   //Suffix "a" is for "all", e.g., cta has values for all groups, ct is for 1 group
   //Empty output vectors
   R_xlen_t nobs = cta.length();
-  NumericVector aa(nobs), ua(nobs), ea(nobs);
+  NumericVector aa(nobs), ua(nobs), ea(nobs), dt(nobs);
 
   //Group loop
   //length() or size()??
@@ -49,7 +49,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
     */
 
     //Number of intervals
-    //Note that now l = ng, NTS could merge
+    //Note that now l = ng, NTS could merge WAIT NO! l = numebr of time steps!
     R_xlen_t l = ct.length();
     NumericVector a(l), u(l), e(l), ddt(l);
     
@@ -86,15 +86,17 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
     //Put results in "all" vectors
     //i = relative element index
     for (R_xlen_t i = 0; i < gl; i++) {
-      aa[i] = a[gs + i];
-      ua[i] = u[gs + i];
-      ea[i] = e[gs + i];
+      aa[gs + i] = a[i];
+      ua[gs + i] = u[i];
+      ea[gs + i] = e[i];
+      dt[gs + i] = ddt[i];
     }
 
   }
 
   //Return results
   return List::create(_["ct"] = cta, 
+                      _["dt"] = dt, 
                       _["f"] = aa, 
                       _["s"] = ua, 
                       _["e"] = ea);

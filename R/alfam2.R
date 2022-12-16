@@ -333,7 +333,7 @@ alfam2 <- ALFAM2mod <- function(
   gstart <- match(unique(dat[, '__group']), dat[, '__group']) - 1
   gend <- c(gstart[-1] - 1, nrow(dat)) - 1
 
-  e <- rcpp_calcEmis(
+  out <- rcpp_calcEmis(
     cta = dat[, time.name],
     a0a = dat[, "__f0"] * dat[1, app.name],
     u0a = (1 - dat[, "__f0"]) * dat[, app.name],
@@ -354,8 +354,14 @@ alfam2 <- ALFAM2mod <- function(
   #  out <- cbind(dum, out)
   #}
 
-  ### NTS
-  out <- e
+  out <- as.data.frame(out)
+
+  # Recalculate ddt ((??)), e.int, and j.ave.int in case there were dropped rows
+  e.prev <- c(0, out$e[-nrow(out)])
+  ## NTS check this
+  e.prev[gstart + 1] <- 0
+  out$e.int <- out$e - e.prev
+  out$j <- out$e.int/out$dt
 
   return(out)
 

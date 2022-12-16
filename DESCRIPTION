@@ -1,14 +1,14 @@
 Package: ALFAM2
 Type: Package
 Title: Model on Ammonia Emission from Field-Applied Manure
-Version: 2.4
+Version: 2.5
 Date: 2022-12-16
-Authors@R: c(person("Sasha D.", "Hafner", role = c("aut", "cre"), email = "sasha.hafner@au.dk"),
+Authors@R: c(person("Sasha D.", "Hafner", role = c("aut", "cre"), email = "sasha.hafner@bce.au.dk"),
              person("Christoph", "Haeni", role = "aut"),
              person("Roland", "Fuss", role = "aut", email = "roland.fuss@thuenen.de"))
 Maintainer: Sasha D. Hafner <sasha.hafner@eng.au.dk>
 Depends: R (>= 3.5.0)
-Imports: Rcpp (>= 1.0.8), stats, parallel
+Imports: Rcpp (>= 1.0.8), stats
 Suggests: tinytest, knitr
 Description: An implementation of the ALFAM2 model for ammonia emission from field-applied manure. Model can be used with default parameters or applied to specific cases (locations, application methods, etc.).
 License: GPL-3
