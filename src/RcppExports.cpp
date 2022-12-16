@@ -11,25 +11,27 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // rcpp_calcEmis
-List rcpp_calcEmis(const NumericVector ct, const double a0, const double u0, const NumericVector r1, const NumericVector r2, const NumericVector r3, const NumericVector f4);
-RcppExport SEXP _ALFAM2_rcpp_calcEmis(SEXP ctSEXP, SEXP a0SEXP, SEXP u0SEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP r3SEXP, SEXP f4SEXP) {
+List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a, const NumericVector u0a, const NumericVector r1a, const NumericVector r2a, const NumericVector r3a, const NumericVector f4a, const IntegerVector gstart, const IntegerVector gend);
+RcppExport SEXP _ALFAM2_rcpp_calcEmis(SEXP ctaSEXP, SEXP a0aSEXP, SEXP u0aSEXP, SEXP r1aSEXP, SEXP r2aSEXP, SEXP r3aSEXP, SEXP f4aSEXP, SEXP gstartSEXP, SEXP gendSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector >::type ct(ctSEXP);
-    Rcpp::traits::input_parameter< const double >::type a0(a0SEXP);
-    Rcpp::traits::input_parameter< const double >::type u0(u0SEXP);
-    Rcpp::traits::input_parameter< const NumericVector >::type r1(r1SEXP);
-    Rcpp::traits::input_parameter< const NumericVector >::type r2(r2SEXP);
-    Rcpp::traits::input_parameter< const NumericVector >::type r3(r3SEXP);
-    Rcpp::traits::input_parameter< const NumericVector >::type f4(f4SEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_calcEmis(ct, a0, u0, r1, r2, r3, f4));
+    Rcpp::traits::input_parameter< const NumericVector >::type cta(ctaSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type a0a(a0aSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type u0a(u0aSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type r1a(r1aSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type r2a(r2aSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type r3a(r3aSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type f4a(f4aSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type gstart(gstartSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type gend(gendSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_calcEmis(cta, a0a, u0a, r1a, r2a, r3a, f4a, gstart, gend));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ALFAM2_rcpp_calcEmis", (DL_FUNC) &_ALFAM2_rcpp_calcEmis, 7},
+    {"_ALFAM2_rcpp_calcEmis", (DL_FUNC) &_ALFAM2_rcpp_calcEmis, 9},
     {NULL, NULL, 0}
 };
 

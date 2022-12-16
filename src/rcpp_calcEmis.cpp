@@ -2,11 +2,54 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List rcpp_calcEmis(const NumericVector ct, const double a0, 
-                   const double u0, const NumericVector r1, 
-                   const NumericVector r2, const NumericVector r3, 
-                   const NumericVector f4) {
+List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a, 
+                   const NumericVector u0a, const NumericVector r1a, 
+                   const NumericVector r2a, const NumericVector r3a, 
+                   const NumericVector f4a, const IntegerVector gstart,
+                   const IntegerVector gend) {
+
+  //Suffix "a" is for "all", e.g., cta has values for all groups, ct is for 1 group
+  //Empty output vectors
+  R_xlen_t nobs = cta.length();
+  NumericVector aa(nobs), ua(nobs), ea(nobs);
+
+  //Group loop
+  //length() or size()??
+  R_xlen_t ngrp = gstart.length(); // ngrp = number of groups
+
+  //Loop through groups, g = group
+  for (R_xlen_t g = 0; g < ngrp; ++g) {
+    //Group g indices
+    R_xlen_t gs = gstart[g];
+    R_xlen_t ge = gend[g];
+    R_xlen_t gl = ge - gs + 1;
+
+    //Extract group values of inputs
+    NumericVector ct(gl), r1(gl), r2(gl), r3(gl), f4(gl);
+
+    //i = relative element index
+    for (R_xlen_t i = 0; i < gl; i++) {
+      ct[i] = cta[gs + i];
+      r1[i] = r1a[gs + i];
+      r2[i] = r2a[gs + i];
+      r3[i] = r3a[gs + i];
+      f4[i] = f4a[gs + i];
+    }
+
+    /*
+    //Alt that might work
+    //Extract group i values
+    NumericVector ct(cta.begin() + gs - 1, cta.begin() + ge)
+    NumericVector a0(a0a.begin() + gs - 1, a0a.begin() + ge)
+    NumericVector u0(u0a.begin() + gs - 1, u0a.begin() + ge)
+    NumericVector r1(r1a.begin() + gs - 1, r1a.begin() + ge)
+    NumericVector r2(r2a.begin() + gs - 1, r2a.begin() + ge)
+    NumericVector r3(r3a.begin() + gs - 1, r3a.begin() + ge)
+    NumericVector f4(f4a.begin() + gs - 1, f4a.begin() + ge)
+    */
+
     //Number of intervals
+    //Note that now l = ng, NTS could merge
     R_xlen_t l = ct.length();
     NumericVector a(l), u(l), e(l), ddt(l);
     
@@ -17,6 +60,8 @@ List rcpp_calcEmis(const NumericVector ct, const double a0,
     }
     
     //initial values
+    double a0 = a0a[gs];
+    double u0 = u0a[gs];
     double ati0 = a0;
     double uti0 = u0;
     double eti = 0;
@@ -37,18 +82,20 @@ List rcpp_calcEmis(const NumericVector ct, const double a0,
         uti0 = u[i];
         eti = e[i];
     }
-    
-    return List::create(_["ct"] = ct, 
-                        _["dt"] = ddt,
-                        _["f0"] = a0/(u0 + a0),
-                        _["r1"] = r1, 
-                        _["r2"] = r2,
-                        _["r3"] = r3, 
-                        _["f4"] = f4, 
-                        _["f"] = a, 
-                        _["s"] = u, 
-                        _["j"] = NA_REAL, 
-                        _["e"] = e, 
-                        _["e.int"] = NA_REAL, 
-                        _["er"] = e/(a0 + u0));
-}
+
+    //Put results in "all" vectors
+    //i = relative element index
+    for (R_xlen_t i = 0; i < gl; i++) {
+      aa[i] = a[gs + i];
+      ua[i] = u[gs + i];
+      ea[i] = e[gs + i];
+    }
+
+  }
+
+  //Return results
+  return List::create(_["ct"] = cta, 
+                      _["f"] = aa, 
+                      _["s"] = ua, 
+                      _["e"] = ea);
+}  

@@ -318,58 +318,44 @@ alfam2 <- ALFAM2mod <- function(
   if(check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
     cat('Error!\n')
     cat('Missing values in predictors:\n')
-    print(apply(dat[, unique(names(pars[!grepl('^int', names(pars))]))], 2, function(x) sum(is.na(x))))
+    nn <- unique(names(pars[!grepl('^int', names(pars))]))
+    print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
     stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
   }
 
   # Pare down to essential columns
   dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
-  # Split into list of data frames
-  s.dat <- split(dat, dat$`__group`)
 
-  e.list <- vector("list", length(s.dat))
+  ## NTS: need some sorting here first!!!
 
-  for(i in seq_along(s.dat)) {
-    # get subset
-    sub.dat <- s.dat[[i]]
-    # Check for duplicate ct
-    if(any(duplicated(sub.dat[!sub.dat$`__add.row`, time.name]))) {
-      stop('Look for 998123b in function code. Duplicated ct values.')
-    }
+  # Group positions
+  # Note - 1 to get C++ approach of first index = 0
+  gstart <- match(unique(dat[, '__group']), dat[, '__group']) - 1
+  gend <- c(gstart[-1] - 1, nrow(dat)) - 1
 
-    # calculate emission
-    drop.rows <- sub.dat$`__drop.row`
-    ce <- calcEmis(
-      ct = sub.dat[, time.name],
-      # Calculate a0 and u0 (f4 transfers done in calcEmis())
-      a0 = sub.dat[1, "__f0"]*sub.dat[1, app.name],
-      u0 = (1 - sub.dat[1, "__f0"])*sub.dat[1, app.name],
-      r1 = sub.dat[, "__r1"],
-      r2 = sub.dat[, "__r2"],
-      r3 = sub.dat[, "__r3"],
-      f4 = sub.dat[, "__f4"], drop.rows = drop.rows)
+  e <- rcpp_calcEmis(
+    cta = dat[, time.name],
+    a0a = dat[, "__f0"] * dat[1, app.name],
+    u0a = (1 - dat[, "__f0"]) * dat[, app.name],
+    r1a = dat[, "__r1"],
+    r2a = dat[, "__r2"],
+    r3a = dat[, "__r3"],
+    f4a = dat[, "__f4"], 
+    gstart = gstart,
+    gend = gend 
+  )
 
-    # Change name of ct to what user specified
-    names(ce)[names(ce) == 'ct'] <- time.name
 
-    # add group
-    e.list[[i]] <- data.frame(`__orig.order` = sub.dat[!drop.rows, "__orig.order"], 
-                              sub.dat[!drop.rows, group, drop = FALSE],
-                              ce, 
-                              sub.dat[!drop.rows, pass.col, drop = FALSE],
-                              row.names = NULL, check.names = FALSE)
-  }
+  ### Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
+  ##out <- e[order(e$`__orig.order`), -1]
+  ##row.names(out) <- seq.int(nrow(out))
 
-  # rbind e.list to data.frame
-  e <- do.call("rbind", e.list)
+  #if (!add.incorp.rows & prep) {
+  #  out <- cbind(dum, out)
+  #}
 
-  # Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
-  out <- e[order(e$`__orig.order`), -1]
-  row.names(out) <- seq.int(nrow(out))
-
-  if (!add.incorp.rows & prep) {
-    out <- cbind(dum, out)
-  }
+  ### NTS
+  out <- e
 
   return(out)
 
