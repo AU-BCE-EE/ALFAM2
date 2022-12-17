@@ -324,6 +324,7 @@ alfam2 <- ALFAM2mod <- function(
   }
 
   # Pare down to essential columns
+  # No good reason for this anymore except debugging ease
   dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
 
   # Sort required for gstart and gend to work, also ct loop
@@ -334,7 +335,8 @@ alfam2 <- ALFAM2mod <- function(
   gstart <- match(unique(dat[, '__group']), dat[, '__group']) - 1
   gend <- c(gstart[-1], nrow(dat)) - 1
 
-  out <- rcpp_calcEmis(
+  # Calculate emission for all groups, all in C++ function
+  ce <- rcpp_calcEmis(
     cta = dat[, time.name],
     a0a = dat[, "__f0"] * dat[1, app.name],
     u0a = (1 - dat[, "__f0"]) * dat[, app.name],
@@ -346,32 +348,41 @@ alfam2 <- ALFAM2mod <- function(
     gend = gend 
   )
 
-  out <- as.data.frame(out)
-  out <- cbind(out, dat[, c('__group', '__orig.order', '__drop.row')])
+  ce <- as.data.frame(ce)
+  ce <- cbind(ce, dat[, c('__group', '__orig.order', '__drop.row')])
 
   # Sort to match original order 
   # NTS how does this work with add.incorp.rows = TRUE?
-  # NTS there was a , -1, what first col was dropped before?
-  out <- out[order(out$`__orig.order`), ]
-  row.names(out) <- seq.int(nrow(out))
+  # NTS there was a , -1, what first col was dropped before? Prob group?
+  ce <- ce[order(ce$`__orig.order`), ]
+  row.names(ce) <- seq.int(nrow(ce))
 
   # Drop added rows
-  out <- out[!out[, '__drop.row'], ]
+  ce <- ce[!ce[, '__drop.row'], ]
 
   if (!add.incorp.rows & prep) {
-    out <- cbind(dum, out)
+    ce <- cbind(dum, ce)
   }
 
   # Recalculate dt, e.int after possibly dropping rows and get j
-  gstart <- match(unique(out[, '__group']), out[, '__group'])
-  ct.prev <- c(0, out[-nrow(out), 'ct'])
+  gstart <- match(unique(ce[, '__group']), ce[, '__group'])
+  ct.prev <- c(0, ce[-nrow(ce), 'ct'])
   ct.prev[gstart] <- 0
-  out$dt <- out[, 'ct'] - ct.prev
+  ce$dt <- ce[, 'ct'] - ct.prev
 
-  e.prev <- c(0, out$e[-nrow(out)])
+  e.prev <- c(0, ce$e[-nrow(ce)])
   e.prev[gstart] <- 0
-  out$e.int <- out$e - e.prev
-  out$j <- out$e.int/out$dt
+  ce$e.int <- ce$e - e.prev
+  ce$j <- ce$e.int/ce$dt
+
+  # Sort ce names so they match user input
+  names(ce)[names(ce) == 'ct'] <- time.name
+
+  # Add other columns
+  drop.rows <- dat[, '__drop.row']
+  out <- data.frame(dat[!drop.rows, c(group, pass.col), drop = FALSE],
+                    ce, 
+                    row.names = NULL, check.names = FALSE)
 
   return(out)
 
