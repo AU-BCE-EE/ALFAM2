@@ -326,12 +326,13 @@ alfam2 <- ALFAM2mod <- function(
   # Pare down to essential columns
   dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
 
-  ## NTS: need some sorting here first!!!
+  # Sort reqiured for gstart and gend to work, also ct loop
+  dat <- dat[order(dat[, '__group'], dat[, time.name]), ]
 
   # Group positions
   # Note - 1 to get C++ approach of first index = 0
   gstart <- match(unique(dat[, '__group']), dat[, '__group']) - 1
-  gend <- c(gstart[-1] - 1, nrow(dat)) - 1
+  gend <- c(gstart[-1], nrow(dat)) - 1
 
   out <- rcpp_calcEmis(
     cta = dat[, time.name],
@@ -345,20 +346,22 @@ alfam2 <- ALFAM2mod <- function(
     gend = gend 
   )
 
-
-  ### Sort to match original order NTS how does this work with add.incorp.rows = TRUE?
-  ##out <- e[order(e$`__orig.order`), -1]
-  ##row.names(out) <- seq.int(nrow(out))
-
-  #if (!add.incorp.rows & prep) {
-  #  out <- cbind(dum, out)
-  #}
-
   out <- as.data.frame(out)
+  out <- cbind(out, dat[, c('__group', '__orig.order', '__drop.row')])
+
+  # Sort to match original order 
+  # NTS how does this work with add.incorp.rows = TRUE?
+  # NTS there was a , -1, what first col was dropped before?
+  out <- out[order(out$`__orig.order`), ]
+  row.names(out) <- seq.int(nrow(out))
+
+  if (!add.incorp.rows & prep) {
+    out <- cbind(dum, out)
+  }
 
   # Recalculate ddt ((??)), e.int, and j.ave.int in case there were dropped rows
   e.prev <- c(0, out$e[-nrow(out)])
-  ## NTS check this
+  ## NTS check this--is gstart + 1 correct?
   e.prev[gstart + 1] <- 0
   out$e.int <- out$e - e.prev
   out$j <- out$e.int/out$dt
