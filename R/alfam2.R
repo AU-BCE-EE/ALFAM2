@@ -326,7 +326,7 @@ alfam2 <- ALFAM2mod <- function(
   # Pare down to essential columns
   dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
 
-  # Sort reqiured for gstart and gend to work, also ct loop
+  # Sort required for gstart and gend to work, also ct loop
   dat <- dat[order(dat[, '__group'], dat[, time.name]), ]
 
   # Group positions
@@ -355,14 +355,21 @@ alfam2 <- ALFAM2mod <- function(
   out <- out[order(out$`__orig.order`), ]
   row.names(out) <- seq.int(nrow(out))
 
+  # Drop added rows
+  out <- out[!out[, '__drop.row'], ]
+
   if (!add.incorp.rows & prep) {
     out <- cbind(dum, out)
   }
 
-  # Recalculate ddt ((??)), e.int, and j.ave.int in case there were dropped rows
+  # Recalculate dt, e.int after possibly dropping rows and get j
+  gstart <- match(unique(out[, '__group']), out[, '__group'])
+  ct.prev <- c(0, out[-nrow(out), 'ct'])
+  ct.prev[gstart] <- 0
+  out$dt <- out[, 'ct'] - ct.prev
+
   e.prev <- c(0, out$e[-nrow(out)])
-  ## NTS check this--is gstart + 1 correct?
-  e.prev[gstart + 1] <- 0
+  e.prev[gstart] <- 0
   out$e.int <- out$e - e.prev
   out$j <- out$e.int/out$dt
 
