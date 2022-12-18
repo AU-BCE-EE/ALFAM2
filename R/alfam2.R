@@ -131,6 +131,7 @@ alfam2 <- ALFAM2mod <- function(
     dat$`__group` <- 'a' 
   } else {
     # NTS: what does next line do?
+    # NTS: can't we just set _group = group col?
     dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = "//")
   }
 
@@ -328,6 +329,7 @@ alfam2 <- ALFAM2mod <- function(
   dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
 
   # Sort required for gstart and gend to work, also ct loop
+  # _orig.order used to sort back to original order later
   dat <- dat[order(dat[, '__group'], dat[, time.name]), ]
 
   # Group positions
@@ -349,23 +351,26 @@ alfam2 <- ALFAM2mod <- function(
   )
 
   ce <- as.data.frame(ce)
-  ce <- cbind(ce, dat[, c('__group', '__orig.order', '__drop.row')])
+
+  # Drop added rows unless requested through add.incorp.rows
+  ce <- ce[!dat[, '__drop.row'], ]
+  # Keep up with dat to use for sorting below
+  dat <- dat[!dat[, '__drop.row'], ]
 
   # Sort to match original order 
   # NTS how does this work with add.incorp.rows = TRUE?
   # NTS there was a , -1, what first col was dropped before? Prob group?
-  ce <- ce[order(ce$`__orig.order`), ]
+  ce <- ce[order(dat$`__orig.order`), ]
+  # Keep up with dat for grouped operation below
+  dat <- dat[order(dat$`__orig.order`), ]
   row.names(ce) <- seq.int(nrow(ce))
-
-  # Drop added rows
-  ce <- ce[!ce[, '__drop.row'], ]
 
   if (!add.incorp.rows & prep) {
     ce <- cbind(dum, ce)
   }
 
   # Recalculate dt, e.int after possibly dropping rows and get j
-  gstart <- match(unique(ce[, '__group']), ce[, '__group'])
+  gstart <- match(unique(dat[, '__group']), dat[, '__group'])
   ct.prev <- c(0, ce[-nrow(ce), 'ct'])
   ct.prev[gstart] <- 0
   ce$dt <- ce[, 'ct'] - ct.prev
@@ -379,8 +384,8 @@ alfam2 <- ALFAM2mod <- function(
   names(ce)[names(ce) == 'ct'] <- time.name
 
   # Add other columns
-  drop.rows <- dat[, '__drop.row']
-  out <- data.frame(dat[!drop.rows, c(group, pass.col), drop = FALSE],
+  # If group not specified by user, group = NULL and is automatically left out
+  out <- data.frame(dat[, c(group, pass.col), drop = FALSE],
                     ce, 
                     row.names = NULL, check.names = FALSE)
 

@@ -401,9 +401,9 @@ pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
 Cumulative emission and average interval flux are plotted below.
 
 <<>>=
-plot(e ~ ct, data = pred7, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ctime, data = pred7, type = 'o', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
-plot(j ~ ct, data = pred7, type = 'S', log = 'y', col = 'red', 
+plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 @
 
@@ -423,10 +423,10 @@ pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
 @
 
 <<>>=
-plot(e ~ ct, data = pred8, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ctime, data = pred8, type = 'o', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 abline(v = 6.5, col = 'blue')
-plot(j ~ ct, data = pred8, type = 'S', log = 'y', col = 'red', 
+plot(j ~ ctime, data = pred8, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 abline(v = 6.5, col = 'blue')
 @
@@ -457,9 +457,6 @@ In fact, the only difference between these dynamic calls and the simple examples
 All the calls in this document used the default parameter values.
 However, it is possible to use completely different parameter values for the same parameters, or even different secondary parameters.
 These are set with the \texttt{pars} argument.
-
-For large datasets, or parameter estimation (where the \texttt{alfam2()} function is called many times), parallel processing will be helpful. 
-See the \texttt{parallel} argument.
 
 \section*{Acknowledgements}
 Christoph Haeni, Johanna Maria Pedersen, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
