@@ -393,8 +393,8 @@ alfam2 <- ALFAM2mod <- function(
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
   out <- data.frame(dat[, c(group, pass.col), drop = FALSE],
-                    ppars,
                     ce, 
+                    ppars,
                     row.names = NULL, check.names = FALSE)
 
   return(out)
