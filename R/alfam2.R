@@ -380,8 +380,11 @@ alfam2 <- ALFAM2mod <- function(
   ce$e.int <- ce$e - e.prev
   ce$j <- ce$e.int/ce$dt
 
-  # Sort ce names so they match user input
+  # Change ct name so it matches input
   names(ce)[names(ce) == 'ct'] <- time.name
+
+  # Add relative emission
+  ce$er <- ce$e / ce[, app.name]
 
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
