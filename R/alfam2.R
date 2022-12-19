@@ -386,9 +386,14 @@ alfam2 <- ALFAM2mod <- function(
   # Add relative emission
   ce$er <- ce$e / dat[, app.name]
 
+  # Get primary parameters
+  ppars <- dat[, c('__r1', '__r2', '__r3', '__f4')]
+  names(ppars) <- gsub('__', '', names(ppars))
+
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
   out <- data.frame(dat[, c(group, pass.col), drop = FALSE],
+                    ppars,
                     ce, 
                     row.names = NULL, check.names = FALSE)
 
