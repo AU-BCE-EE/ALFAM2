@@ -14,7 +14,6 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
   NumericVector aa(nobs), ua(nobs), ea(nobs), dt(nobs);
 
   //Group loop
-  //length() or size()??
   R_xlen_t ngrp = gstart.length(); // ngrp = number of groups
 
   //Loop through groups, g = group
@@ -36,20 +35,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
       f4[i] = f4a[gs + i];
     }
 
-    /*
-    //Alt that might work
-    //Extract group i values
-    NumericVector ct(cta.begin() + gs - 1, cta.begin() + ge)
-    NumericVector a0(a0a.begin() + gs - 1, a0a.begin() + ge)
-    NumericVector u0(u0a.begin() + gs - 1, u0a.begin() + ge)
-    NumericVector r1(r1a.begin() + gs - 1, r1a.begin() + ge)
-    NumericVector r2(r2a.begin() + gs - 1, r2a.begin() + ge)
-    NumericVector r3(r3a.begin() + gs - 1, r3a.begin() + ge)
-    NumericVector f4(f4a.begin() + gs - 1, f4a.begin() + ge)
-    */
-
     //Number of intervals
-    //Note that now l = ng, NTS could merge WAIT NO! l = numebr of time steps!
     R_xlen_t l = ct.length();
     NumericVector a(l), u(l), e(l), ddt(l);
     
