@@ -133,7 +133,7 @@ alfam2 <- ALFAM2mod <- function(
   if(is.null(group)) {
     dat$`__group` <- 'a' 
   } else {
-    dat$`__group` <- dat[, group, drop = FALSE]
+    dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = "//")
   }
 
   # Center numeric predictors
