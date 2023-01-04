@@ -167,6 +167,7 @@ alfam2 <- ALFAM2mod <- function(
 
     # Get actual incorporation parameter names (if any) from parameters
     inc.names <- unique(gsub("\\.{1}[rf]{1}[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
+    clck <- c(clck, t11 = Sys.time())
 
     if(length(inc.names) > 0){
 
@@ -208,6 +209,8 @@ alfam2 <- ALFAM2mod <- function(
       }
       time.incorp <- NULL
     }
+
+    clck <- c(clck, t12 = Sys.time())
 
     # Add incorporation rows as needed
     dat$`__add.row` <- FALSE
