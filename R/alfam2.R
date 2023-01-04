@@ -132,9 +132,7 @@ alfam2 <- ALFAM2mod <- function(
   if(is.null(group)) {
     dat$`__group` <- 'a' 
   } else {
-    # NTS: what does next line do?
-    # NTS: can't we just set _group = group col?
-    dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = "//")
+    dat$`__group` <- dat[, group, drop = FALSE]
   }
 
   # Center numeric predictors
@@ -190,7 +188,7 @@ alfam2 <- ALFAM2mod <- function(
 
       # If multiple incoporation dummy variables are 1 for any row, throw error
       if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
-        stop('Multiple incorporation types specified in the same row--this cannot be done with ALFAM2mod().')
+        stop('Multiple incorporation types specified in the same row.\nThis is not compatible with the ALFAM2 package and is likely a mistake.')
       }
 
       # Check if columns exist
