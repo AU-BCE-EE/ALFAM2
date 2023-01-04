@@ -19,6 +19,7 @@ The model is described in Hafner et al. (2019).
 alfam2(
   dat, 
   pars = ALFAM2::alfam2pars02, 
+  add.pars = NULL,
   app.name = 'TAN.app', 
   time.name = 'ct', 
   time.incorp = NULL, 
@@ -48,6 +49,9 @@ alfam2(
 }
   \item{pars}{
     A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to include a package check problem, the package name is included by default. See details for more information.
+}
+  \item{add.pars}{
+    Additional parameter values that will extend or overwrite the \code{pars}.
 }
   \item{app.name}{
     name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha)
@@ -205,7 +209,7 @@ dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app
 # Run model, using default parameter values
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
 pred1
-plot(e ~ ct, data = pred1, type = 'o')
+plot(e ~ ctime, data = pred1, type = 'o')
 
 # For fixed variables (constant over time), they can be given as optional argument.
 dat1b <- data.frame(ctime = 0:12*4)
@@ -225,13 +229,13 @@ dat2$t.incorp <- 4
 pred2 <- alfam2(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
 # See change in r3
 pred2
-lines(e ~ ct, data = pred2, type = 'o', col = 'red')
+lines(e ~ ctime, data = pred2, type = 'o', col = 'red')
 
 # Example 3
 # Time step doesn't matter
 dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 pred3 <- alfam2(dat3, app.name = 'TAN.app', time.name = 'ctime')
-lines(e ~ ct, data = pred3, type = 'o', col = 'blue')
+lines(e ~ ctime, data = pred3, type = 'o', col = 'blue')
 
 # Example 4
 # Incorporation does not need to occur at end of interval
@@ -239,7 +243,7 @@ dat4 <- dat3
 dat4$incorp.deep <- TRUE
 dat4$t.incorp <- 4
 pred4 <- alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
-lines(e ~ ct, data = pred4, type = 'o', col = 'orange')
+lines(e ~ ctime, data = pred4, type = 'o', col = 'orange')
 
 # Incorporation time can be numeric also (not very practical for groups)
 alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4)

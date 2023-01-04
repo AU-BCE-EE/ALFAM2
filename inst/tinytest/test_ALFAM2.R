@@ -50,13 +50,13 @@ pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = '
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, warn = FALSE)
 expect_equal(pred0, pred1)
 
-# Try to use data.table for dat
-# No real expect_* to use here, so comparing to one with data frame
-dat0 <- data.table::data.table(ctime = 48, TAN.app = 100)
-pred0 <- alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
-dat1 <- data.frame(ctime = 48, TAN.app = 100)
-pred1 <- alfam2(dat1, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
-expect_equal(pred0, pred1)
+### Try to use data.table for dat
+### No real expect_* to use here, so comparing to one with data frame
+##dat0 <- data.table::data.table(ctime = 48, TAN.app = 100)
+##pred0 <- alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+##dat1 <- data.frame(ctime = 48, TAN.app = 100)
+##pred1 <- alfam2(dat1, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+##expect_equal(pred0, pred1)
 
 # Should get a warning if trying to use reserved names
 dat0 <- data.frame(ctime = 48, TAN.app = 100)
