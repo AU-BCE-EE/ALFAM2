@@ -43,6 +43,8 @@ alfam2 <- ALFAM2mod <- function(
 
   if (nrow(dat) == 0) stop('dat has no rows!')
 
+  if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
+
   if (parallel) warning('parallel argument ignored >v2.1.3')
 
   # Warning if cmns is changed
