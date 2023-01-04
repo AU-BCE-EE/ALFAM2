@@ -30,6 +30,7 @@ alfam2 <- ALFAM2mod <- function(
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows)
   ) {
 
+  clck <- c(t0 = clck, t1 = system.time())
 
   # Argument checks
   # NTS: Work needed here, add checks for all arguments
@@ -159,6 +160,8 @@ alfam2 <- ALFAM2mod <- function(
   # Default f4 value (for no incorporation in group, or incorporation only later)
   dat[, '__f4'] <- 1
 
+  clck <- c(clck, t10 = system.time())
+
   # Sort out incorporation
   if(!is.null(time.incorp)) {
 
@@ -272,6 +275,8 @@ alfam2 <- ALFAM2mod <- function(
 
   }
 
+  clck <- c(clck, t20 = system.time())
+
   # Sort 
   dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
@@ -312,6 +317,8 @@ alfam2 <- ALFAM2mod <- function(
   # f4 only calculated where it is already 0 (not default of 1)
   if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
+  clck <- c(clck, t30 = system.time())
+
   # Add drop row indicator
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
 
@@ -337,6 +344,8 @@ alfam2 <- ALFAM2mod <- function(
   gstart <- match(unique(dat[, '__group']), dat[, '__group']) - 1
   gend <- c(gstart[-1], nrow(dat)) - 1
 
+  clck <- c(clck, t40 = system.time())
+
   # Calculate emission for all groups, all in C++ function
   ce <- rcpp_calcEmis(
     cta = dat[, time.name],
@@ -349,6 +358,8 @@ alfam2 <- ALFAM2mod <- function(
     gstart = gstart,
     gend = gend 
   )
+
+  clck <- c(clck, t50 = system.time())
 
   ce <- as.data.frame(ce)
 
@@ -390,6 +401,8 @@ alfam2 <- ALFAM2mod <- function(
   ppars <- dat[, c('__r1', '__r2', '__r3', '__f4')]
   names(ppars) <- gsub('__', '', names(ppars))
 
+  clck <- c(clck, t60 = system.time())
+
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
   out <- data.frame(dat[, c(group, pass.col), drop = FALSE],
@@ -397,7 +410,11 @@ alfam2 <- ALFAM2mod <- function(
                     ppars,
                     row.names = NULL, check.names = FALSE)
 
-  return(out)
+  clck <- c(clck, t70 = system.time())
+  dclck <- diff(clck)
+  names(dclck) <- names(clck)[-1]
+
+  return(list(out = out, clck = clck, dclck = dclck))
 
 }
 
