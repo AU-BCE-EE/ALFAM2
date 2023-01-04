@@ -30,7 +30,7 @@ alfam2 <- ALFAM2mod <- function(
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows)
   ) {
 
-  clck <- c(t0 = clck, t1 = system.time())
+  clck <- c(t1 = system.time())
 
   # Argument checks
   # NTS: Work needed here, add checks for all arguments
