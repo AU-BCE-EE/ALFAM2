@@ -255,10 +255,9 @@ alfam2 <- ALFAM2mod <- function(
         dat[dat$`__group` == i, '__f4'][ct.ind] <- 0
         dat <- rbind(dat, ins.dat)          
 
-      } else {
+      } else { # Exact time match
 
-        sub.dat[ct.ind, '__f4'] <- 0
-        dat <- rbind(dat[dat$`__group` != i, ], sub.dat)          
+        dat[dat$`__group` == i, '__f4'][ct.ind] <- 0
 
       }
 
