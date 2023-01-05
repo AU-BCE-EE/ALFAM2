@@ -182,7 +182,7 @@ alfam2 <- ALFAM2mod <- function(
         incorp.time <- rep(time.incorp, length(u.group))[seq_along(u.group)] # NTS: why is [] needed?
         names(incorp.time) <- u.group
       } else {
-        # Get time.incorp column entries (first row, so rows underneath could have time.incorp = NA etc., all ignored
+        # Get time.incorp column entries (first row, so rows underneath could have time.incorp = NA etc., all ignored)
         incorp.time <- tapply(dat[, time.incorp], dat$`__group`, "[", 1)
       }
 
@@ -212,67 +212,59 @@ alfam2 <- ALFAM2mod <- function(
 
     clck <- c(clck, t12 = Sys.time())
 
-    # Add incorporation rows as needed
+    # Incorporation groups
+    incorp.grps <- names(incorp.time)[!is.na(incorp.time) & n.incorp.vals.grp > 0]
+    # Drop groups that have incorp.time >= maximum time
+    inc.dat <- dat[dat$`__group` %in% incorp.grps, ]
+    maxtime <- tapply(inc.dat[, time.name], inc.dat$`__group`, max)
+    # NTS: Add warning on late incorp ignored
+    incorp.grps <- names(maxtime)[maxtime > incorp.time[names(maxtime)]]
+
+    #maxtime <- maxtime[incorp.grps]
+    #incorp.time <- incorp.time[incorp.grps]
+
+    # Set incorp to FALSE for groups without incorporation (based on missing etc. incorp time)
+    dat[!dat$`__group` %in% incorp.grps, inc.ex] <- FALSE
+
     dat$`__add.row` <- FALSE
-    if(!is.null(time.incorp)) {
 
-      # Loop through groups with incorporation (incorp.time != NA)
-      for(i in names(incorp.time)[!is.na(incorp.time) & n.incorp.vals.grp > 0]) {
+    # Loop through groups with incorporation (incorp.time != NA)
+    if (warn) {
+      message('Incorporation applied for groups', paste(incorp.grps, collapse = ', '), '.')
+    }
 
-        sub.dat <- dat[dat$`__group` == i, ]
+    for(i in incorp.grps) {
 
-        # Extract cumulative time
-        ct <- sub.dat[, time.name]
+      #sub.dat <- dat[dat$`__group` == i, ]
 
-        # Find where incorporation occurs
-        ct.ind <- which(ct > incorp.time[i])[1]
+      # Extract cumulative time
+      ct <- dat[dat$`__group` == i, time.name]
 
-        # Add rows
-        if(is.na(ct.ind)){
-        
-          if (warn) {
-            warning('Incorporation takes place after the end of the last interval and will be ignored (group ', i, ').')
-          }
-        
-        } else if(ct.ind == 1){
+      # Find where incorporation occurs
+      ct.ind <- which(ct > incorp.time[i])[1]
 
-          if (warn) {
-            message('Incorporation applied (for group ', i, ').')
-          }
+      # Hint to interpret __f4 = 0 placement below: incorporation occurs at the *start* of an interval (see rcpp_calcEmis.cpp)
 
-          # Use predictor values from first row
-          ins.dat <- sub.dat[1, ]
-          ins.dat[, time.name] <- incorp.time[i] 
-          ins.dat$`__add.row` <- TRUE
-          sub.dat[1, '__f4'] <- 0
-          dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
+      # Add rows
+      if (ct.ind == 1 || incorp.time[i] != ct[ct.ind - 1]){
 
-        } else if(incorp.time[i] != ct[ct.ind - 1]){
+        # Use predictor values from ct.ind row, insert row before first interval
+        ins.dat <- dat[dat$`__group` == i, ][ct.ind, ]
+        ins.dat[, time.name] <- incorp.time[i] 
+        ins.dat$`__add.row` <- TRUE
+        dat[dat$`__group` == i, '__f4'][ct.ind] <- 0
+        dat <- rbind(dat, ins.dat)          
 
-          # Insert a row before incorp, interval ends at incorp.time
-          ins.dat <- sub.dat[ct.ind, ]
-          ins.dat[, time.name] <- incorp.time[i] 
-          ins.dat$`__add.row` <- TRUE
-          sub.dat[ct.ind, '__f4'] <- 0
-          dat <- rbind(dat[dat$`__group` != i, ], sub.dat, ins.dat)          
+      } else {
 
-        } else {
-
-          sub.dat[ct.ind, '__f4'] <- 0
-          dat <- rbind(dat[dat$`__group` != i, ], sub.dat)          
-
-        }
-
-        # Set incorp variables to FALSE for time <= incorp.time (incorp then applied at start of next interval)
-        dat[dat$`__group` == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
+        sub.dat[ct.ind, '__f4'] <- 0
+        dat <- rbind(dat[dat$`__group` != i, ], sub.dat)          
 
       }
 
-      # Also set incorp to FALSE for all rows within groups with incorp.time = NA
-      for(i in names(incorp.time)[is.na(incorp.time)]) {
-        dat[dat$`__group` == i & is.na(incorp.time[i]), inc.ex] <- FALSE
-
-      }
+      # Set incorp variables to FALSE for time <= incorp.time (incorp then applied at start of next interval)
+      # NTS: Is this redundant because __f4 = 1 for these (or should)?
+      dat[dat$`__group` == i & dat[, time.name] <= incorp.time[i], inc.ex] <- FALSE
 
     }
 
