@@ -170,7 +170,10 @@ alfam2 <- ALFAM2mod <- function(
   dat$`__add.row` <- FALSE 
 
   # Default f4 value (for no incorporation in group, or incorporation only later)
-  dat[, '__f4'] <- 1
+  # If using flatout, __f4 should already be in input data
+  if (!flatout) {
+    dat[, '__f4'] <- 1
+  }
 
 #clck <- c(clck, t10 = Sys.time())
 
