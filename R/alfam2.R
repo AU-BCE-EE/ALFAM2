@@ -37,7 +37,7 @@ alfam2 <- ALFAM2mod <- function(
     ovars <- list(...)
     dat <- data.frame(dat, ovars)
     if (any(names(ovars) == 'flatout')) {
-      flatout <- ovars[names(ovars) == 'flatout']
+      flatout <- ovars[[names(ovars) == 'flatout']]
       ovars <- ovars[!names(ovars) == 'flatout']
     } else {
       flatout <- FALSE    
