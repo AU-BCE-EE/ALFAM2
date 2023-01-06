@@ -47,7 +47,7 @@ alfam2 <- ALFAM2mod <- function(
     if (nrow(dat) == 0) stop('dat has no rows!')
 
     if (parallel) warning('parallel argument ignored >v2.1.3')
-    if (missing(n.cpus)) warning('n.cpus argument ignored >v2.1.3')
+    if (!missing(n.cpus)) warning('n.cpus argument ignored >v2.1.3')
 
     # Warning if cmns is changed
     if (!identical(cmns, eval(formals(alfam2)$cmns))) {
@@ -379,7 +379,7 @@ alfam2 <- ALFAM2mod <- function(
   dat <- dat[order(dat$`__orig.order`), ]
   row.names(ce) <- seq.int(nrow(ce))
 
-  if (!add.incorp.rows & prep) {
+  if (!flatout && !add.incorp.rows && prep) {
     ce <- cbind(dum, ce)
   }
 
