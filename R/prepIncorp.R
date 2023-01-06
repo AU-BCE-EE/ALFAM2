@@ -27,7 +27,7 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
 
     # If multiple incoporation dummy variables are 1 for any row, throw error
     if (any(rowSums(dat[, inc.ex, drop = FALSE]) > 1)) {
-      stop('Multiple incorporation types specified in the same row.\nThis is not compatible with the ALFAM2 package and is likely a mistake.')
+      stop('Multiple incorporation types specified in the same row.\nYou cannot do this!')
     }
 
     # Check if columns exist
@@ -52,7 +52,7 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
   maxtime <- tapply(inc.dat[, time.name], inc.dat$`__group`, max)
   incorp.grps <- names(maxtime)[maxtime > incorp.time[names(maxtime)]]
   if (warn && length(dn <- names(maxtime)[maxtime <= incorp.time[names(maxtime)]]) > 0) {
-    message('Incorporation skipped where it occurred after all intervals.\nGroups: ', paste(dn, collapse = ','), '.')
+    message('Incorporation skipped where it occurred after all intervals, for groups: ', paste(dn, collapse = ','), '.')
   }
 
   # Set incorp to FALSE for groups without incorporation (based on missing etc. incorp time)
@@ -62,7 +62,7 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
 
   # Loop through groups with incorporation (incorp.time != NA)
   if (warn) {
-    message('Incorporation applied for groups', paste(incorp.grps, collapse = ', '), '.')
+    message('Incorporation applied for groups: ', paste(incorp.grps, collapse = ', '), '.')
   }
 
   for(i in incorp.grps) {

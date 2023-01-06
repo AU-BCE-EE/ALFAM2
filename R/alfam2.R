@@ -170,12 +170,11 @@ alfam2 <- ALFAM2mod <- function(
 #clck <- c(clck, t10 = Sys.time())
 
   # Sort out incorporation
+  # Skipped for flatout == TRUE (must be done externally before calling alfam2())
   if(!flatout && !is.null(time.incorp)) {
-
-    inprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
-    dat <- inprepout[['dat']]
-    time.incorp <- inprepout[['time.incorp']]
-
+    incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
+    dat <- incprepout[['dat']]
+    time.incorp <- incprepout[['time.incorp']]
   }
 
 #clck <- c(clck, t20 = Sys.time())
@@ -183,6 +182,7 @@ alfam2 <- ALFAM2mod <- function(
   # Sort 
   dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
+  # NTS: parameter calculation below could be moved to a separate function for simpler code in alfam2()
   # Drop parameters for missing predictors
   p.orig <- pars
   ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
