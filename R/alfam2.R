@@ -166,23 +166,22 @@ alfam2 <- ALFAM2mod <- function(
   # Original order (for sorting before return)
   dat$`__orig.order` <- 1:nrow(dat)
 
-  # Extend dat data frame with incorporation time if needed
-  dat$`__add.row` <- FALSE 
-
-  # Default f4 value (for no incorporation in group, or incorporation only later)
-  # If using flatout, __f4 should already be in input data
-  if (!flatout) {
-    dat[, '__f4'] <- 1
-  }
-
 #clck <- c(clck, t10 = Sys.time())
 
   # Sort out incorporation
+  # Default f4 value (for no incorporation in group, or incorporation only later)
+  # If using flatout, __f4 should already be in input data
   # Skipped for flatout == TRUE (must be done externally before calling alfam2())
-  if(!flatout && !is.null(time.incorp)) {
-    incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
-    dat <- incprepout[['dat']]
-    time.incorp <- incprepout[['time.incorp']]
+  if (!flatout) {
+    dat[, '__f4'] <- 1
+    dat$`__add.row` <- FALSE 
+
+    if(!is.null(time.incorp)) {
+      incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
+      dat <- incprepout[['dat']]
+      time.incorp <- incprepout[['time.incorp']]
+    }
+
   }
 
 #clck <- c(clck, t20 = Sys.time())
