@@ -217,8 +217,10 @@ alfam2 <- ALFAM2mod <- function(
     # Drop groups that have incorp.time >= maximum time
     inc.dat <- dat[dat$`__group` %in% incorp.grps, ]
     maxtime <- tapply(inc.dat[, time.name], inc.dat$`__group`, max)
-    # NTS: Add warning on late incorp ignored
     incorp.grps <- names(maxtime)[maxtime > incorp.time[names(maxtime)]]
+    if (warn && length(dn <- names(maxtime)[maxtime <= incorp.time[names(maxtime)]]) > 0) {
+      message('Incorporation skipped where it occurred after all intervals.\nGroups: ', paste(dn, collapse = ','), '.')
+    }
 
     #maxtime <- maxtime[incorp.grps]
     #incorp.time <- incorp.time[incorp.grps]
@@ -235,15 +237,13 @@ alfam2 <- ALFAM2mod <- function(
 
     for(i in incorp.grps) {
 
-      #sub.dat <- dat[dat$`__group` == i, ]
-
       # Extract cumulative time
       ct <- dat[dat$`__group` == i, time.name]
 
       # Find where incorporation occurs
-      ct.ind <- which(ct > incorp.time[i])[1]
-
       # Hint to interpret __f4 = 0 placement below: incorporation occurs at the *start* of an interval (see rcpp_calcEmis.cpp)
+      # and ct = *end* of an interval, with the start = the end of previous interval
+      ct.ind <- which(ct > incorp.time[i])[1]
 
       # Add rows
       if (ct.ind == 1 || incorp.time[i] != ct[ct.ind - 1]){
@@ -255,7 +255,7 @@ alfam2 <- ALFAM2mod <- function(
         dat[dat$`__group` == i, '__f4'][ct.ind] <- 0
         dat <- rbind(dat, ins.dat)          
 
-      } else { # Exact time match
+      } else { # Exact time match (in *previous* interval)
 
         dat[dat$`__group` == i, '__f4'][ct.ind] <- 0
 
