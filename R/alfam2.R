@@ -42,6 +42,8 @@ alfam2 <- ALFAM2mod <- function(
     } else {
       flatout <- FALSE    
     }
+  } else {
+    flatout <- FALSE    
   }
 
   if (!flatout) {
