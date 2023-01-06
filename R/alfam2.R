@@ -35,7 +35,7 @@ alfam2 <- ALFAM2mod <- function(
   # and look for secret flatout argument (with it alfam2() goes as fast as possible without checks and without some conversions (requires more data prep prior to call))
   if (!missing(...)) {
     ovars <- list(...)
-    dat <- data.frame(dat, ovars)
+    dat <- data.frame(dat, ovars, check.names = FALSE)
     if (any(names(ovars) == 'flatout')) {
       flatout <- ovars[[names(ovars) == 'flatout']]
       ovars <- ovars[!names(ovars) == 'flatout']
