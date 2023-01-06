@@ -167,7 +167,7 @@ alfam2 <- ALFAM2mod <- function(
 
     # Get actual incorporation parameter names (if any) from parameters
     inc.names <- unique(gsub("\\.{1}[rf]{1}[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
-    clck <- c(clck, t11 = Sys.time())
+    #clck <- c(clck, t11 = Sys.time())
 
     if(length(inc.names) > 0){
 
@@ -210,7 +210,7 @@ alfam2 <- ALFAM2mod <- function(
       time.incorp <- NULL
     }
 
-    clck <- c(clck, t12 = Sys.time())
+    #clck <- c(clck, t12 = Sys.time())
 
     # Incorporation groups
     incorp.grps <- names(incorp.time)[!is.na(incorp.time) & n.incorp.vals.grp > 0]
@@ -235,7 +235,7 @@ alfam2 <- ALFAM2mod <- function(
       message('Incorporation applied for groups', paste(incorp.grps, collapse = ', '), '.')
     }
 
-    clck <- c(clck, t13 = Sys.time())
+    #clck <- c(clck, t13 = Sys.time())
 
     for(i in incorp.grps) {
 
