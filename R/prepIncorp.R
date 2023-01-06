@@ -1,5 +1,5 @@
 
-prepIncorp <- function(dat, pars, time.incorp, incorp.names) {
+prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names) {
 
   # Get actual incorporation parameter names (if any) from parameters
   inc.names <- unique(gsub("\\.{1}[rf]{1}[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))

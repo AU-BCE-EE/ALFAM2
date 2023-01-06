@@ -172,7 +172,7 @@ alfam2 <- ALFAM2mod <- function(
   # Sort out incorporation
   if(!flatout && !is.null(time.incorp)) {
 
-    inprepout <- prepIncorp(dat, pars, time.incorp, incorp.names)
+    inprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names)
     dat <- inprepout[['dat']]
     time.incorp <- inprepout[['time.incorp']]
 
