@@ -27,28 +27,32 @@ alfam2 <- ALFAM2mod <- function(
   warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
+  flatout = FALSE,
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows)
   ) {
 
 #clck <- c(t1 = Sys.time())
 
-  # Argument checks
-  # NTS: Work needed here, add checks for all arguments
-  # Convert data.table to data.frame
-  if (class(dat)[1] == 'data.table') {
-    dat <- as.data.frame(dat)
-  }
-  checkArgClassValue(dat, expected.class = 'data.frame')
-  checkArgClassValue(pars, expected.class = c('numeric', 'list'))
-  checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
+  if (!flatout) {
+    # Argument checks
+    # NTS: Work needed here, add checks for all arguments
+    # Convert data.table to data.frame
+    if (class(dat)[1] == 'data.table') {
+      dat <- as.data.frame(dat)
+    }
+    checkArgClassValue(dat, expected.class = 'data.frame')
+    checkArgClassValue(pars, expected.class = c('numeric', 'list'))
+    checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
-  if (nrow(dat) == 0) stop('dat has no rows!')
+    if (nrow(dat) == 0) stop('dat has no rows!')
 
-  if (parallel) warning('parallel argument ignored >v2.1.3')
+    if (parallel) warning('parallel argument ignored >v2.1.3')
+    if (missing(n.cpus)) warning('n.cpus argument ignored >v2.1.3')
 
-  # Warning if cmns is changed
-  if (!identical(cmns, eval(formals(alfam2)$cmns))) {
-    warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
+    # Warning if cmns is changed
+    if (!identical(cmns, eval(formals(alfam2)$cmns))) {
+      warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
+    }
   }
 
   # Add predictor variables if given in "..." optional arguments
@@ -57,77 +61,80 @@ alfam2 <- ALFAM2mod <- function(
     dat <- data.frame(dat, ovars)
   }
 
-  # Check for specified columns etc. *after* adding additional variables
-  if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
+  if (!flatout) {
+    # Check for specified columns etc. *after* adding additional variables
+    if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 
-  if (!app.name %in% names(dat)) {
-    stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
-  }
-
-  if (!time.name %in% names(dat)) {
-    stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
-  }
-
-  # Prepare input data (dummy variables)
-  if (prep) {
-    dum <- prepDat(dat, value = 'dummy')
-    #dat <- prepDat(dat, value = 'data')
-    dat <- cbind(dat, dum)
-  }
-
-  # Tell user whether default or user-supplied parameters are in use
-  if (warn) {
-    if (missing(pars)) {
-      message('Default parameters (Set 2) are being used.')
-    } else {
-      message('User-supplied parameters are being used.')
+    if (!app.name %in% names(dat)) {
+      stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
     }
-  }
 
-  # If pars was given as list, change to vector
-  if(is.list(pars)) {
-    pars <- unlist(pars)
-  }
+    if (!time.name %in% names(dat)) {
+      stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
+    }
 
-  # Continue with pars conversion, switch order for names that start with e.g. f0 or r3
-  if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(pars)))){
-    names(pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(pars)[chg.nms])
-  }
+    # Prepare input data (dummy variables)
+    if (prep) {
+      dum <- prepDat(dat, value = 'dummy')
+      #dat <- prepDat(dat, value = 'data')
+      dat <- cbind(dat, dum)
+    }
 
-  # Additional pars that override or extend pars
-  if (!is.null(add.pars)) {
+    # Tell user whether default or user-supplied parameters are in use
     if (warn) {
-      message('Additional parameters were specified.')
+      if (missing(pars)) {
+        message('Default parameters (Set 2) are being used.')
+      } else {
+        message('User-supplied parameters are being used.')
+      }
     }
 
-    # If add.pars was given as list, change to vector
-    if(is.list(add.pars)) {
-      add.pars <- unlist(add.pars)
+    # If pars was given as list, change to vector
+    if(is.list(pars)) {
+      pars <- unlist(pars)
     }
 
-    # Continue with add.pars conversion as with pars above
-    if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(add.pars)))){
-      names(add.pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(add.pars)[chg.nms])
+    # Continue with pars conversion, switch order for names that start with e.g. f0 or r3
+    if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(pars)))){
+      names(pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(pars)[chg.nms])
     }
 
-    # Combine add.pars with pars, with add.pars overriding pars
-    pars <- c(add.pars, pars[!names(pars) %in% add.pars])
-  }
+    # Additional pars that override or extend pars
+    if (!is.null(add.pars)) {
+      if (warn) {
+        message('Additional parameters were specified.')
+      }
+
+      # If add.pars was given as list, change to vector
+      if(is.list(add.pars)) {
+        add.pars <- unlist(add.pars)
+      }
+
+      # Continue with add.pars conversion as with pars above
+      if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(add.pars)))){
+        names(add.pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(add.pars)[chg.nms])
+      }
+
+      # Combine add.pars with pars, with add.pars overriding pars
+      pars <- c(add.pars, pars[!names(pars) %in% add.pars])
+    }
 
 
-  # Check that all names for pars end with a number
-  if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
+    # Check that all names for pars end with a number
+    if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
 
-  # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
-  # -> possibly extend names as done below?
-  # Yup! Will work on.
-  reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', '__orig.order')
-  if (any(names(dat) %in% reserved.names)) {
-    warning('dat data frame has some columns with reserved names.\nYou can proceed, but there may be problems.\nBetter to remove/rename the offending columns: ', reserved.names[reserved.names %in% names(dat)])
-  }
+    # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
+    # -> possibly extend names as done below?
+    # Yup! Will work on.
+    reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', '__orig.order')
+    if (any(names(dat) %in% reserved.names)) {
+      warning('dat data frame has some columns with reserved names.\nYou can proceed, but there may be problems.\nBetter to remove/rename the offending columns: ', reserved.names[reserved.names %in% names(dat)])
+    }
 
-  # Remove non-existent pass.col columns if pass-through requested
-  pass.col <- intersect(pass.col, names(dat))
+    # Remove non-existent pass.col columns if pass-through requested
+    pass.col <- intersect(pass.col, names(dat))
+
+  } # End flatout skip
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
@@ -163,7 +170,7 @@ alfam2 <- ALFAM2mod <- function(
 #clck <- c(clck, t10 = Sys.time())
 
   # Sort out incorporation
-  if(!is.null(time.incorp)) {
+  if(!flatout && !is.null(time.incorp)) {
 
     # Get actual incorporation parameter names (if any) from parameters
     inc.names <- unique(gsub("\\.{1}[rf]{1}[0-4]$", "", unlist(mapply(function(x) grep(x, names(pars), value = TRUE), incorp.names))))
@@ -281,7 +288,7 @@ alfam2 <- ALFAM2mod <- function(
   ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
-  if(any(!predpres) & warn) {
+  if(!flatout && any(!predpres) && warn) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
             'These secondary parameters have been dropped:\n  ', 
             paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
@@ -298,12 +305,12 @@ alfam2 <- ALFAM2mod <- function(
 
   names(pars) <- gsub('\\.[rf][0-9]$', '', names(pars))
 
-  if(!all(ww <- sort(c(which0, which1, which2, which3, which4)) == 1:length(pars))) {
+  if(!flatout && !all(ww <- sort(c(which0, which1, which2, which3, which4)) == 1:length(pars))) {
     stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
   }
 
   # Make sure parameter names can be found in dat
-  if(any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
+  if(!flatout && any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
   # Calculate primary parameters
   if(length(which0) > 0) dat[, "__f0"] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, "__f0"] <- 0
@@ -319,7 +326,7 @@ alfam2 <- ALFAM2mod <- function(
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
 
   # Missing values
-  if(check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
+  if(!flatout && check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
     cat('Error!\n')
     cat('Missing values in predictors:\n')
     nn <- unique(names(pars[!grepl('^int', names(pars))]))
