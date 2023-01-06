@@ -44,8 +44,6 @@ alfam2 <- ALFAM2mod <- function(
 
   if (nrow(dat) == 0) stop('dat has no rows!')
 
-  if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
-
   if (parallel) warning('parallel argument ignored >v2.1.3')
 
   # Warning if cmns is changed
@@ -53,12 +51,14 @@ alfam2 <- ALFAM2mod <- function(
     warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
   }
 
-  # Check for specified columns after adding additional variables
   # Add predictor variables if given in "..." optional arguments
   if (!missing(...)) {
     ovars <- list(...)
     dat <- data.frame(dat, ovars)
   }
+
+  # Check for specified columns etc. *after* adding additional variables
+  if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 
   if (!app.name %in% names(dat)) {
     stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
