@@ -248,7 +248,7 @@ alfam2 <- ALFAM2mod <- function(
       ct.ind <- which(ct > incorp.time[i])[1]
 
       # Add rows
-      if (ct.ind == 1 || incorp.time[i] != ct[ct.ind - 1]){
+      if (incorp.time[i] != ct[ct.ind - 1] || ct.ind == 1){
 
         # Use predictor values from ct.ind row, insert row before first interval
         ins.dat <- dat[dat$`__group` == i, ][ct.ind, ]
