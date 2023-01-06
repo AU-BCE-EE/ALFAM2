@@ -27,11 +27,22 @@ alfam2 <- ALFAM2mod <- function(
   warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
-  flatout = FALSE,    # Go flat-out; as fast as possible without checks and without some conversions (requires more data prep prior to call)
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows)
   ) {
 
 #clck <- c(t1 = Sys.time())
+  # Add predictor variables if given in "..." optional arguments
+  # and look for secret flatout argument (with it alfam2() goes as fast as possible without checks and without some conversions (requires more data prep prior to call))
+  if (!missing(...)) {
+    ovars <- list(...)
+    dat <- data.frame(dat, ovars)
+    if (any(names(ovars) == 'flatout')) {
+      flatout <- ovars[names(ovars) == 'flatout']
+      ovars <- ovars[!names(ovars) == 'flatout']
+    } else {
+      flatout <- FALSE    
+    }
+  }
 
   if (!flatout) {
     # Argument checks
@@ -53,16 +64,8 @@ alfam2 <- ALFAM2mod <- function(
     if (!identical(cmns, eval(formals(alfam2)$cmns))) {
       warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
     }
-  }
 
-  # Add predictor variables if given in "..." optional arguments
-  if (!missing(...)) {
-    ovars <- list(...)
-    dat <- data.frame(dat, ovars)
-  }
-
-  if (!flatout) {
-    # Check for specified columns etc. *after* adding additional variables
+    # Check for specified columns etc. *after* adding additional variables above
     if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 
     if (!app.name %in% names(dat)) {
