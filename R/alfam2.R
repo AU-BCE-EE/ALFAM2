@@ -235,6 +235,8 @@ alfam2 <- ALFAM2mod <- function(
       message('Incorporation applied for groups', paste(incorp.grps, collapse = ', '), '.')
     }
 
+    clck <- c(clck, t13 = Sys.time())
+
     for(i in incorp.grps) {
 
       # Extract cumulative time
