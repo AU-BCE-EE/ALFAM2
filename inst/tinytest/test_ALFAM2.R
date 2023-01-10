@@ -52,6 +52,8 @@ pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = '
 expect_equal(length(pred0$er), 2)
 expect_equal(pred0$ct, c(4, 48))
 
+# Need comparison of incorp and data prep with and without flatout = TRUE
+
 # NAs in input variables should throw an error ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dat0 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = c(1, NA))
 expect_error(alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE))
