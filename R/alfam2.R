@@ -126,12 +126,12 @@ alfam2 <- ALFAM2mod <- function(
 
 
     # Check that all names for pars end with a number
-    if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
+    if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4, r5.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
 
     # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
     # -> possibly extend names as done below?
     # Yup! Will work on.
-    reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', '__orig.order')
+    reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', '__orig.order')
     if (any(names(dat) %in% reserved.names)) {
       warning('dat data frame has some columns with reserved names.\nYou can proceed, but there may be problems.\nBetter to remove/rename the offending columns: ', reserved.names[reserved.names %in% names(dat)])
     }
@@ -170,7 +170,7 @@ alfam2 <- ALFAM2mod <- function(
 
   # Sort out incorporation
   # Default f4 value (for no incorporation in group, or incorporation only later)
-  # If using flatout, __f4 should already be in input data
+  # If using flatout, __f4 should (must) already be in input data
   # Skipped for flatout == TRUE (must be done externally before calling alfam2())
   if (!flatout) {
     dat[, '__f4'] <- 1
@@ -209,10 +209,11 @@ alfam2 <- ALFAM2mod <- function(
   which2 <- grep('2$', names(pars)) # For r2
   which3 <- grep('3$', names(pars)) # For r3
   which4 <- grep('4$', names(pars)) # For a to u transfer at specific times, incorporation, will be applied once only!
+  which5 <- grep('5$', names(pars)) # For r5
 
   names(pars) <- gsub('\\.[rf][0-9]$', '', names(pars))
 
-  if(!flatout && !all(ww <- sort(c(which0, which1, which2, which3, which4)) == 1:length(pars))) {
+  if(!flatout && !all(ww <- sort(c(which0, which1, which2, which3, which4, which5)) == 1:length(pars))) {
     stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
   }
 
@@ -224,6 +225,7 @@ alfam2 <- ALFAM2mod <- function(
   if(length(which1) > 0) dat[, "__r1"] <- calcPParms(pars[which1], dat)                  else dat[, "__r1"] <- 0
   if(length(which2) > 0) dat[, "__r2"] <- calcPParms(pars[which2], dat)                  else dat[, "__r2"] <- 0
   if(length(which3) > 0) dat[, "__r3"] <- calcPParms(pars[which3], dat)                  else dat[, "__r3"] <- 0
+  if(length(which5) > 0) dat[, "__r5"] <- calcPParms(pars[which5], dat)                  else dat[, "__r5"] <- 0
   # f4 only calculated where it is already 0 (not default of 1)
   if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
@@ -233,7 +235,7 @@ alfam2 <- ALFAM2mod <- function(
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
 
   # Missing values
-  if(!flatout && check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4")]))) {
+  if(!flatout && check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4", "__r5")]))) {
     cat('Error!\n')
     cat('Missing values in predictors:\n')
     nn <- unique(names(pars[!grepl('^int', names(pars))]))
@@ -243,7 +245,7 @@ alfam2 <- ALFAM2mod <- function(
 
   # Pare down to essential columns
   # No good reason for this anymore except debugging ease
-  dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__drop.row', pass.col)]
+  dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', pass.col)]
 
   # Sort required for gstart and gend to work, also ct loop
   # _orig.order used to sort back to original order later
@@ -265,6 +267,7 @@ alfam2 <- ALFAM2mod <- function(
     r2a = dat[, "__r2"],
     r3a = dat[, "__r3"],
     f4a = dat[, "__f4"], 
+    r5a = dat[, "__r5"], 
     gstart = gstart,
     gend = gend 
   )
@@ -308,7 +311,7 @@ alfam2 <- ALFAM2mod <- function(
   ce$er <- ce$e / dat[, app.name]
 
   # Get primary parameters
-  ppars <- dat[, c('__r1', '__r2', '__r3', '__f4')]
+  ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
   names(ppars) <- gsub('__', '', names(ppars))
 
 #clck <- c(clck, t60 = Sys.time())
