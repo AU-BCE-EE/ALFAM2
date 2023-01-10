@@ -2,8 +2,8 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a, 
-                   const NumericVector u0a, const NumericVector r1a, 
+List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a, 
+                   const NumericVector S0a, const NumericVector r1a, 
                    const NumericVector r2a, const NumericVector r3a, 
                    const NumericVector f4a, const NumericVector r5a,
                    const IntegerVector gstart, const IntegerVector gend) {
@@ -11,7 +11,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
   //Suffix "a" is for "all", e.g., cta has values for *all* groups, ct is for 1 group
   //Empty output vectors
   R_xlen_t nobs = cta.length();
-  NumericVector aa(nobs), ua(nobs), ea(nobs), dt(nobs);
+  NumericVector Fa(nobs), Sa(nobs), Ea(nobs), dt(nobs);
 
   //Group loop
   R_xlen_t ngrp = gstart.length(); // ngrp = number of groups
@@ -41,7 +41,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
 
     //Number of intervals
     R_xlen_t l = ct.length();
-    NumericVector a(l), u(l), e(l), ddt(l);
+    NumericVector F(l), S(l), E(l), ddt(l);
     
     //time steps
     ddt[0] = ct[0];
@@ -51,42 +51,42 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
 
     //intermediates
     double femis, semis, em;
-    double ati, uti;
+    double Fti, Sti;
     
     //initial values
-    double a0 = a0a[gs];
-    double u0 = u0a[gs];
-    double ati0 = a0;
-    double uti0 = u0;
-    double eti = 0.;
+    double F0 = F0a[gs];
+    double S0 = S0a[gs];
+    double Fti0 = F0;
+    double Sti0 = S0;
+    double Eti = 0.;
     
     for (R_xlen_t i = 0; i < l; ++i) {
-      // Make incorporation transfer (at *start* of interval) (if none then f4 = 1 and ati = a[i])
-      ati = f4[i] * ati0;
-      uti = (1 - f4[i]) * ati0 + uti0;
+      // Make incorporation transfer (at *start* of interval) (if none then f4 = 1 and Fti = F[i])
+      Fti = f4[i] * Fti0;
+      Sti = (1 - f4[i]) * Fti0 + Sti0;
       
       //Calculate intermediates
       //Calculate pools at *end* of ct[i]
-      a[i] = ati * exp(-(rf[i]) * ddt[i]);
-      u[i] = exp(-rs[i] * ddt[i]) * (uti + r2[i] * (1 - exp(-rd[i] * ddt[i])) / rd[i] * ati);
-      femis = r1[i] * (1 - exp(-rf[i] * ddt[i])) / rf[i] * ati;
-      em = (ati + uti - a[i] - u[i] - femis) / rs[i];
+      F[i] = Fti * exp(-(rf[i]) * ddt[i]);
+      S[i] = exp(-rs[i] * ddt[i]) * (Sti + r2[i] * (1 - exp(-rd[i] * ddt[i])) / rd[i] * Fti);
+      femis = r1[i] * (1 - exp(-rf[i] * ddt[i])) / rf[i] * Fti;
+      em = (Fti + Sti - F[i] - S[i] - femis) / rs[i];
       semis = r3[i] * em;
-      e[i] = eti + femis + semis;
+      E[i] = Eti + femis + semis;
 
       //save pools for next step
-      ati0 = a[i];
-      uti0 = u[i];
-      eti = e[i];
+      Fti0 = F[i];
+      Sti0 = S[i];
+      Eti = E[i];
 
     }
 
     //Put results in "all" vectors
     //i = relative element index
     for (R_xlen_t i = 0; i < gl; i++) {
-      aa[gs + i] = a[i];
-      ua[gs + i] = u[i];
-      ea[gs + i] = e[i];
+      Fa[gs + i] = F[i];
+      Sa[gs + i] = S[i];
+      Ea[gs + i] = E[i];
       dt[gs + i] = ddt[i];
     }
 
@@ -95,7 +95,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector a0a,
   //Return results
   return List::create(_["ct"] = cta, 
                       _["dt"] = dt, 
-                      _["f"] = aa, 
-                      _["s"] = ua, 
-                      _["e"] = ea);
+                      _["f"] = Fa, 
+                      _["s"] = Sa, 
+                      _["e"] = Ea);
 }  
