@@ -261,7 +261,7 @@ alfam2 <- ALFAM2mod <- function(
   # Calculate emission for all groups, all in C++ function
   ce <- rcpp_calcEmis(
     cta = dat[, time.name],
-    F0a = dat[, "__f0"] * dat[1, app.name],
+    F0a = dat[, "__f0"] * dat[, app.name],
     S0a = (1 - dat[, "__f0"]) * dat[, app.name],
     r1a = dat[, "__r1"],
     r2a = dat[, "__r2"],
