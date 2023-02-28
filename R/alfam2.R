@@ -173,8 +173,8 @@ alfam2 <- ALFAM2mod <- function(
   # If using flatout, __f4 should (must) already be in input data
   # Skipped for flatout == TRUE (must be done externally before calling alfam2())
   dat$`__add.row` <- FALSE 
+  dat[, '__f4'] <- 1
   if (!flatout) {
-    dat[, '__f4'] <- 1
 
     if(!is.null(time.incorp)) {
       incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
