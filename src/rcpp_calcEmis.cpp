@@ -27,7 +27,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
     NumericVector ct(gl), r1(gl), r2(gl), r3(gl), f4(gl), r5(gl), rf(gl), rs(gl), rd(gl);
 
     //i = relative element index
-    for (R_xlen_t i = 0; i < gl; i++) {
+    for (R_xlen_t i = 0; i < gl; ++i) {
       ct[i] = cta[gs + i];
       r1[i] = r1a[gs + i];
       r2[i] = r2a[gs + i];
@@ -83,7 +83,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
 
     //Put results in "all" vectors
     //i = relative element index
-    for (R_xlen_t i = 0; i < gl; i++) {
+    for (R_xlen_t i = 0; i < gl; ++i) {
       Fa[gs + i] = F[i];
       Sa[gs + i] = S[i];
       Ea[gs + i] = E[i];
