@@ -44,7 +44,7 @@ Once the package is installed, load it.
 library(ALFAM2)
 ```
 
-And see this vignette to get started.
+And see a vignette to get started.
 
 ```
 vignette("ALFAM2-start")
@@ -54,4 +54,4 @@ vignette("ALFAM2-start")
 Please use the Issues page.
 
 # Project information
-See www.alfam.dk for information and more resources.
+See www.alfam.dk for more information and resources.
