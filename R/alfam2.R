@@ -27,10 +27,9 @@ alfam2 <- ALFAM2mod <- function(
   warn = TRUE,
   parallel = FALSE, 
   n.cpus = 1,
-  ...                 # Additional predictor variables with fixed values for all times and groups (all rows)
+  ...                 # Additional predictor variables with fixed values for all times and groups (all rows) (or the secret flatout = TRUE option)
   ) {
 
-#clck <- c(t1 = Sys.time())
   # Add predictor variables if given in "..." optional arguments
   # and look for secret flatout argument (with it alfam2() goes as fast as possible without checks and without some conversions (requires more data prep prior to call))
   if (!missing(...)) {
@@ -47,7 +46,7 @@ alfam2 <- ALFAM2mod <- function(
   }
 
   if (!flatout) {
-    # Argument checks
+    # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # NTS: Work needed here, add checks for all arguments
     # Convert data.table to data.frame
     if (class(dat)[1] == 'data.table') {
@@ -76,6 +75,12 @@ alfam2 <- ALFAM2mod <- function(
 
     if (!time.name %in% names(dat)) {
       stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
+    }
+
+    # Fix negative times with a warning
+    if (any(dat[, time.name] < 0)) {
+      warning(paste0('Negative times (variable "', time.name, '") found and set to 0.'))
+      dat[dat$time.name < 0, time.name] <- 0
     }
 
     # Prepare input data (dummy variables)
@@ -166,7 +171,6 @@ alfam2 <- ALFAM2mod <- function(
   # Original order (for sorting before return)
   dat$`__orig.order` <- 1:nrow(dat)
 
-#clck <- c(clck, t10 = Sys.time())
 
   # Sort out incorporation
   # Default f4 value (for no incorporation in group, or incorporation only later)
@@ -183,8 +187,6 @@ alfam2 <- ALFAM2mod <- function(
     }
 
   }
-
-#clck <- c(clck, t20 = Sys.time())
 
   # Sort 
   dat <- dat[order(dat$`__group`, dat[, time.name]), ]
@@ -229,8 +231,6 @@ alfam2 <- ALFAM2mod <- function(
   # f4 only calculated where it is already 0 (not default of 1)
   if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
-#clck <- c(clck, t30 = Sys.time())
-
   # Add drop row indicator
   dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
 
@@ -256,8 +256,6 @@ alfam2 <- ALFAM2mod <- function(
   gstart <- match(unique(dat[, '__group']), dat[, '__group']) - 1
   gend <- c(gstart[-1], nrow(dat)) - 1
 
-#clck <- c(clck, t40 = Sys.time())
-
   # Calculate emission for all groups, all in C++ function
   ce <- rcpp_calcEmis(
     cta = dat[, time.name],
@@ -271,8 +269,6 @@ alfam2 <- ALFAM2mod <- function(
     gstart = gstart,
     gend = gend 
   )
-
-#clck <- c(clck, t50 = Sys.time())
 
   ce <- as.data.frame(ce)
 
@@ -314,8 +310,6 @@ alfam2 <- ALFAM2mod <- function(
   ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
   names(ppars) <- gsub('__', '', names(ppars))
 
-#clck <- c(clck, t60 = Sys.time())
-
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
   out <- data.frame(dat[, c(group, pass.col), drop = FALSE],
@@ -323,11 +317,6 @@ alfam2 <- ALFAM2mod <- function(
                     ppars,
                     row.names = NULL, check.names = FALSE)
 
-  #clck <- c(clck, t70 = Sys.time())
-  #dclck <- diff(clck)
-  #names(dclck) <- names(clck)[-1]
-
-  #return(list(out = out, clck = clck, dclck = dclck))
   return(out)
 
 }
