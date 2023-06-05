@@ -49,7 +49,7 @@ alfam2 <- ALFAM2mod <- function(
     # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # NTS: Work needed here, add checks for all arguments
     # Convert data.table to data.frame
-    if (class(dat)[1] == 'data.table') {
+    if (class(dat)[1] %in% c('data.table', 'tbl_df')) {
       dat <- as.data.frame(dat)
     }
     checkArgClassValue(dat, expected.class = 'data.frame')
