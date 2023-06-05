@@ -9,6 +9,8 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
                     value = 'dummy'
                     ) {
+
+  # Keep track of number of columns to use in returning data
   ncc <- ncol(dat)
   ndum <- 0
 
@@ -24,7 +26,12 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     # Application method dummy variables
     aml <- intersect(unique(dat[, app.mthd.name]), names(app.mthd.levels))
     for (i in aml) {
-      dat[, paste(app.mthd.name, i, sep = '.')] <- 1 * (dat[, app.mthd.name] == i)
+      nn <- paste(app.mthd.name, i, sep = '.')
+      if (nn %in% names(dat)) {
+        ncc <- ncc - 1
+        warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+      }
+      dat[, nn] <- 1 * (dat[, app.mthd.name] == i)
       ndum <- ndum + 1
     }
    }
@@ -41,7 +48,12 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     # Incorporation dummy variables
     il <- intersect(unique(dat[, incorp.name]), names(incorp.levels))
     for (i in il) {
-      dat[, paste(incorp.name, i, sep = '.')] <- 1 * (dat[, incorp.name] == i)
+      nn <- paste(incorp.name, i, sep = '.')
+      if (nn %in% names(dat)) {
+        ncc <- ncc - 1
+        warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+      }
+      dat[, nn] <- 1 * (dat[, incorp.name] == i)
       ndum <- ndum + 1
     }
    }
@@ -58,7 +70,12 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     # Source dummy variables
     sl <- intersect(unique(dat[, source.name]), names(source.levels))
     for (i in sl) {
-      dat[, paste(source.name, i, sep = '.')] <- 1 * (dat[, source.name] == i)
+      nn <- paste(source.name, i, sep = '.')
+      if (nn %in% names(dat)) {
+        ncc <- ncc - 1
+        warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+      }
+      dat[, nn] <- 1 * (dat[, source.name] == i)
       ndum <- ndum + 1
     }
   }
@@ -77,3 +94,9 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
 #dat
 #prepDat(dat)
 #prepDat(dat, value = 'dat')
+#
+#dat <- data.frame(ct = 168, app.mthd = c('open slot injection', 'cs', 'bsth'), t.incorp = 12, incorp = c('none', 'shallow', 'deep'), man.source = 'pig', app.mthd.cs = FALSE)
+#dat
+#prepDat(dat)
+#prepDat(dat, value = 'dat')
+
