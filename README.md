@@ -26,6 +26,7 @@ devtools::install_github("sashahafner/ALFAM2@v3.0", build_vignettes = TRUE))
 ```
 
 See the [Releases page](https://github.com/sashahafner/ALFAM2/releases) for all available releases.
+The `@v3.0` bit in the command above is from the release *tag*.
 
 For other branches using the `ref` argument.
 
