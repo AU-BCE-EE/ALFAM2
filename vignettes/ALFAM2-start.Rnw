@@ -450,6 +450,21 @@ The simplest approach here is to use the \texttt{read.csv()} function or some of
 Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
 See the book mentioned above for details.
 
+\subsection{Warnings and error messages}
+A lot of effort has gone into the warnings and error messages returned by `alfam2()`, with the objective of making it easier to understand and fix problems with a call or the predictor variable data frame.
+A few are shown here.
+
+Missing values in predictors:
+<<>>=
+dat6b <- dat6
+dat6b[3, 'wind.2m'] <- NA
+
+alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+@
+
+The printed messages identify which variables and which rows are missing.
+
 \subsection{More with the ALFAM2 model}
 Dynamic predictions can be combined with multiple scenarios, although this is not shown here. 
 In fact, the only difference between these dynamic calls and the simple examples given above is the number of measurement intervals.
