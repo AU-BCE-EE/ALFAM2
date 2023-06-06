@@ -18,13 +18,14 @@ devtools::install_github("sashahafner/ALFAM2@*release", build_vignettes = TRUE)
 ```
 
 You can just pull from the master branch (`sashahafner/ALFAM2`), but you may get some new changes not yet included in a release.
-You can get any specific release (e.g., to check out a specific version used in a particular paper) with this syntax: 
+
+*You can get any specific release (e.g., to check out a specific version used in a particular paper) with this syntax: *
 
 ```
 devtools::install_github("sashahafner/ALFAM2@v3.0", build_vignettes = TRUE))
 ```
 
-See the [releases page](https://github.com/sashahafner/ALFAM2/releases) for all available releases.
+See the [Releases page](https://github.com/sashahafner/ALFAM2/releases) for all available releases.
 
 For other branches using the `ref` argument.
 
@@ -55,7 +56,7 @@ The value of these parameters are determined by the value of predictor variables
 ![schematic](schematic.png)
 
 # Bugs and requests
-Please use the Issues page.
+Please use the [Issues](https://github.com/sashahafner/ALFAM2/issues) page.
 
 # Project information
 See www.alfam.dk for more information and resources.
