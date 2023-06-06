@@ -453,6 +453,7 @@ See the book mentioned above for details.
 \subsection{Warnings and error messages}
 A lot of effort has gone into the warnings and error messages returned by `alfam2()`, with the objective of making it easier to understand and fix problems with a call or the predictor variable data frame.
 A few are shown here.
+Of course the calls above already demonstrate the information on missing predictor variables (which can be supressed by setting \texttt{warn = FALSE}).
 
 Missing values in predictors:
 <<error=TRUE>>=
@@ -496,6 +497,20 @@ pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime",
        time.incorp = "t.incorp", group = "scenario", cmns = c(app.rate = 0, man.dm = 10), warn = FALSE, prep = TRUE)
 @
 
+Ask for prep when it isn't needed:
+<<error=TRUE>>=
+dat7 <- data.frame(ctime = 1:10, TAN.app = 100)
+pred0 <- alfam2(dat7, app.name = "TAN.app", time.name = "ctime", prep = TRUE, warn = TRUE)
+@
+
+Using your own parameter set (better know what you are doing, not like the example below!):
+
+<<error=TRUE>>=
+pred0 <- alfam2(dat6, pars = c(int0 = -1), app.name = "TAN.app", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "scenario", warn = TRUE, prep = TRUE)
+@
+
+Note the additional warning about incorporation.
 
 \subsection{More with the ALFAM2 model}
 Dynamic predictions can be combined with multiple scenarios, although this is not shown here. 
