@@ -22,7 +22,7 @@ You can just pull from the master branch (`sashahafner/ALFAM2`), but you may get
 *You can get any specific release (e.g., to check out a specific version used in a particular paper) with this syntax:*
 
 ```
-devtools::install_github("sashahafner/ALFAM2@v3.0", build_vignettes = TRUE))
+devtools::install_github("sashahafner/ALFAM2@v3.0", build_vignettes = TRUE)
 ```
 
 See the [Releases page](https://github.com/sashahafner/ALFAM2/releases) for all available releases.
