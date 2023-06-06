@@ -455,7 +455,7 @@ A lot of effort has gone into the warnings and error messages returned by `alfam
 A few are shown here.
 
 Missing values in predictors:
-<<>>=
+<<eval=FALSE>>=
 dat6b <- dat6
 dat6b[3, 'wind.2m'] <- NA
 
