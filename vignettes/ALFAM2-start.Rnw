@@ -466,17 +466,17 @@ alfam2(dat6b, app.name = "TAN.app", time.name = "ctime",
 The printed messages identify which variables and which rows are missing.
 
 Using the wrong names:
-<<>>=
+<<error=TRUE>>=
 pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
 @
 
-<<>>=
+<<error=TRUE>>=
 pred0 <- alfam2(dat6b, app.name = "TAN.appppp", time.name = "ctime", 
        time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
 @
 
-<<>>=
+<<error=TRUE>>=
 pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
        time.incorp = "t.incorp", group = "acenarip", warn = FALSE, prep = TRUE)
 @
