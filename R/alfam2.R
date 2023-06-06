@@ -74,6 +74,10 @@ alfam2 <- ALFAM2mod <- function(
       stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
     }
 
+    if (!is.null(group) & !group %in% names(dat)) {
+      stop(paste0('group argument you specified (', group, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
+    }
+
     # Check for specified columns etc. *after* adding additional variables above
     if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 

@@ -465,6 +465,38 @@ alfam2(dat6b, app.name = "TAN.app", time.name = "ctime",
 
 The printed messages identify which variables and which rows are missing.
 
+Using the wrong names:
+<<>>=
+pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctim", 
+       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+@
+
+<<>>=
+pred0 <- alfam2(dat6b, app.name = "TAN.appppp", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+@
+
+<<>>=
+pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "acenarip", warn = FALSE, prep = TRUE)
+@
+
+Negative time:
+<<error=TRUE>>=
+dat6b[1, 'ctime'] <- -10
+
+pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+@
+
+Changing centering means (bad idea!):
+
+<<error=TRUE>>=
+pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "scenario", cmns = c(app.rate = 0, man.dm = 10), warn = FALSE, prep = TRUE)
+@
+
+
 \subsection{More with the ALFAM2 model}
 Dynamic predictions can be combined with multiple scenarios, although this is not shown here. 
 In fact, the only difference between these dynamic calls and the simple examples given above is the number of measurement intervals.
