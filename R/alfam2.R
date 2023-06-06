@@ -66,15 +66,15 @@ alfam2 <- ALFAM2mod <- function(
       warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
     }
 
+    if (!time.name %in% names(dat)) {
+      stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
+    }
+
     # Check for specified columns etc. *after* adding additional variables above
     if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 
     if (!app.name %in% names(dat)) {
       stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
-    }
-
-    if (!time.name %in% names(dat)) {
-      stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ',')))
     }
 
     # Fix negative times with a warning
