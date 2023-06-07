@@ -29,7 +29,7 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
     n.incorp.vals.grp <- tapply(n.incorp.vals, dat$`__group`, "[", 1)
 
     n.incorp.vals <- na.omit(n.incorp.vals)
-    n.incorp.vals.grp <- na.omit(n.incorp.vals.grp)
+    n.incorp.vals.grp[is.na(n.incorp.vals.grp)] <- 0  
 
     # If multiple incoporation dummy variables are 1 for any row, throw error
     if (any(n.incorp.vals) > 1) {
