@@ -40,6 +40,12 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
   if (incorp.name %in% names(dat)) {
     dat[, incorp.name] <- tolower(dat[, incorp.name])
 
+    # Replace NA values with 'none'
+    if (any(is.na(dat[, incorp.name]))) {
+      warning(paste0('Some NA values in incorporation column ', incorp.name, '.\nReplacing all with "none".'))
+      dat[is.na(dat[, incorp.name]), incorp.name] <- 'none'
+    }
+
     # Convert incorporation values to standards
     for (i in 1:length(incorp.levels)) {
       dat[dat[, incorp.name] %in% incorp.levels[[i]], incorp.name] <- names(incorp.levels)[i] 
