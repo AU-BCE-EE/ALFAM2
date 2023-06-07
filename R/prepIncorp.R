@@ -9,6 +9,9 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
     # Do they exist?
     inc.ex <- intersect(inc.names, names(dat))
 
+    # Set NAs in incorporation time to Inf so they are skipped
+    dat[is.na(dat[, time.incorp]), time.incorp] <- Inf
+
     # Get times and types
     if(is.numeric(time.incorp)){
       # Unique groups
