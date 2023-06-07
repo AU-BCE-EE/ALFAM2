@@ -10,6 +10,7 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
     inc.ex <- intersect(inc.names, names(dat))
 
     # Set NAs in incorporation time to Inf so they are skipped
+    # NTS: was this really not solved before now? Just noticed problem with v3.2!
     dat[is.na(dat[, time.incorp]), time.incorp] <- Inf
 
     # Get times and types
@@ -28,11 +29,13 @@ prepIncorp <- function(dat, pars, time.name, time.incorp, incorp.names, warn) {
     n.incorp.vals <- rowSums(dat[, inc.ex, drop = FALSE])
     n.incorp.vals.grp <- tapply(n.incorp.vals, dat$`__group`, "[", 1)
 
+    # Sort out missing values
+    # NTS: was this really not solved before now? Just noticed problem with v3.2!
     n.incorp.vals <- na.omit(n.incorp.vals)
     n.incorp.vals.grp[is.na(n.incorp.vals.grp)] <- 0  
 
     # If multiple incoporation dummy variables are 1 for any row, throw error
-    if (any(n.incorp.vals) > 1) {
+    if (any(n.incorp.vals > 1)) {
       stop('Multiple incorporation types specified in the same row.\nYou cannot do this!')
     }
 
