@@ -3,8 +3,12 @@
 \alias{ALFAM2mod}
 \alias{ALFAM2pars01}
 \alias{ALFAM2pars02}
+\alias{ALFAM2pars03}
 \alias{alfam2pars01}
 \alias{alfam2pars02}
+\alias{alfam2pars03}
+\alias{ALFAM2pars03var}
+\alias{alfam2pars03var}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
