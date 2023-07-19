@@ -281,14 +281,6 @@ alfam2 <- ALFAM2mod <- function(
   # Keep up with dat to use for sorting below
   dat <- dat[!dat[, '__drop.row'], ]
 
-  # Sort to match original order 
-  # NTS how does this work with add.incorp.rows = TRUE?
-  # NTS there was a , -1, what first col was dropped before? Prob group?
-  ce <- ce[order(dat$`__orig.order`), ]
-  # Keep up with dat for grouped operation below
-  dat <- dat[order(dat$`__orig.order`), ]
-  row.names(ce) <- seq.int(nrow(ce))
-
   if (!flatout && !add.incorp.rows && prep) {
     ce <- cbind(dum, ce)
   }
@@ -313,6 +305,13 @@ alfam2 <- ALFAM2mod <- function(
   # Get primary parameters
   ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
   names(ppars) <- gsub('__', '', names(ppars))
+
+  # Sort to match original order, with any added row at end (might be better to keep time order in those cases)
+  # NTS there was a , -1, what first col was dropped before? Prob group?
+  ce <- ce[order(dat$`__orig.order`), ]
+  # Keep up with dat for grouped operation below
+  dat <- dat[order(dat$`__orig.order`), ]
+  row.names(ce) <- seq.int(nrow(ce))
 
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
