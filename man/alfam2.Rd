@@ -52,7 +52,7 @@ alfam2(
     data frame containing values for predictor variables
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to include a package check problem, the package name is included by default. See details for more information.
+    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
   \item{add.pars}{
     Additional parameter values that will extend or overwrite the \code{pars}.
