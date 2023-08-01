@@ -274,6 +274,7 @@ alfam2 <- ALFAM2mod <- function(
     gend = gend 
   )
 
+  # ce, from rcpp_calcEmis, contains columns ct, dt, f, s, e
   ce <- as.data.frame(ce)
 
   # Drop added rows unless requested through add.incorp.rows
