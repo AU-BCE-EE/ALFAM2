@@ -303,16 +303,16 @@ alfam2 <- ALFAM2mod <- function(
   # Add relative emission
   ce$er <- ce$e / dat[, app.name]
 
-  # Get primary parameters
-  ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
-  names(ppars) <- gsub('__', '', names(ppars))
-
   # Sort to match original order, with any added row at end (might be better to keep time order in those cases)
   # NTS there was a , -1, what first col was dropped before? Prob group?
   ce <- ce[order(dat$`__orig.order`), ]
   # Keep up with dat for grouped operation below
   dat <- dat[order(dat$`__orig.order`), ]
   row.names(ce) <- seq.int(nrow(ce))
+
+  # Get primary parameters (could be done in data.frame() below but there is name issue. . .
+  ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
+  names(ppars) <- gsub('__', '', names(ppars))
 
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
