@@ -237,7 +237,7 @@ alfam2 <- ALFAM2mod <- function(
   if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
 
   # Add drop row indicator
-  dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows
+  dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows & !flatout
 
   # Missing values
   if(!flatout && check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4", "__r5")]))) {
