@@ -7,7 +7,8 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
                                            cs = c('closed slot injection', 'cs', 'closed-slot injection', 'deep injection', 'nedf\u00E6ldning p\u00E5 sort jord')),
                     incorp.levels = list(shallow = c('shallow', 'harrow'), deep = c('deep', 'plough', 'plow', 'nedbringning')),
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
-                    value = 'dummy'
+                    value = 'dummy',
+                    all.levels = TRUE
                     ) {
 
   # Keep track of number of columns to use in returning data
@@ -24,7 +25,11 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     }
 
     # Application method dummy variables
-    aml <- intersect(unique(dat[, app.mthd.name]), names(app.mthd.levels))
+    if (!all.levels) {
+      aml <- intersect(unique(dat[, app.mthd.name]), names(app.mthd.levels))
+    } else {
+      aml <- names(app.mthd.levels)
+    }
     for (i in aml) {
       nn <- paste(app.mthd.name, i, sep = '.')
       if (nn %in% names(dat)) {
@@ -52,7 +57,12 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     }
 
     # Incorporation dummy variables
-    il <- intersect(unique(dat[, incorp.name]), names(incorp.levels))
+    if (!all.levels) {
+      il <- intersect(unique(dat[, incorp.name]), names(incorp.levels))
+    } else {
+      il <- names(incorp.levels)
+    }
+
     for (i in il) {
       nn <- paste(incorp.name, i, sep = '.')
       if (nn %in% names(dat)) {
@@ -74,7 +84,11 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     }
 
     # Source dummy variables
-    sl <- intersect(unique(dat[, source.name]), names(source.levels))
+    if (!all.levels) {
+      sl <- intersect(unique(dat[, source.name]), names(source.levels))
+    } else {
+      sl <- names(source.levels)
+    }
     for (i in sl) {
       nn <- paste(source.name, i, sep = '.')
       if (nn %in% names(dat)) {
