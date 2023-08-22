@@ -177,11 +177,6 @@ alfam2 <- ALFAM2mod <- function(
 
 
   # Sort out incorporation
-  # Default f4 value (for no incorporation in group, or incorporation only later)
-  # If using flatout, __f4 should (must) already be in input data
-  # Skipped for flatout == TRUE (must be done externally before calling alfam2())
-  dat$`__add.row` <- FALSE 
-  dat[, '__f4'] <- 1
   if (!flatout) {
 
     if(!is.null(time.incorp)) {
@@ -189,6 +184,13 @@ alfam2 <- ALFAM2mod <- function(
       dat <- incprepout[['dat']]
       time.incorp <- incprepout[['time.incorp']]
     }
+
+  } else if (!flatout) {
+    # Default f4 value (for no incorporation in group, or incorporation only later)
+    # If using flatout, __f4 should (must) already be in input data
+    # Skipped for flatout == TRUE (must be done externally before calling alfam2())
+    dat$`__add.row` <- FALSE 
+    dat[, '__f4'] <- 1
 
   }
 
