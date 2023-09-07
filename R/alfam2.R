@@ -175,6 +175,9 @@ alfam2 <- ALFAM2mod <- function(
   # Original order (for sorting before return)
   dat$`__orig.order` <- 1:nrow(dat)
 
+  # Sort 
+  # prepIncorp() should require sorted ct 
+  dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
   # Sort out incorporation
   if (!flatout) {
@@ -192,9 +195,6 @@ alfam2 <- ALFAM2mod <- function(
     }
 
   }
-
-  # Sort 
-  dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
   # NTS: parameter calculation below could be moved to a separate function for simpler code in alfam2()
   # Drop parameters for missing predictors
