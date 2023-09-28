@@ -18,6 +18,7 @@ alfam2 <- ALFAM2mod <- function(
            man.ph    =  7.5, 
            air.temp  = 13, 
            wind.2m   =  2.7, 
+           wind.sqrt =  sqrt(2.7), 
            crop.z    = 10), 
   check.NA = TRUE, 
   pass.col = NULL, 
