@@ -1,6 +1,10 @@
 # ALFAM2
 Model for ammonia volatilization (loss) from field-applied manure.
 
+# Maintainer
+Sasha D. Hafner.
+Contact information here: <https://au.dk/sasha.hafner@bce>.
+
 # Installation
 Installation of packages from GitHub requires a package called devtools.
 You can run the code below to install devtools and ALFAM2.
