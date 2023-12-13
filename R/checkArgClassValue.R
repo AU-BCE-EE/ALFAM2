@@ -5,8 +5,17 @@ function(
   expected.values = NULL, 
   expected.range = NULL, 
   case.sens = TRUE, 
+  allow.na = TRUE,
   warn.only = FALSE
   ) {
+
+  if (!allow.na && any(is.na(object))) {
+    if(!warn.only) {
+      stop('Found NAs in argument ', deparse(substitute(object)), ', where they are not allowed.', call. = FALSE)
+    } else {
+      warning('Found NAs in argument ', deparse(substitute(object)), ', where they are not allowed.', call. = FALSE)
+    }
+  }
 
   if(any(expected.class == 'character') & !case.sens) {
     object <- tolower(object)

@@ -54,7 +54,7 @@ alfam2 <- ALFAM2mod <- function(
       dat <- as.data.frame(dat)
     }
     checkArgClassValue(dat, expected.class = 'data.frame')
-    checkArgClassValue(pars, expected.class = c('numeric', 'list'))
+    checkArgClassValue(pars, expected.class = c('numeric', 'list'), allow.na = FALSE)
     checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
     if (nrow(dat) == 0) stop('dat has no rows!')
