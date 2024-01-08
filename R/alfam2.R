@@ -25,10 +25,11 @@ alfam2 <- ALFAM2mod <- function(
   add.incorp.rows = FALSE, 
   prep = FALSE,
   warn = TRUE,
+  #check = TRUE,
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows) (or the secret flatout = TRUE option)
   ) {
 
-  # Add predictor variables if given in "..." optional arguments
+  # Add predictor variables if given in '...' optional arguments
   # and look for secret flatout argument (with it alfam2() goes as fast as possible without checks and without some conversions (requires more data prep prior to call))
   if (!missing(...)) {
     ovars <- list(...)
@@ -104,8 +105,8 @@ alfam2 <- ALFAM2mod <- function(
     }
 
     # Continue with pars conversion, switch order for names that start with e.g. f0 or r3
-    if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(pars)))){
-      names(pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(pars)[chg.nms])
+    if(any(chg.nms <- grepl('^[fr]{1}[0-4]{1}[.]', names(pars)))){
+      names(pars)[chg.nms] <- gsub('^([fr][0-4])[.](.*)', '\\2\\.\\1', names(pars)[chg.nms])
     }
 
     # Additional pars that override or extend pars
@@ -120,8 +121,8 @@ alfam2 <- ALFAM2mod <- function(
       }
 
       # Continue with add.pars conversion as with pars above
-      if(any(chg.nms <- grepl("^[fr]{1}[0-4]{1}[.]", names(add.pars)))){
-        names(add.pars)[chg.nms] <- gsub("^([fr][0-4])[.](.*)", "\\2\\.\\1", names(add.pars)[chg.nms])
+      if(any(chg.nms <- grepl('^[fr]{1}[0-4]{1}[.]', names(add.pars)))){
+        names(add.pars)[chg.nms] <- gsub('^([fr][0-4])[.](.*)', '\\2\\.\\1', names(add.pars)[chg.nms])
       }
 
       # Combine add.pars with pars, with add.pars overriding pars
@@ -149,11 +150,11 @@ alfam2 <- ALFAM2mod <- function(
   if(is.null(group)) {
     dat$`__group` <- 'a' 
   } else {
-    dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = "//")
+    dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = '//')
   }
 
   # Center numeric predictors
-  if(!is.null(center) && !is.na(center)) {
+  if(!is.null(center)[1] && !is.na(center)[1]) {
     # get columns that will be centered 
     c_cols <- names(center)[names(center) %in% names(dat)]
 
@@ -220,19 +221,19 @@ alfam2 <- ALFAM2mod <- function(
   if(!flatout && any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
   # Calculate primary parameters
-  if(length(which0) > 0) dat[, "__f0"] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, "__f0"] <- 0
-  if(length(which1) > 0) dat[, "__r1"] <- calcPParms(pars[which1], dat, upr = 1000)      else dat[, "__r1"] <- 0
-  if(length(which2) > 0) dat[, "__r2"] <- calcPParms(pars[which2], dat, upr = 1E9)       else dat[, "__r2"] <- 0
-  if(length(which3) > 0) dat[, "__r3"] <- calcPParms(pars[which3], dat)                  else dat[, "__r3"] <- 0
-  if(length(which5) > 0) dat[, "__r5"] <- calcPParms(pars[which5], dat, upr = 1000)      else dat[, "__r5"] <- 0
+  if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, '__f0'] <- 0
+  if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, upr = 1000)      else dat[, '__r1'] <- 0
+  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, upr = 1E9)       else dat[, '__r2'] <- 0
+  if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat)                  else dat[, '__r3'] <- 0
+  if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, upr = 1000)      else dat[, '__r5'] <- 0
   # f4 only calculated where it is already 0 (not default of 1)
-  if(length(which4) > 0) dat[dat[, "__f4"] == 0, "__f4"] <- calcPParms(pars[which4], dat[dat[, "__f4"] == 0, ], tr = 'logistic') ##else dat[, "__f4"] <- 1
+  if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic') ##else dat[, '__f4'] <- 1
 
   # Add drop row indicator
-  dat$"__drop.row" <- dat$"__add.row" & !add.incorp.rows & !flatout
+  dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows & !flatout
 
   # Missing values
-  if(!flatout && check.NA && any(anyNA(dat[, c("__f0", "__r1", "__r2", "__r3", "__f4", "__r5")]))) {
+  if(!flatout && check.NA && any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
     cat('Error!\n')
     cat('Missing values in predictors:\n')
     nn <- unique(names(pars[!grepl('^int', names(pars))]))

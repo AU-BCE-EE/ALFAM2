@@ -180,9 +180,9 @@ By design, any time a predictor variable is omitted when \texttt{alfam2()} is ca
 One exception is \texttt{app.rate.ni}.
 }
 The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
-Predictor values for the default scenario can be found in the \texttt(cmns) argument (for centering means, see help file).
+Predictor values for the default scenario can be found in the \texttt(center) argument (for centering means, see help file).
 The default application method is trailing hose.
-The \texttt{cmns} argument is used for centering predictor variables, and this approach facilities the behavior described above.
+The \texttt{center} argument is used for centering predictor variables, and this approach facilities the behavior described above.
 
 \subsection{Cumulative emission for a single scenario}
 In this example, let's assume we are interested in manure application by broadcast when manure had 8\% dry matter (DM), total TAN application is 50 kg/ha, wind is 3 m/s, and air temperature is 20$^\circ$C.
@@ -494,7 +494,7 @@ Changing centering means (bad idea!):
 
 <<error=TRUE>>=
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", cmns = c(app.rate = 0, man.dm = 10), warn = FALSE, prep = TRUE)
+       time.incorp = "t.incorp", group = "scenario", center = c(app.rate = 0, man.dm = 10), warn = FALSE, prep = TRUE)
 @
 
 Ask for prep when it isn't needed:

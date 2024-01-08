@@ -84,7 +84,7 @@ expect_equal(pred0, pred1)
 dat0 <- data.frame(ctime = 48, TAN.app = 100)
 # It's hard to use a reserved name!
 dat0$`__r1` <- 0
-expect_warning(alfam2(dat0, app.name = "TAN.app", time.name = "ctime", warn = FALSE))
+expect_warning(alfam2(dat0, app.name = "TAN.app", time.name = "ctime"))
 
 # Make sure add.pars changes output whether overriding/replacing or adding/extending
 dat0 <- data.frame(ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 10, wind.2m = 5, soil.type.clay = 1)
