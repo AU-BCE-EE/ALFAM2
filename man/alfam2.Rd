@@ -94,6 +94,7 @@ alfam2(
 }  
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
+    Useful for reducing console or report clutter, but use with caution, because problems with the input data or call could be missed.
 }  
   \item{...}{
     additional optional arguments as length-one vectors that set values of fixed predictor variables.

@@ -58,7 +58,7 @@ alfam2 <- ALFAM2mod <- function(
     if (nrow(dat) == 0) stop('dat has no rows!')
 
     # Warning if cmns is changed
-    if (!identical(cmns, eval(formals(alfam2)$cmns))) {
+    if (warn && !identical(cmns, eval(formals(alfam2)$cmns))) {
       warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
     }
 
@@ -78,7 +78,7 @@ alfam2 <- ALFAM2mod <- function(
     if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 
     # Fix negative times with a warning
-    if (any(dat[, time.name] < 0)) {
+    if (warn && any(dat[, time.name] < 0)) {
       warning(paste0('Negative times (variable "', time.name, '") found and set to 0.'))
       dat[dat$time.name < 0, time.name] <- 0
     }
@@ -137,7 +137,7 @@ alfam2 <- ALFAM2mod <- function(
     # -> possibly extend names as done below?
     # Yup! Will work on.
     reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', '__orig.order')
-    if (any(names(dat) %in% reserved.names)) {
+    if (warn && any(names(dat) %in% reserved.names)) {
       warning('dat data frame has some columns with reserved names.\nYou can proceed, but there may be problems.\nBetter to remove/rename the offending columns: ', reserved.names[reserved.names %in% names(dat)])
     }
 
@@ -163,7 +163,7 @@ alfam2 <- ALFAM2mod <- function(
       dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = cmns[c_cols], scale = FALSE)
       #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, cmns[c_cols])
     }
-  } else {
+  } else if (warn) {
     # Warning if centering is turned off
     warning('You turned off centering by setting center = FALSE. Only use this option if you know what you are doing.')
   }
@@ -195,7 +195,7 @@ alfam2 <- ALFAM2mod <- function(
   ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
-  if(!flatout && any(!predpres) && warn) {
+  if(warn && !flatout && any(!predpres) && warn) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
             'These secondary parameters have been dropped:\n  ', 
             paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
