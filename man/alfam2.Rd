@@ -43,8 +43,6 @@ alfam2(
   add.incorp.rows = FALSE, 
   prep = FALSE,
   warn = TRUE,
-  parallel = FALSE, 
-  n.cpus = 1,
   ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -97,12 +95,6 @@ alfam2(
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
 }  
-  \item{parallel}{
-    should parallel processing be used? Helpful for very large \code{dat}.
-}
-  \item{n.cpus}{
-    numeric. Defines the number of cores used if \code{parallel} is \code{TRUE}.
-}
   \item{...}{
     additional optional arguments as length-one vectors that set values of fixed predictor variables.
     See examples.

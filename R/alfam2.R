@@ -26,8 +26,6 @@ alfam2 <- ALFAM2mod <- function(
   add.incorp.rows = FALSE, 
   prep = FALSE,
   warn = TRUE,
-  parallel = FALSE, 
-  n.cpus = 1,
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows) (or the secret flatout = TRUE option)
   ) {
 
@@ -58,9 +56,6 @@ alfam2 <- ALFAM2mod <- function(
     checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
 
     if (nrow(dat) == 0) stop('dat has no rows!')
-
-    if (parallel) warning('parallel argument ignored >v2.1.3')
-    if (!missing(n.cpus)) warning('n.cpus argument ignored >v2.1.3')
 
     # Warning if cmns is changed
     if (!identical(cmns, eval(formals(alfam2)$cmns))) {
