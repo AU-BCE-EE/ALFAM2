@@ -28,15 +28,14 @@ alfam2(
   time.name = 'ct', 
   time.incorp = NULL, 
   group = NULL, 
-  center = TRUE, 
-  cmns = c(app.rate  = 40, 
-           man.dm    =  6.0, 
-           man.tan   =  1.2, 
-           man.ph    =  7.5, 
-           air.temp  = 13, 
-           wind.2m   =  2.7, 
-           wind.sqrt =  sqrt(2.7), 
-           crop.z    = 10), 
+  center = c(app.rate  = 40, 
+             man.dm    =  6.0, 
+             man.tan   =  1.2, 
+             man.ph    =  7.5, 
+             air.temp  = 13, 
+             wind.2m   =  2.7, 
+             wind.sqrt =  sqrt(2.7), 
+             crop.z    = 10), 
   check.NA = TRUE, 
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
@@ -54,7 +53,7 @@ alfam2(
     A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
   \item{add.pars}{
-    Additional parameter values that will extend or overwrite the \code{pars}.
+    additional parameter values that will extend or overwrite the \code{pars}
 }
   \item{app.name}{
     name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha)
@@ -69,11 +68,9 @@ alfam2(
     name of column in \code{dat} that contains a grouping variable for identifying individual plots or locations. Optional.
 }
   \item{center}{
-    should numeric predictors be centered?
-    Default parameters are based on centered values.
-}
-  \item{cmns}{
     numeric vector with means for centering.
+    Set to \code{NULL} or \code{NA} to turn off centering (but only do this if you know what you are doing).
+    Default parameters are based on centered values.
 }
   \item{check.NA}{
     should the function check for \code{NA} values in calculation of primary parameters?

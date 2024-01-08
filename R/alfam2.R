@@ -9,17 +9,16 @@ alfam2 <- ALFAM2mod <- function(
   add.pars = NULL,
   app.name = 'TAN.app', 
   time.name = 'ct', 
-  time.incorp = NULL, # NULL with no incorporation, otherwise numeric value or column name. If column name value should be NA for no incorporation (w groups)
+  time.incorp = NULL,
   group = NULL, 
-  center = TRUE, 
-  cmns = c(app.rate  = 40, 
-           man.dm    =  6.0, 
-           man.tan   =  1.2, 
-           man.ph    =  7.5, 
-           air.temp  = 13, 
-           wind.2m   =  2.7, 
-           wind.sqrt =  sqrt(2.7), 
-           crop.z    = 10), 
+  center = c(app.rate  = 40, 
+             man.dm    =  6.0, 
+             man.tan   =  1.2, 
+             man.ph    =  7.5, 
+             air.temp  = 13, 
+             wind.2m   =  2.7, 
+             wind.sqrt =  sqrt(2.7), 
+             crop.z    = 10), 
   check.NA = TRUE, 
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
@@ -57,9 +56,9 @@ alfam2 <- ALFAM2mod <- function(
 
     if (nrow(dat) == 0) stop('dat has no rows!')
 
-    # Warning if cmns is changed
-    if (warn && !identical(cmns, eval(formals(alfam2)$cmns))) {
-      warning('You specified values for the cmns argument for centering means. Only use this option if you know what you are doing.')
+    # Warning if center is changed
+    if (warn && !identical(center, eval(formals(alfam2)$center))) {
+      warning('You specified values for the center argument for centering means. Only use this option if you know what you are doing.')
     }
 
     if (!time.name %in% names(dat)) {
@@ -154,18 +153,18 @@ alfam2 <- ALFAM2mod <- function(
   }
 
   # Center numeric predictors
-  if(center) {
+  if(!is.null(center) && !is.na(center)) {
     # get columns that will be centered 
-    c_cols <- names(cmns)[names(cmns) %in% names(dat)]
+    c_cols <- names(center)[names(center) %in% names(dat)]
 
     # center
     if(length(c_cols)) {
-      dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = cmns[c_cols], scale = FALSE)
-      #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, cmns[c_cols])
+      dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = center[c_cols], scale = FALSE)
+      #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, center[c_cols])
     }
   } else if (warn) {
     # Warning if centering is turned off
-    warning('You turned off centering by setting center = FALSE. Only use this option if you know what you are doing.')
+    warning('You turned off centering by setting center = NULL.\nOnly use this option if you know what you are doing,\nand only with a matching parameter set.')
   }
 
   # Original order (for sorting before return)

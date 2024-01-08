@@ -97,4 +97,4 @@ expect_false(identical(pred0, pred1))
 expect_false(identical(pred0, pred2))
 
 # Tests are needed for groups and pass_cols
-# Also for some warnings (like missing predictor vars, changning centering means. . .
+# Also for some warnings (like missing predictor vars, changing centering means. . .
