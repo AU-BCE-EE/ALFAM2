@@ -22,7 +22,6 @@ alfam2 <- function(
   prep.incorp = TRUE,
   add.incorp.rows = FALSE,
   check = TRUE,
-  check.NA = check,
   warn = TRUE,
   ...
   ) {
@@ -42,16 +41,37 @@ alfam2 <- function(
     flatout <- FALSE    
   }
 
+  if (flatout) {
+    prep.dum <- prep.incorp <- check <- warn <- FALSE
+    warning('You are using the dangerous flatout = TRUE option.\n   Be sure to verify output.')
+  }
+
+  if (!check && warn) {
+    warning('You set check = FALSE. Be sure to verify output!')
+  }
+
+  # Convert data.table to data.frame
+  if (class(dat)[1] %in% c('data.table', 'tbl_df')) {
+    dat <- as.data.frame(dat)
+  }
+
+  # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (check) {
-    # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # NTS: Work needed here, add checks for all arguments
-    # Convert data.table to data.frame
-    if (class(dat)[1] %in% c('data.table', 'tbl_df')) {
-      dat <- as.data.frame(dat)
-    }
     checkArgClassValue(dat, expected.class = 'data.frame')
     checkArgClassValue(pars, expected.class = c('numeric', 'list'), allow.na = FALSE)
+    checkArgClassValue(add.pars, expected.class = c('numeric', 'list', 'NULL'), allow.na = FALSE)
+    checkArgClassValue(app.name, expected.class = 'character', allow.na = FALSE)
+    checkArgClassValue(time.name, expected.class = 'character', allow.na = FALSE)
     checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
+    checkArgClassValue(group, expected.class = c('character', 'NULL'))
+    checkArgClassValue(center, expected.class = c('numeric', 'list', 'NULL'), allow.na = FALSE)
+    checkArgClassValue(pass.col, expected.class = c('character', 'NULL'), allow.na = FALSE)
+    checkArgClassValue(incorp.names, expected.class = c('character', 'NULL'), allow.na = FALSE)
+    checkArgClassValue(prep.dum, expected.class = 'logical', allow.na = FALSE)
+    checkArgClassValue(prep.incorp, expected.class = 'logical', allow.na = FALSE)
+    checkArgClassValue(add.incorp.rows, expected.class = 'logical', allow.na = FALSE)
+    checkArgClassValue(check, expected.class = 'logical', allow.na = FALSE)
+    checkArgClassValue(warn, expected.class = 'logical', allow.na = FALSE)
 
     if (nrow(dat) == 0) stop('dat has no rows!')
 
@@ -72,7 +92,6 @@ alfam2 <- function(
       stop(paste0('group argument you specified (', group, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
     }
 
-    # Check for specified columns etc. *after* adding additional variables above
     if (any(is.na(dat[, c(time.name, app.name)]))) stop('Missing values in time or application rate columns.\nSee ', time.name, ' and ', app.name, ' columns.')
 
     # Fix negative times with a warning
@@ -84,11 +103,15 @@ alfam2 <- function(
     # Prepare input data (dummy variables)
     if (prep.dum) {
       dum <- prepDat(dat, value = 'dummy')
-      #dat <- prepDat(dat, value = 'data')
       dat <- cbind(dat, dum)
+    } else {
+      if (warn) {
+        warning('You set prep.dum = FALSE,\n   so categorical predictors will not be converted to dummary variables.\n  To include these predictors add dummy variables externally or set prep.dum = TRUE.')
+      }
     }
 
     # Tell user whether default or user-supplied parameters are in use
+    # version note: update message with changes to default parameters!
     if (warn) {
       if (missing(pars)) {
         message('Default parameters (Set 2) are being used.')
@@ -110,7 +133,7 @@ alfam2 <- function(
     # Additional pars that override or extend pars
     if (!is.null(add.pars)) {
       if (warn) {
-        message('Additional parameters were specified.')
+        message('Additional parameters were specified and will replace or extend pars argument.')
       }
 
       # If add.pars was given as list, change to vector
@@ -127,14 +150,13 @@ alfam2 <- function(
       pars <- c(add.pars, pars[!names(pars) %in% add.pars])
     }
 
-
     # Check that all names for pars end with a number
-    if(any(!grepl('[0-9]$', names(pars)))) stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4, r5.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
+    if(any(!grepl('[0-9]$', names(pars)))) {
+      stop('One or more entries in argument "pars" cannot be assigned to parameters f0, r1, r2, r3, f4, r5.\n Make sure that the naming is correct. Either append the corresponding primary parameter or number (e.g., 0 to 4, or f0, r1) at the name endings (e.g. int.f0)\n or prepend the parameter separated by a dot (e.g. f0.int) or provide an appropriately named list.')
+    }
 
     # Check predictor names to make sure they don't match reserved names (group, incorporation, etc.)
-    # -> possibly extend names as done below?
-    # Yup! Will work on.
-    reserved.names <-  c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', '__orig.order')
+    reserved.names <- c('__group', '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', '__orig.order')
     if (warn && any(names(dat) %in% reserved.names)) {
       warning('dat data frame has some columns with reserved names.\nYou can proceed, but there may be problems.\nBetter to remove/rename the offending columns: ', reserved.names[reserved.names %in% names(dat)])
     }
@@ -148,22 +170,23 @@ alfam2 <- function(
   if(is.null(group)) {
     dat$`__group` <- 'a' 
   } else {
+    # Create new group column that could combine multiple columns (typically only 1 column though)
     dat$`__group` <- apply(dat[, group, drop = FALSE], 1, paste, collapse = '//')
   }
 
   # Center numeric predictors
   if(!is.null(center)[1] && !is.na(center)[1]) {
-    # get columns that will be centered 
+    # Get columns that will be centered 
     c_cols <- names(center)[names(center) %in% names(dat)]
 
-    # center
+    # Center
     if(length(c_cols)) {
       dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = center[c_cols], scale = FALSE)
       #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, center[c_cols])
     }
   } else if (warn) {
     # Warning if centering is turned off
-    warning('You turned off centering by setting center = NULL.\nOnly use this option if you know what you are doing,\nand only with a matching parameter set.')
+    warning('You turned off centering by setting center = NULL.\n   Only use this option if you know what you are doing,\n   and only with a matching parameter set.')
   }
 
   # Original order (for sorting before return)
@@ -186,6 +209,10 @@ alfam2 <- function(
       dat <- incprepout[['dat']]
       time.incorp <- incprepout[['time.incorp']]
     }
+  } else {
+    if (warn) {
+      warning('Skipping incorporation prep because you set prep.incorp = FALSE.\n   Incorporation will not be applied\n   (unless correct values for variables __f4 and __add.row are first added externally)')
+    }
   }
 
   # Drop parameters for missing predictors
@@ -193,7 +220,7 @@ alfam2 <- function(
   ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
-  if(warn && check && any(!predpres) && warn) {
+  if(warn && check && any(!predpres)) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
             'These secondary parameters have been dropped:\n  ', 
             paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
@@ -212,7 +239,7 @@ alfam2 <- function(
   names(pars) <- gsub('\\.[rf][0-9]$', '', names(pars))
 
   if(check && !all(ww <- sort(c(which0, which1, which2, which3, which4, which5)) == 1:length(pars))) {
-    stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
+    stop('Something wrong with parameter argument pars: ', paste(ww, collapse = ', '))
   }
 
   # Make sure parameter names can be found in dat
@@ -221,22 +248,29 @@ alfam2 <- function(
   # Calculate primary parameters
   if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, '__f0'] <- 0
   if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, upr = 1000)      else dat[, '__r1'] <- 0
-  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, upr = 1E9)       else dat[, '__r2'] <- 0
+  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, upr = 1E15)      else dat[, '__r2'] <- 0
   if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat)                  else dat[, '__r3'] <- 0
   if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, upr = 1000)      else dat[, '__r5'] <- 0
   # f4 only calculated where it is already 0 (not default of 1)
-  if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic') ##else dat[, '__f4'] <- 1
+  if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic')
 
   # Add drop row indicator
   dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows & check
 
   # Missing values
-  if(check && check.NA && any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
-    cat('Error!\n')
+  if(warn && any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
+    if (check) {
+      cat('Error!\n')
+      cat('Missing values in predictors:\n')
+      nn <- unique(names(pars[!grepl('^int', names(pars))]))
+      print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
+      stop('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+    }
+    cat('Warning!\n')
     cat('Missing values in predictors:\n')
     nn <- unique(names(pars[!grepl('^int', names(pars))]))
     print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
-    stop('NA values in primary parameters. Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+    warning('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
   }
 
   # Pare down to essential columns

@@ -1,5 +1,5 @@
 import(parallel)
 import(Rcpp)
 importFrom("stats", "na.omit", "setNames")
-export(alfam2, ALFAM2mod)
+export(alfam2)
 useDynLib(ALFAM2)

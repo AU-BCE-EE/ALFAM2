@@ -1,6 +1,5 @@
 \name{alfam2}
 \alias{alfam2}
-\alias{ALFAM2mod}
 \alias{ALFAM2pars01}
 \alias{ALFAM2pars02}
 \alias{ALFAM2pars03_alpha}
@@ -36,11 +35,12 @@ alfam2(
              wind.2m   =  2.7, 
              wind.sqrt =  sqrt(2.7), 
              crop.z    = 10), 
-  check.NA = TRUE, 
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
+  prep.dum = TRUE,
+  prep.incorp = TRUE,
   add.incorp.rows = FALSE, 
-  prep = FALSE,
+  check = TRUE,
   warn = TRUE,
   ...)
 }
@@ -72,23 +72,31 @@ alfam2(
     Set to \code{NULL} or \code{NA} to turn off centering (but only do this if you know what you are doing).
     Default parameters are based on centered values.
 }
-  \item{check.NA}{
-    should the function check for \code{NA} values in calculation of primary parameters?
-    Usually makes sense to leave as \code{TRUE}.
-}
   \item{pass.col}{
     character vector with name(s) of column(s) in \code{dat} that should be passed through to the returned data frame.
 }
   \item{incorp.names}{
     character vector with name(s) of column(s) in \code{dat} that contain binary incorporation variables.
 }
+  \item{prep.dum}{
+    if \code{TRUE} (default), function will automatically prepare dummy variables from input data. 
+    If \code{FALSE}, any necessary dummy variables must already be present in \code{dat}. 
+    See vignette.
+    Length one logical vector.
+}  
+  \item{prep.incorp}{
+    if \code{TRUE} (default), function will automatically prepare incorporation inputs from input data. 
+    See vignette.
+    Length one logical vector.
+}
   \item{add.incorp.rows}{
     function will add additional rows that exactly match the incorporation time(s) (no more than one per level of \code{group}) if they are not already present. Should these be returned or left out (default)?
     Length one logical vector.
 }
-  \item{prep}{
-    set to \code{TRUE} to automatically prepare dummy variables from input data. If \code{FALSE} (default), any necessary dummay variables must already be present in \code{dat}. See vignette.
-}  
+  \item{check}{
+    should the function check inputs, including for \code{NA} values in calculation of primary parameters?
+    Default of \code{TRUE} is recommended.
+}
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
     Useful for reducing console or report clutter, but use with caution, because problems with the input data or call could be missed.
@@ -124,7 +132,8 @@ alfam2(
   }
 
   For Set 2, some parameters were removed, and others added, and all values changed at least slightly.
-  Calculation of this set is described in a report on Danish emission factors (Hafner et al., 2021).
+  Calculation of this set is described in a report on Danish emission factors (Hafner et al., 2021) and a paper (Hafner et al., 2024).
+
   \code{
          c(int.f0            = -0.605683,
            app.mthd.os.f0    = -1.74351,
@@ -155,7 +164,7 @@ alfam2(
 
 \value{
   A data frame with the same number of rows as \code{dat} (unless \code{add.incorp.rows = TRUE}).
-  Deafult columns are:
+  Default columns are:
   \describe{
     \item{\code{ct}}{cumulative time since manure was applied}
     \item{\code{dt}}{interval duration (time step)}
@@ -171,11 +180,15 @@ alfam2(
     \item{\code{e}}{cumulative emission (from time = 0 to \code{ct}) (kg/ha)}
     \item{\code{er}}{relative cumulative emission (fraction of applied TAN)}
   }
+
+  If \code{prep.dum} is used, additional dummy variable columns will also be returned.
 }
 \references{
   Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484.
 
   Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
+
+  Hafner, S.D., Kamp, J.N., Pedersen, J., 2024. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. Agricultural and Forest Meteorology 344, 109790. \url{https://doi.org/10.1016/j.agrformet.2023.109790}
 
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
@@ -210,8 +223,9 @@ plot(e ~ ctime, data = pred1, type = 'o')
 dat1b <- data.frame(ctime = 0:12*4)
 
 # Run model, using default parameter values
-pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime', TAN.app = 100, 
-                    man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
+pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime', 
+                 TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
+
 all.equal(pred1, pred1b)
 
 
@@ -219,10 +233,10 @@ all.equal(pred1, pred1b)
 # Add incorporation (can occur at any time)
 dat2 <- dat1
 dat2$incorp.deep <- TRUE
-dat2$t.incorp <- 4
+dat2$t.incorp <- 3.5
 
 pred2 <- alfam2(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
-# See change in r3
+# Note change in r3
 pred2
 lines(e ~ ctime, data = pred2, type = 'o', col = 'red')
 
@@ -244,7 +258,8 @@ lines(e ~ ctime, data = pred4, type = 'o', col = 'orange')
 alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4)
 
 # To see incorporation time in output, use add.incorp.rows
-alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, add.incorp.rows = TRUE)
+alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, 
+       add.incorp.rows = TRUE)
 
 # Example 5
 # Function accepts multiple groups
