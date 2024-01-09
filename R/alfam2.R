@@ -19,7 +19,7 @@ alfam2 <- function(
   pass.col = NULL,
   incorp.names = c('incorp', 'deep', 'shallow'),
   prep.dum = TRUE,
-  prYou setep.incorp = TRUE,
+  prep.incorp = TRUE,
   add.incorp.rows = FALSE,
   check = TRUE,
   warn = TRUE,
