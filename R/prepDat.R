@@ -115,6 +115,7 @@ prepDat <- function(dat,
     if (value == 'dummy') return(dum)
   } else if (warn) {
     warning('Argument prep.dum = TRUE but there are no variables to convert to dummy variables!\n  Ignoring prep.dum = TRUE.') 
+    return(NULL)
   }
 
   return(dat)

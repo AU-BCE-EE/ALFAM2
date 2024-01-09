@@ -1,5 +1,5 @@
 calcPParms <-
-function(p, dat, tr = 'log10', upr = Inf) {
+function(p, dat, tr = 'log10', upr = Inf, warn = TRUE) {
   # Intercept must be first term!
   which.int <- grep('int', names(p))
   if(length(which.int)>1) stop('calcPParms called with more than one intercept (int) term for p argument: ', names(p)[which.int])
@@ -19,8 +19,8 @@ function(p, dat, tr = 'log10', upr = Inf) {
   # Apply limit
   if (any(r > upr)) {
     warning('Some calculated primary parameters are at the limit. Check input parameters.')
+    r[r > upr] <- upr
   }
-  r[r > upr] <- upr
 
   return(r)
 

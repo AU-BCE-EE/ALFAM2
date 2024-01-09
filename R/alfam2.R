@@ -102,7 +102,7 @@ alfam2 <- function(
 
     # Prepare input data (dummy variables)
     if (prep.dum) {
-      dum <- prepDat(dat, value = 'dummy')
+      dum <- prepDat(dat, value = 'dummy', warn = warn)
       dat <- cbind(dat, dum)
     } else {
       if (warn) {
@@ -245,33 +245,46 @@ alfam2 <- function(
   # Make sure parameter names can be found in dat
   if(check && any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
+  # Missing values
+  if (check || warn) {
+    # Trial run of par calcuations without upr to check for missing inputs
+    # Calculate primary parameters
+    if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, warn = FALSE, tr = 'logistic') else dat[, '__f0'] <- 0
+    if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, warn = FALSE)                  else dat[, '__r1'] <- 0
+    if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, warn = FALSE)                  else dat[, '__r2'] <- 0
+    if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat, warn = FALSE)                  else dat[, '__r3'] <- 0
+    if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, warn = FALSE)                  else dat[, '__r5'] <- 0
+    if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic')
+
+    if (any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
+      if (check) {
+        cat('Error!\n')
+        cat('Missing values in predictors:\n')
+        nn <- unique(names(pars[!grepl('^int', names(pars))]))
+        print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
+        stop('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+      }
+      if (warn) {
+        cat('Warning!\n')
+        cat('Missing values in predictors:\n')
+        nn <- unique(names(pars[!grepl('^int', names(pars))]))
+        print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
+        warning('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+      }
+    }
+  }
+
   # Calculate primary parameters
-  if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, '__f0'] <- 0
-  if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, upr = 1000)      else dat[, '__r1'] <- 0
-  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, upr = 1E15)      else dat[, '__r2'] <- 0
-  if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat)                  else dat[, '__r3'] <- 0
-  if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, upr = 1000)      else dat[, '__r5'] <- 0
+  if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, warn = warn, tr = 'logistic') else dat[, '__f0'] <- 0
+  if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, warn = warn, upr = 1000)      else dat[, '__r1'] <- 0
+  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, warn = warn, upr = 1E15)      else dat[, '__r2'] <- 0
+  if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat, warn = warn)                  else dat[, '__r3'] <- 0
+  if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, warn = warn, upr = 1000)      else dat[, '__r5'] <- 0
   # f4 only calculated where it is already 0 (not default of 1)
   if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic')
 
   # Add drop row indicator
   dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows & check
-
-  # Missing values
-  if(warn && any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
-    if (check) {
-      cat('Error!\n')
-      cat('Missing values in predictors:\n')
-      nn <- unique(names(pars[!grepl('^int', names(pars))]))
-      print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
-      stop('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
-    }
-    cat('Warning!\n')
-    cat('Missing values in predictors:\n')
-    nn <- unique(names(pars[!grepl('^int', names(pars))]))
-    print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
-    warning('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
-  }
 
   # Pare down to essential columns
   # No good reason for this anymore except debugging ease

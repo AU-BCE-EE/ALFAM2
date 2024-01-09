@@ -184,7 +184,7 @@ Predictor values for the default scenario can be found in the \texttt(center) ar
 The default application method is trailing hose.
 The \texttt{center} argument is used for centering predictor variables, and this approach facilities the behavior described above.
 
-\subsection{Cumulative emission for a single scenario}
+\subsection{Example 1. Cumulative emission for a single scenario}
 In this example, let's assume we are interested in manure application by broadcast when manure had 8\% dry matter (DM), total TAN application is 50 kg/ha, wind is 3 m/s, and air temperature is 20$^\circ$C.
 
 First we need to create a data frame with the input data.
@@ -208,9 +208,9 @@ We can predict cumulative emission after 3 days (72 hours) with the following ca
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
 @
 
-The warning message just tells us that the call included some parameters with no associated predictor variables in our data frame given in the \texttt{dat} argument.
+The warning messages tell us that dummy variables were not created, and that the call included some parameters with no associated predictor variables in our data frame given in the \texttt{dat} argument.
 This is discussed more below.
-We will turn off the warning in the examples below.
+We will turn off the warnings in some examples below.
 
 Let's look at the predictions.
 
@@ -219,12 +219,12 @@ pred1
 @
 
 The most interesting columns here are called \texttt{e}, which has cumulative emission in the same units as TAN application, and \texttt{er}, which has relative cumulative emission, as a fraction of applied TAN.
-So in this example, 48\% of applied TAN is predicted to be lost by volatilization.
+So in this example, \Sexpr{round(100 * pred1$er, 0)}\% of applied TAN is predicted to be lost by volatilization.
 
 The warning message above is related to an important point: Any excluded predictors are effectively assumed to be at their reference levels.
 
-\subsection{Adding incorporation}
-To include incorporation, we need to add a couple columns to our data frame.
+\subsection{Example 2. Adding incorporation}
+To include incorporation of slurry into the soil after application, we need to add a couple columns to our data frame.
 First let's make a new data frame for the example.
 
 <<>>=
@@ -262,10 +262,10 @@ pred3 <- alfam2(dat3, app.name = "TAN.app", time.name = "ctime",
 pred3
 @
 
-\subsection{Multiple scenarios in a single call}
+\subsection{Example 3. Multiple scenarios in a single call}
 A single function call can be used for multiple scenarios.
 For example, perhaps we would like to compare 5 different incorporation times.
-First let's create a new data frame that contains this information.
+First let's create a new data frame that contains the inputs.
 We will need to add a new column with a grouping variable also, to let \texttt{alfam2()} know that each row represents a different scenario.
 
 <<>>=
@@ -273,14 +273,14 @@ dat4 <- data.frame(scenario = 1:5, ctime = 72, TAN.app = 50,
                    man.dm = 8, air.temp = 20, wind.2m = 4, 
                    app.mthd.bc = TRUE,
                    incorp.deep = TRUE, 
-                   t.incorp = c(0.1, 1, 6, 24, Inf))
+                   t.incorp = c(0.1, 1, 6, 24, NA))
 dat4
 @
 
 It may seem strange to have a \texttt{scenario} column--isn't it clear that each row is a different scenario?
 The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change.
 Note that there is no incorporation for scenario 5.
-We could also specify this behavior with \texttt{t.incorp = NA}.\footnote{This would provide identical results, but for package v0.3.2 and prior, this approach did not work correctly unless \texttt{incorp.deep} was set to FALSE.}
+We could also specify this behavior with \texttt{t.incorp = Inf}.
 
 Let's run the model for these 5 scenarios.
 
@@ -291,6 +291,11 @@ pred4
 @
 
 We can see that predicted emission increases substantially as incorporation time goes up.
+
+<<>>=
+plot(dat4$t.incorp, pred4$er, type = 'o')
+@
+
 And incorporation after 24, or really even 6, hours is not much better than no incorporation!
 
 Scenarios could differ in any way. 
@@ -313,10 +318,10 @@ pred5 <- alfam2(dat5, app.name = "TAN.app", time.name = "ctime",
 pred5
 @
 
-\subsection{An easier approach for dummy variables}
+\subsection{Example 4. An easier approach for dummy variables}
 Most of the examples given above include "dummy variables", or multiple binary variables that together represent a factor.
 For example, \texttt{dat5} includes two columns (\texttt{app.mthd.bc} and \texttt{app.mthd.os}) to together represent application method.
-The package now (>=v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
+The package (>=v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
 For example, we could duplicate the behavior of the call above with the following.
 
 <<>>=
@@ -330,14 +335,13 @@ dat5b
 
 <<>>=
 pred5b <- alfam2(dat5b, app.name = "TAN.app", time.name = "ctime", 
-                    group = "scenario", warn = FALSE, prep = TRUE)
+                    group = "scenario", warn = FALSE)
 pred5b
 @
 
-Note that \texttt{prep = TRUE} argument in the call above.
 Calculated emission is the same as in \texttt{pred5} above, but in \texttt{pred5b} we also have the dummy variables returned in the output.
 
-This data preparation option invoked by using \texttt{prep = TRUE} will automatically calculate dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
+This data preparation option invoked by \texttt{prep = TRUE} (default) will automatically calculate dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
 For this automatic conversion to take place, column names and factor levels must match the relevant part of the parameter names.
 In the call immediately above, \texttt{app.mthd} matches the beginning of the parameter names \texttt{app.mthd.bc} etc., and the levels \texttt{bc} and \texttt{os} match the final part of these names.
 The level \texttt{th} has no match--it is (correctly) interpreteted as a reference level.
@@ -350,34 +354,47 @@ alfam2pars02[grepl('^incorp', names(alfam2pars02))]
 @
 
 So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.
-To show that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
+To help ensure that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
 
 <<>>=
 dat6 <- data.frame(scenario = 1:6, ctime = 72, TAN.app = 100, 
-                    man.dm = 5, air.temp = 10, wind.2m = 2, 
-                    app.mthd = rep(c('bc', 'th'), each = 3),
-                    incorp = rep(c('none', 'shallow', 'deep'), 2),
-                    t.incorp = 4)
+                   man.dm = 5, air.temp = 10, wind.2m = 2, 
+                   app.mthd = rep(c('bc', 'th'), each = 3),
+                   incorp = rep(c('none', 'shallow', 'deep'), 2),
+                   t.incorp = 4)
 dat6
 @
 
 <<>>=
 pred6 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
-                   time.incorp = "t.incorp", group = "scenario", warn = TRUE, prep = TRUE)
+                time.incorp = "t.incorp", group = "scenario", 
+                warn = TRUE)
 pred6
 @
 
-\subsection{Volatilization dynamics}
-All the calls above returned results for a single time per scenario.
+Indeed, the incorporation parameters have been used.
+We could do a more careful check by viewing the times at which incorporation took place.
+
+<<>>=
+pred6b <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
+                 time.incorp = "t.incorp", group = "scenario", 
+                 warn = TRUE, add.incorp.rows = TRUE)
+pred6b
+@
+
+Here we see the expected effects in primary parameters \texttt{r3} and \texttt{f4}.
+But note that the \texttt{f4} mass transfer occurs at the beginning of an interval, and therefore shows up for the 72 h interval in the output, which takes place from 4 to 72 h after slurry application.
+
+\subsection{Example 5. Volatilization dynamics}
+All the calls above returned results for a single time per scenario (with the exception of some incorporation results).
 The function also predicts dynamics.
 If your interest is final cumulative emission, it is not necessary to look at dynamics.
 The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions (e.g., wind or air temperature) are constant.
 However, if detailed temporal weather data are available, running the model with with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
-Where needed for incorporation calculations, the function will add an interval (row), but these rows are excluded from the results by default (set the \texttt{add.incorp.rows} argument to \texttt{TRUE} to show them).
+Where needed for incorporation calculations, the function will add an interval (row), but these rows are excluded from the results by default (they were returned above by setting the \texttt{add.incorp.rows} argument to \texttt{TRUE}).
 
 Let's assume we have some high resolution measurements of weather conditions.
 We'll create some data to represent this below.
-
 
 <<>>=
 set.seed(1201)
@@ -385,7 +402,7 @@ dat7 <- data.frame(ctime = 0:36*2, TAN.app = 100, man.dm = 8,
                    air.temp = 7 + 7*sin(0:36*2 * 2*pi/24) + rnorm(37, 0, 2), 
                    wind = 10^(0.5 + 0.4*sin(0:36*2 * 2*pi/24) + 
                               rnorm(37, 0, 0.12)), 
-                   app.mthd.bc = TRUE)
+                   app.mthd = "bc")
 plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
 plot(wind ~ ctime, data = dat7, type = 'o', col = 'blue')
 @
@@ -408,12 +425,10 @@ plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red',
 @
 
 Dynamics in the case of incorporation may be interesting.
-The additional interval required internally because incorporation does not line up exactly with an interval in the input data frame can be returned in the output by using the \texttt{add.incorp.rows} argument.
-But recall that this has no effect on cumulative emission.
 
 <<>>=
 dat8 <- dat7
-dat8$incorp.deep <- TRUE
+dat8$incorp <- "deep"
 dat8$t.incorp <- 6.5
 @
 
@@ -425,10 +440,10 @@ pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
 <<>>=
 plot(e ~ ctime, data = pred8, type = 'o', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
-abline(v = 6.5, col = 'blue')
+abline(v = 6.5, col = 'blue', lty = 2)
 plot(j ~ ctime, data = pred8, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
-abline(v = 6.5, col = 'blue')
+abline(v = 6.5, col = 'blue', lty = 2)
 @
 
 The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
@@ -442,11 +457,11 @@ The following call will create a comma delimited text file that can be opened wi
 write.csv(pred7, 'pred7.csv', row.names = FALSE)
 @
 
-Alternatives include \texttt{write.csv2}, \texttt{write.table}, and any of the various functions in add-on packages for writing to Excel files.
+Alternatives include \texttt{write.csv2}, \texttt{write.table}, and for users of the data.table package, \texttt{fwrite}, along with any of the various functions in add-on packages for writing to Excel files.
 
 Except for simple scenarios, it is not very efficient to create a data frame for entering predictor variable values.
 A more typical approach will be to read data into R from a file, especially when using the model in association with emission measurements.
-The simplest approach here is to use the \texttt{read.csv()} function or some of the related functions.
+The simplest approach here is to use the \texttt{read.csv()}, \texttt{fread()} or some of the related functions.
 Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
 See the book mentioned above for details.
 
@@ -460,8 +475,9 @@ Missing values in predictors:
 dat6b <- dat6
 dat6b[3, 'wind.2m'] <- NA
 
+debug(alfam2)
 alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+       time.incorp = "t.incorp", group = "scenario", check = TRUE, warn = TRUE)
 @
 
 The printed messages identify which variables and which rows are missing.
