@@ -22,10 +22,12 @@ alfam2 <- ALFAM2mod <- function(
   check.NA = TRUE, 
   pass.col = NULL, 
   incorp.names = c('incorp', 'deep', 'shallow'),
+  prep = 'di',
+  prep.dum = FALSE,
+  prep.incorp = FALSE,
   add.incorp.rows = FALSE, 
-  prep = FALSE,
   warn = TRUE,
-  #check = TRUE,
+  check = TRUE,
   ...                 # Additional predictor variables with fixed values for all times and groups (all rows) (or the secret flatout = TRUE option)
   ) {
 
@@ -175,12 +177,11 @@ alfam2 <- ALFAM2mod <- function(
   # prepIncorp() should require sorted ct 
   dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
-  # Sort out incorporation
-  # Default f4 value (for no incorporation in group, or incorporation only later)
-  dat$`__add.row` <- FALSE 
-  dat[, '__f4'] <- 1
-
   if (!flatout) {
+    # Default f4 value (for no incorporation in group, or incorporation only later)
+    # If using flatout, __f4 should (must) already be in input data, and is only fixed at 1 if there is no incorporation
+    dat$`__add.row` <- FALSE 
+    dat[, '__f4'] <- 1
     # Skipped for flatout == TRUE (must be done externally before calling alfam2())
     if(!is.null(time.incorp)) {
       incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
