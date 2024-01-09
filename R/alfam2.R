@@ -322,7 +322,9 @@ alfam2 <- function(
   dat <- dat[!dat[, '__drop.row'], ]
 
   if (check && !add.incorp.rows && prep.dum) {
-    ce <- cbind(dum, ce)
+    if (!is.null(dum) && nrow(dum) == nrow(ce)) {
+      ce <- cbind(dum, ce)
+    }
   }
 
   # Recalculate dt, e.int after possibly dropping rows and get j

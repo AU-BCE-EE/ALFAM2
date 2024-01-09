@@ -475,7 +475,6 @@ Missing values in predictors:
 dat6b <- dat6
 dat6b[3, 'wind.2m'] <- NA
 
-debug(alfam2)
 alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
        time.incorp = "t.incorp", group = "scenario", check = TRUE, warn = TRUE)
 @
