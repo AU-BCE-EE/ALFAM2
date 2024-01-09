@@ -103,7 +103,9 @@ alfam2 <- function(
     # Prepare input data (dummy variables)
     if (prep.dum) {
       dum <- prepDat(dat, value = 'dummy', warn = warn)
-      dat <- cbind(dat, dum)
+      if (!is.null(dum) && nrow(dum) == nrow(dat)) {
+        dat <- cbind(dat, dum)
+      }
     } else {
       if (warn) {
         warning('You set prep.dum = FALSE,\n   so categorical predictors will not be converted to dummy variables.\n  To include these predictors add dummy variables externally or set prep.dum = TRUE.')
