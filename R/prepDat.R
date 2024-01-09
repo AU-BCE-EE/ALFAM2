@@ -1,6 +1,9 @@
 # Prepare input data for alfam2()/ALFAM2mod()
 
-prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', source.name = 'man.source',
+prepDat <- function(dat, 
+                    app.mthd.name = 'app.mthd', 
+                    incorp.name = 'incorp', 
+                    source.name = 'man.source',
                     app.mthd.levels = list(ts = c('trailing shoe', 'ts', 'sl\u00E6besko'), 
                                            bc = c('broadcast', 'bc', 'broadspread', 'bredspredning', 'bredspredt'),
                                            os = c('open slot injection', 'os', 'open-slot injection', 'shallow injection', 'nedf\u00E6ldning i gr\u00E6s'), 
@@ -8,7 +11,8 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
                     incorp.levels = list(shallow = c('shallow', 'harrow'), deep = c('deep', 'plough', 'plow', 'nedbringning')),
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
                     value = 'dummy',
-                    all.levels = TRUE
+                    all.levels = TRUE,
+                    warn = TRUE
                     ) {
 
   # Keep track of number of columns to use in returning data
@@ -34,7 +38,9 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
       nn <- paste(app.mthd.name, i, sep = '.')
       if (nn %in% names(dat)) {
         ncc <- ncc - 1
-        warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+        if (warn) {
+          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+        }
       }
       dat[, nn] <- 1 * (dat[, app.mthd.name] == i)
       ndum <- ndum + 1
@@ -46,7 +52,7 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
     dat[, incorp.name] <- tolower(dat[, incorp.name])
 
     # Replace NA values with 'none'
-    if (any(is.na(dat[, incorp.name]))) {
+    if (warn && any(is.na(dat[, incorp.name]))) {
       warning(paste0('Some NA values in incorporation column ', incorp.name, '.\nReplacing all with "none".'))
       dat[is.na(dat[, incorp.name]), incorp.name] <- 'none'
     }
@@ -67,7 +73,9 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
       nn <- paste(incorp.name, i, sep = '.')
       if (nn %in% names(dat)) {
         ncc <- ncc - 1
-        warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+        if (warn) {
+          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+        }
       }
       dat[, nn] <- 1 * (dat[, incorp.name] == i)
       ndum <- ndum + 1
@@ -93,7 +101,9 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
       nn <- paste(source.name, i, sep = '.')
       if (nn %in% names(dat)) {
         ncc <- ncc - 1
-        warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+        if (warn) {
+          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+        }
       }
       dat[, nn] <- 1 * (dat[, source.name] == i)
       ndum <- ndum + 1
@@ -103,7 +113,7 @@ prepDat <- function(dat, app.mthd.name = 'app.mthd', incorp.name = 'incorp', sou
   if (ndum > 0) {
     dum <- dat[, 1:ndum + ncc, drop = FALSE]
     if (value == 'dummy') return(dum)
-  } else {
+  } else if (warn) {
     warning('You set prep = TRUE but there are no variables to convert to dummy variables!\nIgnoring prep = TRUE.') 
   }
 

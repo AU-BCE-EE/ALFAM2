@@ -1,34 +1,30 @@
-# Function for running the model
-# Use group = character name of column in dat to run by group
-# time.incorp is name of column with incorporation time. Only first value (in each group) is used.
-# group is name of group column, app.name is name of total pool (a0 + u0) column
+# Function for running ALFAM2 model
 
-alfam2 <- ALFAM2mod <- function(
-  dat, 
-  pars = ALFAM2::alfam2pars02, 
+alfam2 <- function(
+  dat,
+  pars = ALFAM2::alfam2pars02,
   add.pars = NULL,
-  app.name = 'TAN.app', 
-  time.name = 'ct', 
+  app.name = 'TAN.app',
+  time.name = 'ct',
   time.incorp = NULL,
-  group = NULL, 
-  center = c(app.rate  = 40, 
-             man.dm    =  6.0, 
-             man.tan   =  1.2, 
-             man.ph    =  7.5, 
-             air.temp  = 13, 
-             wind.2m   =  2.7, 
-             wind.sqrt =  sqrt(2.7), 
-             crop.z    = 10), 
-  check.NA = TRUE, 
-  pass.col = NULL, 
+  group = NULL,
+  center = c(app.rate  = 40,
+             man.dm    =  6.0,
+             man.tan   =  1.2,
+             man.ph    =  7.5,
+             air.temp  = 13,
+             wind.2m   =  2.7,
+             wind.sqrt =  sqrt(2.7),
+             crop.z    = 10),
+  pass.col = NULL,
   incorp.names = c('incorp', 'deep', 'shallow'),
-  prep = 'di',
-  prep.dum = FALSE,
-  prep.incorp = FALSE,
-  add.incorp.rows = FALSE, 
-  warn = TRUE,
+  prep.dum = TRUE,
+  prep.incorp = TRUE,
+  add.incorp.rows = FALSE,
   check = TRUE,
-  ...                 # Additional predictor variables with fixed values for all times and groups (all rows) (or the secret flatout = TRUE option)
+  check.NA = check,
+  warn = TRUE,
+  ...
   ) {
 
   # Add predictor variables if given in '...' optional arguments
@@ -46,7 +42,7 @@ alfam2 <- ALFAM2mod <- function(
     flatout <- FALSE    
   }
 
-  if (!flatout) {
+  if (check) {
     # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # NTS: Work needed here, add checks for all arguments
     # Convert data.table to data.frame
@@ -86,7 +82,7 @@ alfam2 <- ALFAM2mod <- function(
     }
 
     # Prepare input data (dummy variables)
-    if (prep) {
+    if (prep.dum) {
       dum <- prepDat(dat, value = 'dummy')
       #dat <- prepDat(dat, value = 'data')
       dat <- cbind(dat, dum)
@@ -146,7 +142,7 @@ alfam2 <- ALFAM2mod <- function(
     # Remove non-existent pass.col columns if pass-through requested
     pass.col <- intersect(pass.col, names(dat))
 
-  } # End flatout skip
+  } # End check skip
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
@@ -177,26 +173,27 @@ alfam2 <- ALFAM2mod <- function(
   # prepIncorp() should require sorted ct 
   dat <- dat[order(dat$`__group`, dat[, time.name]), ]
 
-  if (!flatout) {
+  # Sort out incorporation inputs and pars
+  if (prep.incorp) {
     # Default f4 value (for no incorporation in group, or incorporation only later)
     # If using flatout, __f4 should (must) already be in input data, and is only fixed at 1 if there is no incorporation
+    # Below skipped for flatout == TRUE (must be done externally before calling alfam2())
     dat$`__add.row` <- FALSE 
     dat[, '__f4'] <- 1
     # Skipped for flatout == TRUE (must be done externally before calling alfam2())
-    if(!is.null(time.incorp)) {
+    if(prep.incorp && !is.null(time.incorp)) {
       incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
       dat <- incprepout[['dat']]
       time.incorp <- incprepout[['time.incorp']]
     }
   }
 
-  # NTS: parameter calculation below could be moved to a separate function for simpler code in alfam2()
   # Drop parameters for missing predictors
   p.orig <- pars
   ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
   pars <- pars[predpres <- ppnames %in% names(dat) | ppnames == 'int']
 
-  if(warn && !flatout && any(!predpres) && warn) {
+  if(warn && check && any(!predpres) && warn) {
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
             'These secondary parameters have been dropped:\n  ', 
             paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
@@ -214,12 +211,12 @@ alfam2 <- ALFAM2mod <- function(
 
   names(pars) <- gsub('\\.[rf][0-9]$', '', names(pars))
 
-  if(!flatout && !all(ww <- sort(c(which0, which1, which2, which3, which4, which5)) == 1:length(pars))) {
+  if(check && !all(ww <- sort(c(which0, which1, which2, which3, which4, which5)) == 1:length(pars))) {
     stop('Something wrong with parameter argument p. ', paste(ww, collapse = ', '))
   }
 
   # Make sure parameter names can be found in dat
-  if(!flatout && any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
+  if(check && any(ncheck <- !(names(pars) %in% c('int', names(dat))))) stop ('Names in parameter vector pars not in dat (or not "int"): ', paste(names(pars)[ncheck], collapse = ', '))
 
   # Calculate primary parameters
   if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, tr = 'logistic') else dat[, '__f0'] <- 0
@@ -231,10 +228,10 @@ alfam2 <- ALFAM2mod <- function(
   if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic') ##else dat[, '__f4'] <- 1
 
   # Add drop row indicator
-  dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows & !flatout
+  dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows & check
 
   # Missing values
-  if(!flatout && check.NA && any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
+  if(check && check.NA && any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
     cat('Error!\n')
     cat('Missing values in predictors:\n')
     nn <- unique(names(pars[!grepl('^int', names(pars))]))
@@ -277,7 +274,7 @@ alfam2 <- ALFAM2mod <- function(
   # Keep up with dat to use for sorting below
   dat <- dat[!dat[, '__drop.row'], ]
 
-  if (!flatout && !add.incorp.rows && prep) {
+  if (check && !add.incorp.rows && prep) {
     ce <- cbind(dum, ce)
   }
 
