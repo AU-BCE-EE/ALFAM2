@@ -19,7 +19,7 @@ alfam2 <- function(
   pass.col = NULL,
   incorp.names = c('incorp', 'deep', 'shallow'),
   prep.dum = TRUE,
-  prep.incorp = TRUE,
+  prYou setep.incorp = TRUE,
   add.incorp.rows = FALSE,
   check = TRUE,
   warn = TRUE,
@@ -106,7 +106,7 @@ alfam2 <- function(
       dat <- cbind(dat, dum)
     } else {
       if (warn) {
-        warning('You set prep.dum = FALSE,\n   so categorical predictors will not be converted to dummary variables.\n  To include these predictors add dummy variables externally or set prep.dum = TRUE.')
+        warning('You set prep.dum = FALSE,\n   so categorical predictors will not be converted to dummy variables.\n  To include these predictors add dummy variables externally or set prep.dum = TRUE.')
       }
     }
 
@@ -308,7 +308,7 @@ alfam2 <- function(
   # Keep up with dat to use for sorting below
   dat <- dat[!dat[, '__drop.row'], ]
 
-  if (check && !add.incorp.rows && prep) {
+  if (check && !add.incorp.rows && prep.dum) {
     ce <- cbind(dum, ce)
   }
 

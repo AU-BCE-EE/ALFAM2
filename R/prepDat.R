@@ -114,7 +114,7 @@ prepDat <- function(dat,
     dum <- dat[, 1:ndum + ncc, drop = FALSE]
     if (value == 'dummy') return(dum)
   } else if (warn) {
-    warning('You set prep = TRUE but there are no variables to convert to dummy variables!\nIgnoring prep = TRUE.') 
+    warning('Argument prep.dum = TRUE but there are no variables to convert to dummy variables!\n  Ignoring prep.dum = TRUE.') 
   }
 
   return(dat)
