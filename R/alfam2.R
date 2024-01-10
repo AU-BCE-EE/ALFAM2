@@ -187,7 +187,7 @@ alfam2 <- function(
   }
 
   # Center numeric predictors
-  if(tolower(value) != 'incorp' && !is.null(center)[1] && !is.na(center)[1]) {
+  if(value != 'incorp' && !is.null(center)[1] && !is.na(center)[1]) {
     # Get columns that will be centered 
     c_cols <- names(center)[names(center) %in% names(dat)]
 
@@ -221,7 +221,7 @@ alfam2 <- function(
       dat <- incprepout[['dat']]
       time.incorp <- incprepout[['time.incorp']]
     }
-    if (tolower(value) == 'incorp') {
+    if (value == 'incorp') {
       if (warn) {
         warning('You set values = "incorp" so output does not include emission results.')
       }
