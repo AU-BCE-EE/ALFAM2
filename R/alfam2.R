@@ -23,6 +23,7 @@ alfam2 <- function(
   add.incorp.rows = FALSE,
   check = TRUE,
   warn = TRUE,
+  value = 'emis',
   ...
   ) {
 
@@ -76,6 +77,8 @@ alfam2 <- function(
     checkArgClassValue(add.incorp.rows, expected.class = 'logical', allow.na = FALSE)
     checkArgClassValue(check, expected.class = 'logical', allow.na = FALSE)
     checkArgClassValue(warn, expected.class = 'logical', allow.na = FALSE)
+    value <- tolower(value)
+    checkArgClassValue(value, expected.class = 'character', expected.values = c('emis', 'incorp'), allow.na = FALSE)
 
     if (nrow(dat) == 0) stop('dat has no rows!')
 
@@ -210,10 +213,13 @@ alfam2 <- function(
     dat$`__add.row` <- FALSE 
     dat[, '__f4'] <- 1
     # Skipped for flatout == TRUE (must be done externally before calling alfam2())
-    if(prep.incorp && !is.null(time.incorp)) {
+    if (prep.incorp && !is.null(time.incorp)) {
       incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
       dat <- incprepout[['dat']]
       time.incorp <- incprepout[['time.incorp']]
+    }
+    if (tolower(value) == 'incorp') {
+      return(dat)
     }
   } else {
     if (warn) {
