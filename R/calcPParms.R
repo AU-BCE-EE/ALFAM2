@@ -17,7 +17,7 @@ function(p, dat, tr = 'log10', upr = Inf, warn = TRUE) {
   if(tr == 'logistic') r <- (exp(r)/(1 + exp(r)))
 
   # Apply limit
-  if (any(r > upr)) {
+  if (upr < Inf && any(r > upr)) {
     warning('Some calculated primary parameters are at the limit. Check input parameters.')
     r[r > upr] <- upr
   }
