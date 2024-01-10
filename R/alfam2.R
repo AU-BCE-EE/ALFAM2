@@ -43,7 +43,11 @@ alfam2 <- function(
 
   if (flatout) {
     prep.dum <- prep.incorp <- check <- warn <- FALSE
-    warning('You are using the dangerous flatout = TRUE option.\n   Be sure to verify output.')
+    warning('You are using the flatout = TRUE option.\n   Be sure to verify output.')
+  }
+
+  if (!prep.incorp && warn) {
+    warning('You specified prep.incorp = FALSE.\n   Columns `__f4`, `__add.row`, `__group` must be present (and correct) in input data.')
   }
 
   if (!check && warn) {
