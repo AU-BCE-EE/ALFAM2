@@ -339,7 +339,7 @@ alfam2 <- function(
   # Keep up with dat to use for sorting below
   dat <- dat[!dat[, '__drop.row'], ]
 
-  if (check && !add.incorp.rows && prep.dum) {
+  if (!add.incorp.rows && prep.dum) {
     if (!is.null(dum) && nrow(dum) == nrow(ce)) {
       ce <- cbind(dum, ce)
     }
