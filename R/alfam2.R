@@ -169,7 +169,9 @@ alfam2 <- function(
     if (!is.null(dum) && nrow(dum) == nrow(dat)) {
       dat <- cbind(dat, dum)
     } else {
-      stop('Problem with dummy variable creation.')
+      if (!is.null(dum)) {
+        stop('Problem with dummy variable creation.')
+      }
     }
   } else {
     if (warn) {
