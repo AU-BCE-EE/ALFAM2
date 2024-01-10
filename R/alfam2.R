@@ -168,6 +168,8 @@ alfam2 <- function(
     dum <- prepDat(dat, value = 'dummy', warn = warn)
     if (!is.null(dum) && nrow(dum) == nrow(dat)) {
       dat <- cbind(dat, dum)
+    } else {
+      stop('Problem with dummy variable creation.')
     }
   } else {
     if (warn) {
