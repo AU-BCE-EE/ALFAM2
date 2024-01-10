@@ -107,18 +107,6 @@ alfam2 <- function(
       dat[dat$time.name < 0, time.name] <- 0
     }
 
-    # Prepare input data (dummy variables)
-    if (prep.dum) {
-      dum <- prepDat(dat, value = 'dummy', warn = warn)
-      if (!is.null(dum) && nrow(dum) == nrow(dat)) {
-        dat <- cbind(dat, dum)
-      }
-    } else {
-      if (warn) {
-        warning('You set prep.dum = FALSE,\n   so categorical predictors will not be converted to dummy variables.\n  To include these predictors add dummy variables externally or set prep.dum = TRUE.')
-      }
-    }
-
     # Tell user whether default or user-supplied parameters are in use
     # version note: update message with changes to default parameters!
     if (warn) {
@@ -175,6 +163,19 @@ alfam2 <- function(
 
   } # End check skip
 
+  # Prepare input data (dummy variables)
+  if (prep.dum) {
+    dum <- prepDat(dat, value = 'dummy', warn = warn)
+    if (!is.null(dum) && nrow(dum) == nrow(dat)) {
+      dat <- cbind(dat, dum)
+    }
+  } else {
+    if (warn) {
+      warning('You set prep.dum = FALSE,\n   so categorical predictors will not be converted to dummy variables.\n  To include these predictors add dummy variables externally or set prep.dum = TRUE.')
+    }
+  }
+
+
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
     dat$`__group` <- 'a' 
@@ -219,6 +220,9 @@ alfam2 <- function(
       time.incorp <- incprepout[['time.incorp']]
     }
     if (tolower(value) == 'incorp') {
+      if (warn) {
+        warning('You set values = "incorp" so output does not include emission results.')
+      }
       return(dat)
     }
   } else {
