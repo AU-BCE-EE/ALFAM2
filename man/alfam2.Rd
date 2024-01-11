@@ -137,7 +137,7 @@ alfam2(
            rain.cum.r3       = -0.0300936) 
   }
 
-  For Set 2, some parameters were removed, and others added, and all values changed at least slightly.
+  For the latest set, Set 2, \code{alfam2pars02}, some parameters were removed, and others added, and all values changed at least slightly.
   Calculation of this set is described in a report on Danish emission factors (Hafner et al., 2021) and a paper (Hafner et al., 2024).
 
   \code{
@@ -166,6 +166,24 @@ alfam2(
            incorp.deep.f4    = -3.69495,
            incorp.deep.r3    = -1.26570)
   }
+
+  Names and units (matching units is essential) for numerical predictors are:
+  \describe{
+    \item{\code{man.dm}}{slurry dry matter, percentage of fresh matter}
+    \item{\code{man.ph}}{slurry pH, pH units}
+    \item{\code{air.temp}}{air temperature, degress C}
+    \item{\code{wind.2m}}{wind speed measured (or adjusted to) 2 m height, m/s}
+    \item{\code{rain.rate}}{rainfall rate, mm/h}
+  }
+  See the vignette for more details.
+
+  Categorical predictor variables are all entered as binary dummy variables.
+  The \code{alfam2} function automatically creates the dummy variables (this can be turned off with \code{prep.dum = FALSE}).
+
+  \describe{
+    \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing hose, \code{os} for open slot injection, and \code{cs} for closed slot injection}
+  }
+
 }
 
 \value{
