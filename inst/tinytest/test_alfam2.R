@@ -56,8 +56,6 @@ expect_equal(length(pred0$er), 2)
 expect_equal(pred0$ct, c(4, 48))
 
 # External and internal (prep.incorp = FALSE) incorporation prep gives same result~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-detach('package:ALFAM2')
-library(ALFAM2)
 dat0 <- data.frame(ctime = 168, TAN.app = 100, incorp.deep = TRUE, t.incorp = 4)
 dat0ip <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', value = 'incorp', warn = FALSE)
 predex <- alfam2(dat0ip, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', prep.incorp = FALSE, check = FALSE, warn = FALSE)
