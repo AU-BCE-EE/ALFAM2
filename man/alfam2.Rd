@@ -199,7 +199,7 @@ alfam2(
     \item{\code{r2}}{r2 parameter}
     \item{\code{r3}}{r3 parameter}
     \item{\code{r4}}{r4 parameter}
-    \item{\code{r5}}{r4 parameter}
+    \item{\code{r5}}{r5 parameter}
     \item{\code{f}}{fast pool size at \code{ct} (kg/ha)}
     \item{\code{s}}{slow pool size at \code{ct} (kg/ha)}
     \item{\code{j}}{average NH3 flux in interval (kg/ha-h)}
