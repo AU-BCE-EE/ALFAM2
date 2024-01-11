@@ -21,7 +21,7 @@ library(ALFAM2)
 @
 
 \title{Getting started with the ALFAM2 package}
-\author{Sasha D. Hafner (\texttt{sasha@hafnerconsulting.com, sasha.hafner@bce.au.dk})}
+\author{Sasha D. Hafner (\texttt{sasha.hafner@bce.au.dk})}
 
 \begin{document}
 
@@ -33,7 +33,7 @@ The model, which is described in detail in \cite{afmod2019}, is the focus of the
 The ALFAM2 package is an add-on package for R, which is an environment for statistical computing. 
 With the model, it is possible to predict average volatilization rate and cumulative emission over time, as affected by application method, weather, and manure characteristics.
 This document provides an introduction to the use of the model, and is aimed for users who are new to R.
-Those with some knowledge of R can skip Section 2.
+Readers with some knowledge of R can skip Section 2.
 
 \subsection{Excel or R?}
 The ALFAM2 model is available in an Excel spreadsheet in addition to the R package that is described in this document.
@@ -61,7 +61,7 @@ CRAN provides various manuals, including a good introduction: \url{https://cran.
 RStudio also provides various materials for learning R, although the focus is skewed toward packages developed by RStudio employees: \url{https://education.rstudio.com/learn/}.
 Alternatively, the instructions given below may be sufficient.
 
-\subsection{Installing the ALFAM2 package}
+\section{Installing the ALFAM2 package}
 The ALFAM2 package is available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
 Installation of packages from GitHub requires a package called devtools.
 You can run the code below to install devtools and ALFAM2.
@@ -190,7 +190,7 @@ In this example, let's assume we are interested in manure application by broadca
 First we need to create a data frame with the input data.
 
 <<>>=
-dat1 <- data.frame(ctime = 72, TAN.app = 50, man.dm = 8, 
+dat1 <- data.frame(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd.bc = TRUE)
 dat1
@@ -202,7 +202,7 @@ The names for the predictor variables must match those names used in the model p
 Time, in hours after application, is given in the column named \texttt{ctime} here, for cumulative time (although any name can be used).
 
 And now we can call the model function, using default values for most other arguments.
-We can predict cumulative emission after 3 days (72 hours) with the following call.
+We can predict cumulative emission after 7 days (168 hours) with the following call.
 
 <<>>=
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
@@ -269,7 +269,7 @@ First let's create a new data frame that contains the inputs.
 We will need to add a new column with a grouping variable also, to let \texttt{alfam2()} know that each row represents a different scenario.
 
 <<>>=
-dat4 <- data.frame(scenario = 1:5, ctime = 72, TAN.app = 50, 
+dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50, 
                    man.dm = 8, air.temp = 20, wind.2m = 4, 
                    app.mthd.bc = TRUE,
                    incorp.deep = TRUE, 
@@ -303,7 +303,7 @@ Below, both temperature and application method vary.
 For scenario 2, application method is not explicitly specified, which means it is the default--trailing hose.
 
 <<>>=
-dat5 <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
+dat5 <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
                    man.dm = 8, air.temp = 15,
                    wind.2m = 3,
                    app.mthd.bc = c(TRUE, FALSE, FALSE),
@@ -325,7 +325,7 @@ The package (>=v1.2) includes a helper function to calculate these dummy variabl
 For example, we could duplicate the behavior of the call above with the following.
 
 <<>>=
-dat5b <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
+dat5b <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
                     man.dm = 8, air.temp = 15,
                     wind.2m = 3,
                     app.mthd = c('bc', 'th', 'os'))
@@ -356,7 +356,7 @@ So the following example includes both shallow and deep incorporation combined w
 To help ensure that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
 
 <<>>=
-dat6 <- data.frame(scenario = 1:6, ctime = 72, TAN.app = 100, 
+dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100, 
                    man.dm = 5, air.temp = 10, wind.2m = 2, 
                    app.mthd = rep(c('bc', 'th'), each = 3),
                    incorp = rep(c('none', 'shallow', 'deep'), 2),
@@ -382,7 +382,7 @@ pred6b
 @
 
 Here we see the expected effects in primary parameters \texttt{r3} and \texttt{f4}.
-But note that the \texttt{f4} mass transfer occurs at the beginning of an interval, and therefore shows up for the 72 h interval in the output, which takes place from 4 to 72 h after slurry application.
+But note that the \texttt{f4} mass transfer occurs at the beginning of an interval, and therefore shows up for the 168 h interval in the output, which takes place from 4 to 168 h after slurry application.
 
 \subsection{Example 5. Volatilization dynamics}
 All the calls above returned results for a single time per scenario (with the exception of some incorporation results).
@@ -564,12 +564,19 @@ Alternatively, data can be easily read from Excel files with the \texttt{read\_x
 See the book mentioned above for details.
 
 \subsection{Warnings and error messages}
-A lot of effort has gone into the warnings and error messages returned by \texttt{alfam2()}, with the objective of making it easier to understand and fix problems with a call or the predictor variable data frame.
+The \texttt{alfam2()} function will return errors or warnings for some cases of problems with input data.
+The intent of these is to make it easy for users to understand and fix problems with a call or the predictor variable data frame.
 A few are shown here.
-Of course the calls above already demonstrate the information on missing predictor variables (which can be supressed by setting \texttt{warn = FALSE}).
+Some checks can be skipped by setting \texttt{check = FALSE}, but doing so increases the risk of getting an unhelpful error message, or worse, overlooking a mistake and proceeding with erroneous output.
+Some warnings can be surpressed with \texttt{warn = FALSE} in order to avoid cluttering up the console or a log or dynamic report.
+But users should be careful here also.
+
+The calls above already demonstrate the information on missing predictor variables (which can be supressed by setting \texttt{warn = FALSE}).
 
 Missing values in predictors:
 <<error=TRUE>>=
+detach('package:ALFAM2')
+library(ALFAM2)
 dat6b <- dat6
 dat6b[3, 'wind.2m'] <- NA
 
@@ -580,23 +587,13 @@ alfam2(dat6b, app.name = "TAN.app", time.name = "ctime",
 
 The printed messages identify which variables and which rows are missing.
 
-Using the wrong names:
+Using the wrong names when referring to a column:
 <<error=TRUE>>=
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
-       time.incorp = "t.incorp", group = "scenario", warn = FALSE)
+       time.incorp = "t.incorp", group = "scenario")
 @
 
-<<error=TRUE>>=
-pred0 <- alfam2(dat6b, app.name = "TAN.appppp", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", warn = FALSE)
-@
-
-<<error=TRUE>>=
-pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "acenarip", warn = FALSE)
-@
-
-Negative time:
+Negative time in input data:
 <<error=TRUE>>=
 dat6c <- dat6
 dat6c[1, 'ctime'] <- -10
@@ -605,21 +602,13 @@ pred0 <- alfam2(dat6c, app.name = "TAN.app", time.name = "ctime",
        time.incorp = "t.incorp", group = "scenario", warn = TRUE)
 @
 
-Changing centering means (bad idea!):
-
-<<error=TRUE>>=
-pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", 
-       center = c(app.rate = 0, man.dm = 10))
-@
-
 Trying to use dummy variable prep when it isn't needed:
 <<error=TRUE>>=
 dat7 <- data.frame(ctime = 1:10, TAN.app = 100)
 pred0 <- alfam2(dat7, app.name = "TAN.app", time.name = "ctime")
 @
 
-Using your own parameter set (better know what you are doing, not like the example below!):
+Using an external parameter set (better know what you are doing, not like the example below!):
 
 <<error=TRUE>>=
 pred0 <- alfam2(dat6, pars = c(int.f0 = -1, int.r1 = 0), app.name = "TAN.app", 
@@ -629,12 +618,24 @@ pred0 <- alfam2(dat6, pars = c(int.f0 = -1, int.r1 = 0), app.name = "TAN.app",
 
 Note the additional warning about incorporation.
 
-Incorrect argument types.
+With \texttt{check = TRUE} the \texttt{alfam2} function checks that all arguments are the right type, and in some cases, contain acceptable values.
+For example, 
 
 <<error=TRUE>>=
-pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
-                time.incorp = TRUE, group = "scenario", warn = FALSE)
+alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
+       time.incorp = TRUE, group = "scenario")
 @
+
+Resulting messages are helpful for identifying problems.
+Without these checks, the function would typically still return an error (or worse, incorrect output), but with a nearly useless message.
+For example,
+
+<<error=TRUE>>=
+alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
+       time.incorp = TRUE, group = "scenario", check = FALSE)
+@
+
+Other examples include the following.
 
 Unavailable options.
 
@@ -644,7 +645,7 @@ pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim",
                 value = "something else")
 @
 
-Empty data frame.
+Empty input data frame.
 
 <<error=TRUE>>=
 datnull <- data.frame()
@@ -661,8 +662,6 @@ pred0 <- alfam2(dat6c, app.name = "TAN.app",
                 time.name = "ctime", time.incorp = "t.incorp", 
                 group = "scenario")
 @
-
-And so on. . .
 
 \section*{Acknowledgements}
 Christoph Haeni, Johanna Maria Pedersen, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
