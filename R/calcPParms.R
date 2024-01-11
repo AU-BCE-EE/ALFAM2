@@ -24,6 +24,10 @@ function(p, dat, tr = 'log10', upr = Inf, warn = TRUE) {
     r[r > upr] <- upr
   }
 
+  if (any(is.na(r))) {
+    stop('Missing values in a calculated primary parameter vector.')
+  }
+
   return(r)
 
 }
