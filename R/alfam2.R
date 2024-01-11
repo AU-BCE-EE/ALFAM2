@@ -245,8 +245,8 @@ alfam2 <- function(
     warning('Running with ', sum(predpres), ' parameters. Dropped ', sum(!predpres), ' with no match.\n',
             'These secondary parameters have been dropped:\n  ', 
             paste(names(p.orig)[!predpres], collapse = '\n  '), '\n\n',
-            'These secondary parameters are being used:\n  ', 
-            paste(names(p.orig)[predpres], collapse = '\n  '), '\n')
+            #'These secondary parameters are being used:\n  ', 
+            #paste(names(p.orig)[predpres], collapse = '\n  '), '\n')
   }
 
   # Associate (secondary) parameters with primary parameters (r1, etc.)
