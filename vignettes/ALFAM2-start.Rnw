@@ -526,9 +526,9 @@ This is not a simple process, because incorporation occurs at a particular time,
 Large improvements in speed are possible when these steps are skipped, but doing so requires pre-processing of input data.
 
 <<>>=
-dat9c <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
-                time.incorp = "t.incorp", group = 'field', 
-                warn = FALSE, value = 'incorp')
+dat9c <- alfam2(dat9b, app.name = "TAN.app", time.name = "ct", 
+                time.incorp = "t.incorp", group = "field", 
+                warn = FALSE, value = "incorp")
 head(dat9c)
 @
 
