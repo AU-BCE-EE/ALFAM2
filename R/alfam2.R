@@ -283,6 +283,8 @@ alfam2 <- function(
         cat('Missing values in predictors:\n')
         nn <- unique(names(pars[!grepl('^int', names(pars))]))
         print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
+        cat('\nCheck these rows:\n')
+        print(which(is.na(rowSums(dat[, nn]))))
         stop('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
       }
       if (warn) {
@@ -290,6 +292,8 @@ alfam2 <- function(
         cat('Missing values in predictors:\n')
         nn <- unique(names(pars[!grepl('^int', names(pars))]))
         print(apply(dat[, nn], 2, function(x) sum(is.na(x))))
+        cat('\nCheck these rows:\n')
+        print(which(is.na(rowSums(dat[, nn]))))
         warning('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
       }
     }
