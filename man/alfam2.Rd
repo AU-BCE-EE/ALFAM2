@@ -44,7 +44,11 @@ alfam2(
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dat}{
-    data frame containing values for predictor variables
+    data frame containing predictor variable values.
+    The data frame must include at least the elapsed (cumulative) time since manure was applied in hours, and the application rate of total ammoniaical nitrogen (TAN) in kg/h.
+    (Other units could be used but should match parameter units and will affect the units of output.)
+    Typically other predictor variables are included.
+    See the Details section below and the vignette for more information.
 }
   \item{pars}{
     A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The latest set is described in Hafner et al. (2021, 2024). The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
@@ -113,35 +117,12 @@ alfam2(
 }
 }
 \details{
-  Parameter sets are provided for convenience. Both are numeric vectors. Set 1 (\code{alfam2pars01}) (Hafner et al., 2019) contains the following:
-  \code{
-         c(int.f0            = -0.7364889,
-           int.r1            = -1.1785848,
-           int.r2            = -0.9543731,
-           int.r3            = -2.9012937,
-           app.mthd.os.f0    = -1.1717859,
-           app.rate.f0       = -0.0134681,
-           man.dm.f0         =  0.407466,
-           incorp.deep.f4    = -3.6477259,
-           incorp.shallow.f4 = -0.4121023,
-           app.mthd.bc.r1    =  0.6283396,
-           man.dm.r1         = -0.075822,
-           air.temp.r1       =  0.0492777,
-           wind.2m.r1        =  0.0486651,
-           man.ph.r1         =  0.5327231,
-           air.temp.r3       =  0.0152419,
-           incorp.deep.r3    = -0.3838862,
-           app.mthd.os.r3    = -0.122883,
-           man.ph.r3         =  0.2663616,
-           rain.rate.r2      =  0.4327281,
-           rain.cum.r3       = -0.0300936) 
-  }
+  Default parameter sets are provided for convenience. 
 
   For the latest set, Set 2, \code{alfam2pars02}, some parameters were removed, and others added, and all values changed at least slightly.
   Calculation of this set is described in a report on Danish emission factors (Hafner et al., 2021) and a paper (Hafner et al., 2024).
 
-  \code{
-         c(int.f0            = -0.605683,
+  \code{c(int.f0            = -0.605683,
            app.mthd.os.f0    = -1.74351,
            app.rate.ni.f0    = -0.0111490,
            man.dm.f0         = 0.399670,
@@ -164,8 +145,7 @@ alfam2(
            incorp.shallow.f4 = -0.964967,
            incorp.shallow.r3 = -0.580527,
            incorp.deep.f4    = -3.69495,
-           incorp.deep.r3    = -1.26570)
-  }
+           incorp.deep.r3    = -1.26570)}
 
   Names and units (matching units is essential) for numerical predictors are:
   \describe{
@@ -184,6 +164,28 @@ alfam2(
     \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing hose, \code{os} for open slot injection, and \code{cs} for closed slot injection}
   }
 
+  Parameter set 1 (\code{alfam2pars01}) (Hafner et al., 2019) is retained in the package for reproducibility.
+  It contains the following values:
+  \code{c(int.f0            = -0.7364889,
+           int.r1            = -1.1785848,
+           int.r2            = -0.9543731,
+           int.r3            = -2.9012937,
+           app.mthd.os.f0    = -1.1717859,
+           app.rate.f0       = -0.0134681,
+           man.dm.f0         =  0.407466,
+           incorp.deep.f4    = -3.6477259,
+           incorp.shallow.f4 = -0.4121023,
+           app.mthd.bc.r1    =  0.6283396,
+           man.dm.r1         = -0.075822,
+           air.temp.r1       =  0.0492777,
+           wind.2m.r1        =  0.0486651,
+           man.ph.r1         =  0.5327231,
+           air.temp.r3       =  0.0152419,
+           incorp.deep.r3    = -0.3838862,
+           app.mthd.os.r3    = -0.122883,
+           man.ph.r3         =  0.2663616,
+           rain.rate.r2      =  0.4327281,
+           rain.cum.r3       = -0.0300936)}
 }
 
 \value{
@@ -196,7 +198,8 @@ alfam2(
     \item{\code{r1}}{r1 parameter}
     \item{\code{r2}}{r2 parameter}
     \item{\code{r3}}{r3 parameter}
-    \item{\code{f4}}{r4 parameter}
+    \item{\code{r4}}{r4 parameter}
+    \item{\code{r5}}{r4 parameter}
     \item{\code{f}}{fast pool size at \code{ct} (kg/ha)}
     \item{\code{s}}{slow pool size at \code{ct} (kg/ha)}
     \item{\code{j}}{average NH3 flux in interval (kg/ha-h)}
@@ -220,7 +223,7 @@ alfam2(
 \note{
 }
 \author{
-Sasha D. Hafner
+Sasha D. Hafner, Christoph Haeni, Roland Fuss
 }
 \note{
 %%  ~~further notes~~
