@@ -282,7 +282,7 @@ alfam2 <- function(
         cat('Error!\n')
         cat('Missing values in predictors:\n')
         nn <- unique(names(pars[!grepl('^int', names(pars))]))
-        ddd <- dat[!dat$'_add.row']
+        ddd <- dat[!dat$'__add.row']
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
         cat('\nCheck these rows:\n')
         print(paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', '))
@@ -292,7 +292,7 @@ alfam2 <- function(
         cat('Warning!\n')
         cat('Missing values in predictors:\n')
         nn <- unique(names(pars[!grepl('^int', names(pars))]))
-        ddd <- dat[!dat$'_add.row']
+        ddd <- dat[!dat$'__add.row']
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
         cat('\nCheck these rows:\n')
         print(paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', '))
