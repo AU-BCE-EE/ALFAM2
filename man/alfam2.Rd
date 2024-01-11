@@ -149,6 +149,7 @@ alfam2(
 
   Names and units (matching units is essential) for numerical predictors are:
   \describe{
+    \item{\code{app.rate.ni}}{manure application rate, but not for injection (\code{app.mthd = "os"} or \code{app.mthd = "cs"}) in t/ha}
     \item{\code{man.dm}}{slurry dry matter, percentage of fresh matter}
     \item{\code{man.ph}}{slurry pH, pH units}
     \item{\code{air.temp}}{air temperature, degress C}
@@ -162,6 +163,8 @@ alfam2(
 
   \describe{
     \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing hose, \code{os} for open slot injection, and \code{cs} for closed slot injection}
+    \item{\code{man.source}}{type (source) of manure, \code{pig} for pig, otherwise assumed to cattle or other (reference)}
+    \item{\code{incorp}}{incorporation, eith \code{shallow} or \code{deep} (change in levels would require change in \code{incorp.names} as well as parameter values)}
   }
 
   Parameter set 1 (\code{alfam2pars01}) (Hafner et al., 2019) is retained in the package for reproducibility.
