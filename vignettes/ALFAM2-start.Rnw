@@ -328,8 +328,7 @@ For example, we could duplicate the behavior of the call above with the followin
 dat5b <- data.frame(scenario = 1:3, ctime = 72, TAN.app = 50, 
                     man.dm = 8, air.temp = 15,
                     wind.2m = 3,
-                    app.mthd = c('bc', 'th', 'os')
-                   )
+                    app.mthd = c('bc', 'th', 'os'))
 dat5b
 @
 
@@ -398,10 +397,10 @@ We'll create some data to represent this below.
 
 <<>>=
 set.seed(1201)
-dat7 <- data.frame(ctime = 0:36*2, TAN.app = 100, man.dm = 8, 
-                   air.temp = 7 + 7*sin(0:36*2 * 2*pi/24) + rnorm(37, 0, 2), 
-                   wind = 10^(0.5 + 0.4*sin(0:36*2 * 2*pi/24) + 
-                              rnorm(37, 0, 0.12)), 
+dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
+                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + rnorm(85, 0, 2), 
+                   wind = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
+                              rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
 plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
 plot(wind ~ ctime, data = dat7, type = 'o', col = 'blue')
@@ -448,9 +447,108 @@ abline(v = 6.5, col = 'blue', lty = 2)
 
 The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
 
+\subsection{Example 7. Faster evaluation}
+
+The \texttt{alfam2} function is not particularly slow, but its speed can become limiting when applied to many individual scenarios or with very high resolution input data.
+For example, we can create some fake input data for 1000 different agricultural fields.
+
+<<>>=
+set.seed(1201)
+dat9 <- expand.grid(field = 1:1000, ct = 1:168, 
+                    TAN.app = 100, man.dm = 8, 
+                    app.rate.ni = 30, man.source = "pig",
+                    man.ph = 7, rain.rate = 0,
+                    app.mthd = "bsth")
+
+dat9$air.temp <- 7 + 7*sin(dat9$ct * 2 * pi / 24) + rnorm(1000, 0, 2)
+dat9$wind.2m <- 10^(0.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24) + rnorm(1000, 0, 0.1))
+dat9 <- dat9[order(dat9$field, dat9$ct), ]
+@
+
+<<>>=
+head(dat9)
+dim(dat9)
+@
+
+<<>>=
+system.time(
+  pred9 <- alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', group = 'field', warn = FALSE)
+)
+@
+
+Let's take a small subset for plotting.
+
+<<>>=
+pred9sub <- subset(pred9, field %in% 1:100)
+pred9sub <- pred9sub[order(pred9sub$field), ]
+pred9sub[pred9sub$ct == 168, c('er', 'j')] <- NA
+@
+
+<<>>=
+plot(j ~ ct, data = pred9sub, type = 'S', log = 'y', col = 'red', 
+     xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
+@
+
+There are options for improving function speed, but they introduce complexity and increase the possibility of input errors, and so should be avoided unless speed is critical.
+The speed can be slightly improved by eliminating some checks using the \texttt{check} argument.
+
+<<>>=
+system.time(
+  alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', 
+         group = 'field', check = FALSE, warn = FALSE)
+)
+@
+
+But the improvement is generally trivial.
+With incorporation, the function call tends to be much slower, and there is more room for improvement.
+
+<<>>=
+dat9b <- dat9
+dat9b$incorp <- "shallow"
+dat9b$t.incorp <- 4
+@
+
+
+<<>>=
+system.time(
+  pred9b <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
+                   time.incorp = "t.incorp", group = 'field', warn = FALSE)
+)
+@
+
+The issue is preparation of incorporation inputs and determination of parameters.
+This is not a simple process, because incorporation occurs at a particular time, which may not correspond to a row in the input data, and may differ among locations.
+Large improvements in speed are possible when these steps are skipped, but doing so requires pre-processing of input data.
+
+<<>>=
+dat9c <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
+                time.incorp = "t.incorp", group = 'field', warn = FALSE,
+                value = 'incorp')
+head(dat9c)
+@
+
+Note the new, somewhat strange, columns that have been added.
+And note that this pre-processing takes some time.
+So separating it only saves time if the actual emission predictions are to be made multiple times.
+Examples include parameter estimation or cases where other inputs change, e.g., simulations aimed at the effect of changing weather or slurry properties.
+
+<<>>=
+system.time(
+  pred9c <- alfam2(dat9c, app.name = 'TAN.app', time.name = 'ct', 
+                   time.incorp = "t.incorp", group = 'field', warn = FALSE,
+                   prep.incorp = FALSE, check = FALSE)
+)
+@
+
+<<>>=
+head(pred9b)
+head(pred9c)
+@
+
 \subsection{Data import and export}
 Any of the results shown above can be exported as with any data frame in R.
 The simplest function for this is \texttt{write.csv()}.
+The CRAN manuals mentioned above include one on import and export: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
 The following call will create a comma delimited text file that can be opened with spreadsheet or text editor programs.
 
 <<eval=FALSE>>=
@@ -466,7 +564,7 @@ Alternatively, data can be easily read from Excel files with the \texttt{read\_x
 See the book mentioned above for details.
 
 \subsection{Warnings and error messages}
-A lot of effort has gone into the warnings and error messages returned by `alfam2()`, with the objective of making it easier to understand and fix problems with a call or the predictor variable data frame.
+A lot of effort has gone into the warnings and error messages returned by \texttt{alfam2()}, with the objective of making it easier to understand and fix problems with a call or the predictor variable data frame.
 A few are shown here.
 Of course the calls above already demonstrate the information on missing predictor variables (which can be supressed by setting \texttt{warn = FALSE}).
 
@@ -476,64 +574,95 @@ dat6b <- dat6
 dat6b[3, 'wind.2m'] <- NA
 
 alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", check = TRUE, warn = TRUE)
+       time.incorp = "t.incorp", group = "scenario", 
+       check = TRUE, warn = FALSE)
 @
 
 The printed messages identify which variables and which rows are missing.
 
 Using the wrong names:
 <<error=TRUE>>=
-pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctim", 
-       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
+       time.incorp = "t.incorp", group = "scenario", warn = FALSE)
 @
 
 <<error=TRUE>>=
 pred0 <- alfam2(dat6b, app.name = "TAN.appppp", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+       time.incorp = "t.incorp", group = "scenario", warn = FALSE)
 @
 
 <<error=TRUE>>=
 pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "acenarip", warn = FALSE, prep = TRUE)
+       time.incorp = "t.incorp", group = "acenarip", warn = FALSE)
 @
 
 Negative time:
 <<error=TRUE>>=
-dat6b[1, 'ctime'] <- -10
+dat6c <- dat6
+dat6c[1, 'ctime'] <- -10
 
-pred0 <- alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", warn = FALSE, prep = TRUE)
+pred0 <- alfam2(dat6c, app.name = "TAN.app", time.name = "ctime", 
+       time.incorp = "t.incorp", group = "scenario", warn = TRUE)
 @
 
 Changing centering means (bad idea!):
 
 <<error=TRUE>>=
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", center = c(app.rate = 0, man.dm = 10), warn = FALSE, prep = TRUE)
+       time.incorp = "t.incorp", group = "scenario", 
+       center = c(app.rate = 0, man.dm = 10))
 @
 
-Ask for prep when it isn't needed:
+Trying to use dummy variable prep when it isn't needed:
 <<error=TRUE>>=
 dat7 <- data.frame(ctime = 1:10, TAN.app = 100)
-pred0 <- alfam2(dat7, app.name = "TAN.app", time.name = "ctime", prep = TRUE, warn = TRUE)
+pred0 <- alfam2(dat7, app.name = "TAN.app", time.name = "ctime")
 @
 
 Using your own parameter set (better know what you are doing, not like the example below!):
 
 <<error=TRUE>>=
-pred0 <- alfam2(dat6, pars = c(int0 = -1), app.name = "TAN.app", time.name = "ctime", 
-       time.incorp = "t.incorp", group = "scenario", warn = TRUE, prep = TRUE)
+pred0 <- alfam2(dat6, pars = c(int.f0 = -1, int.r1 = 0), app.name = "TAN.app", 
+                time.name = "ctime", time.incorp = "t.incorp", 
+                group = "scenario")
 @
 
 Note the additional warning about incorporation.
 
-\subsection{More with the ALFAM2 model}
-Dynamic predictions can be combined with multiple scenarios, although this is not shown here. 
-In fact, the only difference between these dynamic calls and the simple examples given above is the number of measurement intervals.
+Incorrect argument types.
 
-All the calls in this document used the default parameter values.
-However, it is possible to use completely different parameter values for the same parameters, or even different secondary parameters.
-These are set with the \texttt{pars} argument.
+<<error=TRUE>>=
+pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
+                time.incorp = TRUE, group = "scenario", warn = FALSE)
+@
+
+Unavailable options.
+
+<<error=TRUE>>=
+pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
+                time.incorp = "t.incorp", group = "scenario", 
+                value = "something else")
+@
+
+Empty data frame.
+
+<<error=TRUE>>=
+datnull <- data.frame()
+pred0 <- alfam2(datnull, app.name = "TAN.app", time.name = "ctim", 
+                time.incorp = "t.incorp", group = "scenario") 
+@
+
+Using reserved names.
+
+<<error=TRUE>>=
+dat6c <- dat6
+dat6c$"__r1" <- 0
+pred0 <- alfam2(dat6c, app.name = "TAN.app", 
+                time.name = "ctime", time.incorp = "t.incorp", 
+                group = "scenario")
+@
+
+And so on. . .
 
 \section*{Acknowledgements}
 Christoph Haeni, Johanna Maria Pedersen, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
