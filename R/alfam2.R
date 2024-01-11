@@ -277,7 +277,7 @@ alfam2 <- function(
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
         cat('\nCheck these rows:\n')
         print(paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', '))
-        stop('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+        stop('Missing value in predictor variable(s)')
       }
       if (warn) {
         cat('Warning!\n')
@@ -286,7 +286,7 @@ alfam2 <- function(
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
         cat('\nCheck these rows:\n')
         print(paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', '))
-        warning('NA values in primary parameters.\n   Look for missing values in predictor variables (in dat) and double-check parameters agaist dat column names')
+        stop('Missing value in predictor variable(s)')
       }
     }
   }
