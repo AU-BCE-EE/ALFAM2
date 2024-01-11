@@ -268,20 +268,11 @@ alfam2 <- function(
 
   # Missing values
   if (check || warn) {
-    # Trial run of par calcuations without upr to check for missing inputs
-    # Calculate primary parameters
-    if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, warn = FALSE, tr = 'logistic') else dat[, '__f0'] <- 0
-    if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, warn = FALSE)                  else dat[, '__r1'] <- 0
-    if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, warn = FALSE)                  else dat[, '__r2'] <- 0
-    if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat, warn = FALSE)                  else dat[, '__r3'] <- 0
-    if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, warn = FALSE)                  else dat[, '__r5'] <- 0
-    if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic')
-
-    if (any(anyNA(dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]))) {
+    nn <- unique(names(pars[!grepl('^int', names(pars))]))
+    if (any(anyNA(dat[, nn]))) {
       if (check) {
         cat('Error!\n')
         cat('Missing values in predictors:\n')
-        nn <- unique(names(pars[!grepl('^int', names(pars))]))
         ddd <- dat[!dat$'__add.row', ]
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
         cat('\nCheck these rows:\n')
@@ -291,7 +282,6 @@ alfam2 <- function(
       if (warn) {
         cat('Warning!\n')
         cat('Missing values in predictors:\n')
-        nn <- unique(names(pars[!grepl('^int', names(pars))]))
         ddd <- dat[!dat$'__add.row', ]
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
         cat('\nCheck these rows:\n')
