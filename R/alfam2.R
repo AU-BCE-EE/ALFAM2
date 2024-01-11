@@ -275,9 +275,7 @@ alfam2 <- function(
         cat('Missing values in predictors:\n')
         ddd <- dat[!dat$'__add.row', ]
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
-        cat('\nCheck these rows:\n')
-        print(paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', '))
-        stop('Missing value in predictor variable(s)')
+        stop(paste('Missing value in predictor variable(s)\nCheck these rows:', paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', ')))
       }
       if (warn) {
         cat('Warning!\n')
