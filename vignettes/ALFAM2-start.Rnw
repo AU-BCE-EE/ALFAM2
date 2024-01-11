@@ -56,9 +56,9 @@ It can be downloaded from here: \url{https://rstudio.com/products/rstudio/downlo
 To use the ALFAM2 package, you will need to install the package, and then call up the function. 
 In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and export data.
 For information on these tasks and more, there are many free resources online. 
-I recommend this book I use for a course on R: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
 CRAN provides various manuals, including a good introduction: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
 RStudio also provides various materials for learning R, although the focus is skewed toward packages developed by RStudio employees: \url{https://education.rstudio.com/learn/}.
+Alternatively, this book I use for a course on R has some details: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
 Alternatively, the instructions given below may be sufficient.
 
 \section{Installing the ALFAM2 package}
@@ -133,7 +133,7 @@ Most arguments have default values, and the only one that is required to make pr
 The \texttt{dat} data frame can contain any number of rows (each representing a time interval), but must contain a column with cumulative time in hours, and the name of this column is indicated with \texttt{time.name}.
 Typically the data frame will have predictor variables as well, for example, manure dry matter, application method, air temperature, or wind speed.
 The name of the predictor columns are used to link predictor variables to model parameters, which are set by the \texttt{pars} argument. 
-Usually the default values, based on the measurements in the ALFAM2 database, should be used.
+Usually the default parameter values, based on the measurements in the ALFAM2 database, should be used.
 Predictor variables and their default names are given in Table 1 below.
 
 \begin{table}[]
@@ -154,7 +154,7 @@ Variable name & Description             & Units          & Notes             &  
   \texttt{man.source.pig}        & Pig manure    & None (logical)  & Binary variable    &  \\
 \texttt{incorp.deep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
 \texttt{incorp.shallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
-  \texttt{air.temp}      & Air tempreature         & $^\circ$C      &                   &  \\
+  \texttt{air.temp}      & Air temperature         & $^\circ$C      &                   &  \\
   \texttt{wind.2m}       & Wind speed (at 2 m)     & m/s            &                   &  \\
   \texttt{rain.rate}     & Rainfall rate           & mm/h           &                   &  \\
   \texttt{rain.cum}      & Cumulative rain         & mm             &                   &  \\
@@ -163,9 +163,11 @@ Variable name & Description             & Units          & Notes             &  
 \end{tabular}
 \end{table}
 
+Binary variables are dummy variables, and can be created automatically by the \texttt{alfam2} function (see Example 4 in Section \ref{sec:dummy} below).
 Default model parameters and numeric values in the \texttt{alfam2pars02} object (``Set 2'') should generally be used. 
-For information on how these values were calculated, see the report on calculation of Danish emission factors \cite{efreport2021}.
-(An earlier version (``Set 1'') are available in \texttt{alfam2pars01}. Derivation of these is described in the 2019 paper \cite{afmod2019}.) 
+For information on how these values were calculated, see the report on calculation of Danish emission factors \cite{efreport2021} and a later paper \cite{comp2024}.
+(An earlier version (``Set 1'') are available in \texttt{alfam2pars01}. 
+Derivation of these is described in the 2019 paper \cite{afmod2019}.) 
 Comparing the contents of \texttt{alfam2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
 
 <<>>=
@@ -319,6 +321,7 @@ pred5
 @
 
 \subsection{Example 4. An easier approach for dummy variables}
+\label{sec:dummy}
 Most of the examples given above include "dummy variables", or multiple binary variables that together represent a factor.
 For example, \texttt{dat5} includes two columns (\texttt{app.mthd.bc} and \texttt{app.mthd.os}) to together represent application method.
 The package (>=v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
@@ -472,7 +475,8 @@ dim(dat9)
 
 <<>>=
 system.time(
-  pred9 <- alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', group = 'field', warn = FALSE)
+  pred9 <- alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', 
+                  group = 'field', warn = FALSE)
 )
 @
 
@@ -512,7 +516,8 @@ dat9b$t.incorp <- 4
 <<>>=
 system.time(
   pred9b <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
-                   time.incorp = "t.incorp", group = 'field', warn = FALSE)
+                   time.incorp = "t.incorp", group = 'field', 
+                   warn = FALSE)
 )
 @
 
@@ -522,8 +527,8 @@ Large improvements in speed are possible when these steps are skipped, but doing
 
 <<>>=
 dat9c <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
-                time.incorp = "t.incorp", group = 'field', warn = FALSE,
-                value = 'incorp')
+                time.incorp = "t.incorp", group = 'field', 
+                warn = FALSE, value = 'incorp')
 head(dat9c)
 @
 
@@ -535,8 +540,8 @@ Examples include parameter estimation or cases where other inputs change, e.g., 
 <<>>=
 system.time(
   pred9c <- alfam2(dat9c, app.name = 'TAN.app', time.name = 'ct', 
-                   time.incorp = "t.incorp", group = 'field', warn = FALSE,
-                   prep.incorp = FALSE, check = FALSE)
+                   time.incorp = "t.incorp", group = 'field', 
+                   warn = FALSE, prep.incorp = FALSE, check = FALSE)
 )
 @
 
@@ -673,13 +678,24 @@ Christoph Haeni, Johanna Maria Pedersen, and Anders Peter Adamsen provided helpf
 Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G.
 \newblock A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. 
 \newblock {\em Atmospheric Environment}, 199:474-484, 2018.
-\newblock https://doi.org/10.1016/j.atmosenv.2018.11.034
+\newblock \url{https://doi.org/10.1016/j.atmosenv.2018.11.034}
+
+\bibitem{comp2024}
+Hafner, S.D., Kamp, J.N., Pedersen, J.
+\newblock Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. 
+\newblock {\em Agricultural and Forest Meteorology}, 344, 109790, 2024. 
+\newblock \url{https://doi.org/10.1016/j.agrformet.2023.109790}
+
+Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G.
+\newblock A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. 
+\newblock {\em Atmospheric Environment}, 199:474-484, 2018.
+\newblock \url{https://doi.org/10.1016/j.atmosenv.2018.11.034}
 
 \bibitem{efreport2021}
 Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. 
 \newblock Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. 
 \newblock Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. 
-\newblock https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf
+\newblock \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
 
 \end{thebibliography}
 \end{document}

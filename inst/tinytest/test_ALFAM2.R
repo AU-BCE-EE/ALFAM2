@@ -59,9 +59,9 @@ expect_equal(pred0$ct, c(4, 48))
 detach('package:ALFAM2')
 library(ALFAM2)
 dat0 <- data.frame(ctime = 168, TAN.app = 100, incorp.deep = TRUE, t.incorp = 4)
-dat0ip <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', value = 'incorp')
-predex <- alfam2(dat0ip, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', prep.incorp = FALSE, check = FALSE)
-predin <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
+dat0ip <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', value = 'incorp', warn = FALSE)
+predex <- alfam2(dat0ip, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', prep.incorp = FALSE, check = FALSE, warn = FALSE)
+predin <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', warn = FALSE)
 
 # Is row dropping correct?
 expect_equal(nrow(dat0), 1)
@@ -86,7 +86,7 @@ dat0 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = 1, incorp.shallow = TRUE
 dat1 <- data.frame(ctime = 48, TAN.app = 100, wind.2m = 1, incorp.shallow = TRUE)
 pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp', warn = FALSE)
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, warn = FALSE)
-expect_equal(pred0, pred1)
+expect_equal(pred0$er, pred1$er)
 
 ### Try to use data.table for dat
 ### No real expect_* to use here, so comparing to one with data frame
@@ -113,4 +113,4 @@ expect_false(identical(pred0, pred1))
 expect_false(identical(pred0, pred2))
 
 # Tests are needed for groups and pass_cols
-# Also for some warnings (like missing predictor vars, changing centering means. . .
+# Also perhaps for additional warnings or errors

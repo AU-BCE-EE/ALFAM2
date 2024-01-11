@@ -38,6 +38,7 @@ alfam2(
   add.incorp.rows = FALSE, 
   check = TRUE,
   warn = TRUE,
+  value = 'emis',
   ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -46,7 +47,7 @@ alfam2(
     data frame containing values for predictor variables
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
+    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The latest set is described in Hafner et al. (2021, 2024). The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
   \item{add.pars}{
     additional parameter values that will extend or overwrite the \code{pars}
@@ -95,7 +96,16 @@ alfam2(
 }
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
-    Useful for reducing console or report clutter, but use with caution, because problems with the input data or call could be missed.
+    Doing so is useful for reducing console or report clutter, but use with caution, because problems with the input data or call could be missed.
+    Even with \code{warn = FALSE} the \code{alfam2} function may make some substitutions in inputs (see vignette).
+}  
+  \item{value}{
+    type of output.
+    Set to \code{"incorp"} to return results early with incorporation (or dummy variable) pre-processing and no emission calculations.
+    Output can be used to run \code{alfam2} with \code{prep.incorp = FALSE} to speed up evaluation.
+    Otherwise must be \code{"emis"} for "emission".
+    See vignette.
+    Length one character.
 }  
   \item{...}{
     additional optional arguments as length-one vectors that set values of fixed predictor variables.
@@ -180,18 +190,16 @@ alfam2(
   If \code{prep.dum} is used, additional dummy variable columns will also be returned.
 }
 \references{
-  Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484.
+  Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484. \doi{10.1016/j.atmosenv.2018.11.034}
 
   Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
 
-  Hafner, S.D., Kamp, J.N., Pedersen, J., 2024. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. Agricultural and Forest Meteorology 344, 109790. \url{https://doi.org/10.1016/j.agrformet.2023.109790}
+  Hafner, S.D., Kamp, J.N., Pedersen, J., 2024. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. Agricultural and Forest Meteorology 344, 109790. \doi{10.1016/j.agrformet.2023.109790}
 
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
 }
 \note{
-  \code{ALFAM2mod()} is an alias for \code{alfam2}.
-  The parameter sets also have aliases with capital \code{ALFAM2}.
 }
 \author{
 Sasha D. Hafner

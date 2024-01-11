@@ -18,7 +18,9 @@ function(p, dat, tr = 'log10', upr = Inf, warn = TRUE) {
 
   # Apply limit
   if (upr < Inf && any(r > upr)) {
-    warning('Some calculated primary parameters are at the limit. Check input parameters.')
+    if (warn) {
+      warning('Some calculated primary parameters are at the limit. Check input parameters.')
+    }
     r[r > upr] <- upr
   }
 
