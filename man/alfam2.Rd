@@ -1,12 +1,8 @@
 \name{alfam2}
 \alias{alfam2}
-\alias{ALFAM2pars01}
-\alias{ALFAM2pars02}
-\alias{ALFAM2pars03_alpha}
 \alias{alfam2pars01}
 \alias{alfam2pars02}
 \alias{alfam2pars03_alpha}
-\alias{ALFAM2pars03var_alpha}
 \alias{alfam2pars03var_alpha}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
