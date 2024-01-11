@@ -297,7 +297,7 @@ alfam2 <- function(
   if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic')
 
   # Add drop row indicator
-  dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows & check
+  dat$'__drop.row' <- dat$'__add.row' & !add.incorp.rows
 
   # Pare down to essential columns
   # No good reason for this anymore except debugging ease
