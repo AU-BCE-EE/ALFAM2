@@ -214,10 +214,9 @@ alfam2 <- function(
   if (prep.incorp) {
     # Default f4 value (for no incorporation in group, or incorporation only later)
     # If using flatout, __f4 should (must) already be in input data, and is only fixed at 1 if there is no incorporation
-    # Below skipped for flatout == TRUE (must be done externally before calling alfam2())
     dat$`__add.row` <- FALSE 
     dat[, '__f4'] <- 1
-    # Skipped for flatout == TRUE (must be done externally before calling alfam2())
+    # Skipped for prep.incorp == FALSE (must be done externally before calling alfam2())
     if (prep.incorp && !is.null(time.incorp)) {
       incprepout <- prepIncorp(dat, pars, time.name, time.incorp, incorp.names, warn)
       dat <- incprepout[['dat']]
