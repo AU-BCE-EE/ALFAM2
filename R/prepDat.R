@@ -12,6 +12,7 @@ prepDat <- function(dat,
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
                     value = 'dummy',
                     all.levels = TRUE,
+                    fix.app.rate.ni = TRUE,
                     warn = TRUE
                     ) {
 
@@ -39,7 +40,7 @@ prepDat <- function(dat,
       if (nn %in% names(dat)) {
         ncc <- ncc - 1
         if (warn) {
-          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\n   It is best to avoid this name in input data.'))
         }
       }
       dat[, nn] <- 1 * (dat[, app.mthd.name] == i)
@@ -53,7 +54,7 @@ prepDat <- function(dat,
 
     # Replace NA values with 'none'
     if (warn && any(is.na(dat[, incorp.name]))) {
-      warning(paste0('Some NA values in incorporation column ', incorp.name, '.\nReplacing all with "none".'))
+      warning(paste0('Some NA values in incorporation column ', incorp.name, '.\n   Replacing all of them with "none".'))
       dat[is.na(dat[, incorp.name]), incorp.name] <- 'none'
     }
 
@@ -74,7 +75,7 @@ prepDat <- function(dat,
       if (nn %in% names(dat)) {
         ncc <- ncc - 1
         if (warn) {
-          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\nIt is best to avoid this name in input data.'))
+          warning(paste0('Overwriting column "', nn, '" with dummy variable values.\n   It is best to avoid this name in input data.'))
         }
       }
       dat[, nn] <- 1 * (dat[, incorp.name] == i)
