@@ -122,6 +122,9 @@ alfam2 <- function(
       pars <- unlist(pars)
     }
 
+    # Through error if duplicated names in pars exists
+    if(any(duplicated(names(pars)))) stop('Check for duplicate names in pars')
+    
     # Continue with pars conversion, switch order for names that start with e.g. f0 or r3
     if(any(chg.nms <- grepl('^[fr]{1}[0-4]{1}[.]', names(pars)))){
       names(pars)[chg.nms] <- gsub('^([fr][0-4])[.](.*)', '\\2\\.\\1', names(pars)[chg.nms])
