@@ -110,11 +110,21 @@ pred2 <- alfam2(dat0, add.pars = c(soil.type.clay.f0 = 1), app.name = "TAN.app",
 expect_false(identical(pred0, pred1))
 expect_false(identical(pred0, pred2))
 
-
 # Test that error is thrown when duplicate names exist in pars~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dat0 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 pars0 <- c(ALFAM2::alfam2pars02, air.temp.r1 = 0.07354268)
 expect_error(alfam2(dat = dat0, pars = pars0, app.name = 'TAN.app', time.name = 'ctime'))
+
+# Different par structures give same results~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dat0 <- data.frame(ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 10)
+p1 <-    c(int.f0 = 0, man.dm.f0 = 0.1, int.r1 = -1, air.temp.r1 = 0.1)
+p2 <- list(int.f0 = 0, man.dm.f0 = 0.1, int.r1 = -1, air.temp.r1 = 0.1)
+p3 <-    c(f0.int = 0, f0.man.dm = 0.1, r1.int = -1, r1.air.temp = 0.1)
+pred1 <- alfam2(dat0, pars = p1, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+pred2 <- alfam2(dat0, pars = p2, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+pred3 <- alfam2(dat0, pars = p3, app.name = "TAN.app", time.name = "ctime", warn = FALSE)
+expect_equal(pred1, pred2)
+expect_equal(pred1, pred3)
 
 # Tests are needed for groups and pass_cols
 # Also perhaps for additional warnings or errors
