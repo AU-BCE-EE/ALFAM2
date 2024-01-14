@@ -115,13 +115,8 @@ expect_false(identical(pred0, pred2))
 dat0 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 pars0 <- c(ALFAM2::alfam2pars02, air.temp.r1 = 0.07354268)
 
-# are duplicated names present in pars?
+# are duplicated names present in pars0?
 any(duplicated(names(pars0)))
-
-# Adding an extra air.temp.r1 element to pars (where air.temp.r1 is already defined), 
-# generates a different output even though the value was not changed. 
-# An error message has not been implemented to prevent this.
-
 expect_error(pred0 <- alfam2(dat = dat0, pars = pars0, app.name = 'TAN.app', time.name = 'ctime'))
 
 # Tests are needed for groups and pass_cols
