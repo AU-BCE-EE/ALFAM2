@@ -1,11 +1,12 @@
 Package: ALFAM2
 Type: Package
 Title: Model on Ammonia Emission from Field-Applied Manure
-Version: 3.60
-Date: 2024-01-11
+Version: 3.61
+Date: 2024-01-14
 Authors@R: c(person("Sasha D.", "Hafner", role = c("aut", "cre"), email = "sasha.hafner@bce.au.dk"),
              person("Christoph", "Haeni", role = "aut"),
              person("Roland", "Fuss", role = "aut", email = "roland.fuss@thuenen.de"),
+             person("Frederik", "Dalby", role = "aut"),
              person("Petersen", "Valdemar", role = "ctb"))
 Maintainer: Sasha D. Hafner <sasha.hafner@bce.au.dk>
 Depends: R (>= 3.5.0)

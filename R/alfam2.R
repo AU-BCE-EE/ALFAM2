@@ -122,8 +122,10 @@ alfam2 <- function(
       pars <- unlist(pars)
     }
 
-    # Through error if duplicated names in pars exists
-    if(any(duplicated(names(pars)))) stop('Check for duplicate names in pars')
+    # Throw error if pars has duplicate names 
+    if(any(duplicated(names(pars)))) {
+      stop('Check for duplicate names in pars')
+    }
     
     # Continue with pars conversion, switch order for names that start with e.g. f0 or r3
     if(any(chg.nms <- grepl('^[fr]{1}[0-4]{1}[.]', names(pars)))){
@@ -273,11 +275,9 @@ alfam2 <- function(
     nn <- unique(names(pars[!grepl('^int', names(pars))]))
     if (any(anyNA(dat[, nn]))) {
       if (check) {
-        cat('Error!\n')
-        cat('Missing values in predictors:\n')
         ddd <- dat[!dat$'__add.row', ]
         print(apply(ddd[, nn], 2, function(x) sum(is.na(x))))
-        stop(paste('Missing value in predictor variable(s)\n   Check these rows:', paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', ')))
+        stop(paste('Missing value(s) in predictor variable(s)\n   See above for variables.\n   Check these rows:', paste(as.integer(which(is.na(rowSums(ddd[, nn])))), collapse = ', ')))
       }
       if (warn) {
         cat('Warning!\n')

@@ -111,13 +111,10 @@ expect_false(identical(pred0, pred1))
 expect_false(identical(pred0, pred2))
 
 
-# Test that error is thrown when duplicate names exists in pars.
+# Test that error is thrown when duplicate names exist in pars~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dat0 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
 pars0 <- c(ALFAM2::alfam2pars02, air.temp.r1 = 0.07354268)
-
-# are duplicated names present in pars0?
-any(duplicated(names(pars0)))
-expect_error(pred0 <- alfam2(dat = dat0, pars = pars0, app.name = 'TAN.app', time.name = 'ctime'))
+expect_error(alfam2(dat = dat0, pars = pars0, app.name = 'TAN.app', time.name = 'ctime'))
 
 # Tests are needed for groups and pass_cols
 # Also perhaps for additional warnings or errors
