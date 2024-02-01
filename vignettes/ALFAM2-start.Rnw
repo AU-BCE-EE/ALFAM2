@@ -450,7 +450,7 @@ abline(v = 6.5, col = 'blue', lty = 2)
 
 The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
 
-\subsection{Example 7. Faster evaluation}
+\subsection{Example 6. Faster evaluation}
 
 The \texttt{alfam2} function is not particularly slow, but its speed can become limiting when applied to many individual scenarios or with very high resolution input data.
 For example, we can create some fake input data for 1000 different agricultural fields.
