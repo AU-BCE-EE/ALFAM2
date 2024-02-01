@@ -53,8 +53,8 @@ alfam2 <- function(
 
     checkArgClassValue(n.ci, expected.class = c('integer', 'numeric'), expected.range = c(0, nrow(pars.ci)))
 
-    if (is.null(group)) {
-      group.orig <- group
+    group.orig <- group
+    if (is.null(group.orig)) {
       group <- '_g_r_o_u_p_42_'
       dat[, group] <- 'A'
     }
