@@ -41,7 +41,7 @@ alfam2 <- function(
     checkArgClassValue(n.ci, expected.class = c('integer', 'numeric', 'NULL', 'NA'))
   }
 
-  # If confidence interval is requested, first make main call, then faster CI calls
+  # Confidence interval requested
   if (!is.null(conf.int) && !is.na(conf.int)) {
     # Check argument values
     checkArgClassValue(pars.ci, expected.class = c('data.frame', 'matrix', 'array'))
@@ -55,24 +55,23 @@ alfam2 <- function(
 
     if (is.null(group)) {
       group.orig <- group
-      group <- '_g_r_o_u_p_'
-      dat$'_g_r_o_u_p_' <- 'A'
+      group <- '_g_r_o_u_p_42_'
+      dat[, group] <- 'A'
     }
 
+    # First run, with main pars
+    out.base <- alfam2(dat = dat, pars = pars, add.pars = add.pars, app.name = app.name, time.name = time.name, 
+                       time.incorp = time.incorp, group = group, center = center, pass.col = pass.col,
+                       incorp.names = incorp.names, prep.dum = prep.dum, prep.incorp = prep.incorp,
+                       add.incorp.rows = add.incorp.rows, check = check, warn = warn, value = 'emis')
+
     # Prepare data--dummy variables and incorporation
+    # No checking or warning because messages are confusing when users asked for CI, and call above should indicate any problems
     datprepped <- alfam2(dat = dat, pars = pars, add.pars = add.pars, app.name = app.name, time.name = time.name, 
                    time.incorp = time.incorp, group = group, center = center, pass.col = pass.col,
                    incorp.names = incorp.names, prep.dum = prep.dum, prep.incorp = prep.incorp,
-                   add.incorp.rows = add.incorp.rows, check = check, warn = warn, 
+                   add.incorp.rows = add.incorp.rows, check = FALSE, warn = FALSE, 
                    value = 'incorp')
-
-    # Now first run, with main pars
-    # Incorporation info already added from data prep in previous call
-    res <- alfam2(dat = datprepped, pars = pars, add.pars = add.pars, app.name = app.name, time.name = time.name, 
-                  group = group, center = center, pass.col = pass.col,
-                  prep.dum = FALSE, prep.incorp = FALSE,
-                  check = FALSE, warn = FALSE, 
-                  value = 'emis')
 
     if (!is.null(n.ci) && !is.na(n.ci)) {
       i.ci <- sample(nrow(pars.ci), n.ci)
@@ -81,38 +80,40 @@ alfam2 <- function(
     }
 
     # Empty data frame for results
-    uout <- data.frame()
+    out.var <- data.frame()
     for (i in i.ci) {
       pp <- pars.ci[i, ]
 
-      res <- alfam2(dat = datprepped, pars = pp, add.pars = add.pars, app.name = app.name, time.name = time.name, 
-                    group = group, center = center, pass.col = pass.col,
-                    prep.dum = FALSE, prep.incorp = FALSE,
-                    check = FALSE, warn = FALSE, value = 'emis')
+      # Incorporation info already added from data prep in previous call
+      out.it <- alfam2(dat = datprepped, pars = pp, add.pars = add.pars, app.name = app.name, time.name = time.name, 
+                       group = group, center = center, pass.col = pass.col,
+                       prep.dum = FALSE, prep.incorp = FALSE,
+                       check = FALSE, warn = FALSE, value = 'emis')
 
-      uout <- rbind(uout, res)
+      out.var <- rbind(out.var, out.it)
 
     }
 
     if (conf.int == 'all') {
-      res <- uout
+      out <- out.var
     } else {
-      lwr <- aggregate(uout[, var.ci, drop = FALSE], uout[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
+      lwr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
       names(lwr)[-1:-2] <- paste0(names(lwr)[-1:-2], '.lwr')
-      upr <- aggregate(uout[, var.ci, drop = FALSE], uout[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
+      upr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
       names(upr)[-1:-2] <- paste0(names(upr)[-1:-2], '.upr')
-      res <- merge(res, lwr, by = c(group, time.name))
-      res <- merge(res, upr, by = c(group, time.name))
+      out <- merge(out.base, lwr, by = c(group, time.name))
+      out <- merge(out, upr, by = c(group, time.name))
     }
 
     if (is.null(group.orig)) {
-      res[, group] <- NULL
+      out[, group] <- NULL
     }
 
-    return(res)
+    return(out)
 
   }
 
+  # Or normal call, without confidence interval
   # Add predictor variables if given in '...' optional arguments
   # and look for secret flatout argument (with it alfam2() goes as fast as possible without checks and without some conversions (requires more data prep prior to call))
   if (!missing(...)) {
