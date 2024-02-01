@@ -45,7 +45,7 @@ alfam2 <- function(
   if (!is.null(conf.int) && !is.na(conf.int)) {
     # Check argument values
     checkArgClassValue(pars.ci, expected.class = c('data.frame', 'matrix', 'array'))
-    checkArgClassValue(var.ci, expected.class = 'character', expected.values = c('f0', 'r1', 'r2', 'r3', 'r4', 'r5', 'f', 's', 'j', 'ei', 'e', 'er'))
+    checkArgClassValue(var.ci, expected.class = 'character', expected.values = c('f0', 'r1', 'r2', 'r3', 'f4', 'r5', 'f', 's', 'j', 'ei', 'e', 'er'))
 
     if (is.null(n.ci) || is.na(n.ci)) {
       n.ci <- nrow(pars.ci)
