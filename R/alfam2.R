@@ -24,8 +24,94 @@ alfam2 <- function(
   check = TRUE,
   warn = TRUE,
   value = 'emis',
+  conf.int = NULL,
+  pars.ci = NULL,
+  n.ci = NULL,
+  var.ci = 'er',
   ...
   ) {
+
+  # Check CI arguments
+  if (check) {
+    checkArgClassValue(conf.int, expected.class = c('numeric', 'integer', 'character', 'NULL', 'NA'))
+    if (class(conf.int) == 'character') {
+      checkArgClassValue(conf.int, expected.class = 'character', expected.values = 'all')
+    }
+    checkArgClassValue(pars.ci, expected.class = c('data.frame', 'matrix', 'array', 'NULL', 'NA'))
+    checkArgClassValue(n.ci, expected.class = c('integer', 'numeric', 'NULL', 'NA'))
+  }
+
+  # If confidence interval is requested, first make main call, then faster CI calls
+  if (!is.null(conf.int) && !is.na(conf.int)) {
+    # Check argument values
+    checkArgClassValue(pars.ci, expected.class = c('data.frame', 'matrix', 'array'))
+    checkArgClassValue(var.ci, expected.class = 'character', expected.values = c('f0', 'r1', 'r2', 'r3', 'r4', 'r5', 'f', 's', 'j', 'ei', 'e', 'er'))
+
+    if (is.null(n.ci) || is.na(n.ci)) {
+      n.ci <- nrow(pars.ci)
+    }
+
+    checkArgClassValue(n.ci, expected.class = c('integer', 'numeric'), expected.range = c(0, nrow(pars.ci)))
+
+    if (is.null(group)) {
+      group.orig <- group
+      group <- '_g_r_o_u_p_'
+      dat$'_g_r_o_u_p_' <- 'A'
+    }
+
+    # Prepare data--dummy variables and incorporation
+    datprepped <- alfam2(dat = dat, pars = pars, add.pars = add.pars, app.name = app.name, time.name = time.name, 
+                   time.incorp = time.incorp, group = group, center = center, pass.col = pass.col,
+                   incorp.names = incorp.names, prep.dum = prep.dum, prep.incorp = prep.incorp,
+                   add.incorp.rows = add.incorp.rows, check = check, warn = warn, 
+                   value = 'incorp')
+
+    # Now first run, with main pars
+    # Incorporation info already added from data prep in previous call
+    res <- alfam2(dat = datprepped, pars = pars, add.pars = add.pars, app.name = app.name, time.name = time.name, 
+                  group = group, center = center, pass.col = pass.col,
+                  prep.dum = FALSE, prep.incorp = FALSE,
+                  check = FALSE, warn = FALSE, 
+                  value = 'emis')
+
+    if (!is.null(n.ci) && !is.na(n.ci)) {
+      i.ci <- sample(nrow(pars.ci), n.ci)
+    } else {
+      i.ci <- 1:nrow(pars.ci)
+    }
+
+    # Empty data frame for results
+    uout <- data.frame()
+    for (i in i.ci) {
+      pp <- pars.ci[i, ]
+
+      res <- alfam2(dat = datprepped, pars = pp, add.pars = add.pars, app.name = app.name, time.name = time.name, 
+                    group = group, center = center, pass.col = pass.col,
+                    prep.dum = FALSE, prep.incorp = FALSE,
+                    check = FALSE, warn = FALSE, value = 'emis')
+
+      uout <- rbind(uout, res)
+
+    }
+
+    if (conf.int == 'all') {
+      res <- uout
+    } else {
+      lwr <- aggregate(uout[, var.ci, drop = FALSE], uout[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
+      names(lwr)[-1:-2] <- paste0(names(lwr)[-1:-2], '.lwr')
+      upr <- aggregate(uout[, var.ci, drop = FALSE], uout[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
+      names(upr)[-1:-2] <- paste0(names(upr)[-1:-2], '.upr')
+      res <- merge(res, lwr, by = c(group, time.name))
+      res <- merge(res, upr, by = c(group, time.name))
+    }
+
+    if (is.null(group.orig)) {
+      res[, group] <- NULL
+    }
+
+    return(res)
+
+  }
 
   # Add predictor variables if given in '...' optional arguments
   # and look for secret flatout argument (with it alfam2() goes as fast as possible without checks and without some conversions (requires more data prep prior to call))
