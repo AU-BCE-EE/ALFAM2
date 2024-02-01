@@ -99,7 +99,7 @@ alfam2 <- function(
     if (conf.int == 'all') {
       out <- out.var
     } else {
-      out.var <- out.var[is.finite(rowSums(out.base[, var.ci])), ]
+      out.var <- out.var[is.finite(rowSums(out.base[, var.ci, drop = FALSE])), ]
       lwr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
       names(lwr)[-1:-2] <- paste0(names(lwr)[-1:-2], '.lwr')
       upr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
