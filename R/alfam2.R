@@ -65,6 +65,8 @@ alfam2 <- function(
                        incorp.names = incorp.names, prep.dum = prep.dum, prep.incorp = prep.incorp,
                        add.incorp.rows = add.incorp.rows, check = check, warn = warn, value = 'emis')
 
+    out.base$`__order__` <- 1:nrow(out.base)
+
     # Prepare data--dummy variables and incorporation
     # No checking or warning because messages are confusing when users asked for CI, and call above should indicate any problems
     datprepped <- alfam2(dat = dat, pars = pars, add.pars = add.pars, app.name = app.name, time.name = time.name, 
@@ -97,12 +99,16 @@ alfam2 <- function(
     if (conf.int == 'all') {
       out <- out.var
     } else {
+      out.var <- out.var[!is.na(rowSums(out.base[, var.ci])), ]
       lwr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
       names(lwr)[-1:-2] <- paste0(names(lwr)[-1:-2], '.lwr')
       upr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
       names(upr)[-1:-2] <- paste0(names(upr)[-1:-2], '.upr')
+      # NTS: sort out sorting order!
       out <- merge(out.base, lwr, by = c(group, time.name))
       out <- merge(out, upr, by = c(group, time.name))
+      out <- out[order(out$`__order__`), ]
+      out$`__order__` <- NULL
     }
 
     if (is.null(group.orig)) {
