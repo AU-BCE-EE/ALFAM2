@@ -105,7 +105,7 @@ alfam2 <- function(
       upr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
       names(upr)[-1:-2] <- paste0(names(upr)[-1:-2], '.upr')
       # NTS: sort out sorting order!
-      out <- merge(out.base, lwr, by = c(group, time.name))
+      out <- merge(out.base, lwr, by = c(group, time.name), all.x = TRUE)
       out <- merge(out, upr, by = c(group, time.name))
       out <- out[order(out$`__order__`), ]
       out$`__order__` <- NULL
