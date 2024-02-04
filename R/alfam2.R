@@ -47,9 +47,7 @@ alfam2 <- function(
   # Confidence interval requested
   if (!is.null(conf.int) && !is.na(conf.int)) {
     out <- do.call(alfam2CI, actargs)
-
     return(out)
-
   }
 
   # Or normal call, without confidence interval

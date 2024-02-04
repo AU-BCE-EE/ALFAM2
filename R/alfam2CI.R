@@ -97,4 +97,6 @@ alfam2CI <- function(
     out[, group] <- NULL
   }
 
+  return(out)
+
 }
