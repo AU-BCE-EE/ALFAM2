@@ -39,6 +39,10 @@ alfam2(
   check = TRUE,
   warn = TRUE,
   value = 'emis',
+  conf.int = NULL,
+  pars.ci = NULL,
+  n.ci = NULL,
+  var.ci = 'er',
   ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -111,6 +115,25 @@ alfam2(
     See vignette.
     Length one character.
 }  
+  \item{conf.int}{
+    confidence interval setting.
+    Default (\code{NULL}) does not return a confidence interval.
+    Use numeric values for confidence interval, e.g., \code{conf.int = 0.90} for 90\% confidence interval.
+    Note that with default \code{pars.ci} like \code{alfam2pars03var_alpha} the returned confidence intervals are an estimate of uncertainty in the \emph{average} response for the particular values provided for input variables. 
+    These parameters are based on variability in measured emission among research institutions, and were developed using a bootstrap approach.
+  }
+  \item{pars.ci}{
+    matrix or data frame of parameter sets for confidence interval calculations.
+    See \code{alfam2pars03var_alpha} for an example.
+  }
+  \item{n.ci}{
+    number of parameter sets to use.
+    Defaults to total number available.
+  }
+  \item{var.ci}{
+    calculate confidence intervals for these variables.
+    Calculation is done separately by variable and time interval.
+  }
   \item{...}{
     additional optional arguments as length-one vectors that set values of fixed predictor variables.
     See examples.
