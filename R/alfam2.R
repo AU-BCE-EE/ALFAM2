@@ -260,7 +260,7 @@ alfam2 <- function(
     }
   } else {
     if (warn) {
-      warning('Skipping incorporation prep because you set prep.incorp = FALSE.\n   Incorporation will not be applied\n   (unless correct values for variables __f4 and __add.row are first added externally)')
+      warning('Skipping incorporation prep because you set prep.incorp = FALSE.\n   Incorporation will not be applied\n   (unless correct values for variables __f4 and __add.row are first added externally,\n    e.g., with alfam2(...,value = "incorp"))')
     }
   }
 

@@ -53,9 +53,11 @@ prepDat <- function(dat,
     dat[, incorp.name] <- tolower(dat[, incorp.name])
 
     # Replace NA values with 'none'
-    if (warn && any(is.na(dat[, incorp.name]))) {
-      warning(paste0('Some NA values in incorporation column ', incorp.name, '.\n   Replacing all of them with "none".'))
+    if (any(is.na(dat[, incorp.name]))) {
       dat[is.na(dat[, incorp.name]), incorp.name] <- 'none'
+      if (warn) {
+        warning(paste0('Some NA values in incorporation column ', incorp.name, '.\n   Replacing all of them with "none".'))
+      }
     }
 
     # Convert incorporation values to standards
@@ -114,8 +116,10 @@ prepDat <- function(dat,
   if (ndum > 0) {
     dum <- dat[, 1:ndum + ncc, drop = FALSE]
     if (value == 'dummy') return(dum)
-  } else if (warn) {
-    warning('Argument prep.dum = TRUE but there are no variables to convert to dummy variables!\n  Ignoring prep.dum = TRUE.') 
+  } else {
+    if (warn) {
+      warning('Argument prep.dum = TRUE but there are no variables to convert to dummy variables!\n  Ignoring prep.dum = TRUE.') 
+    }
     return(NULL)
   }
 
