@@ -216,9 +216,9 @@ alfam2(
 
 \value{
   A data frame with the same number of rows as \code{dat} (unless \code{add.incorp.rows = TRUE}).
-  Default columns are:
+  First column is \code{time.name} column from input data \code{dat}.
+  Defaults for following columns are:
   \describe{
-    \item{\code{ct}}{cumulative time since manure was applied}
     \item{\code{dt}}{interval duration (time step)}
     \item{\code{f0}}{f0 parameter}
     \item{\code{r1}}{r1 parameter}
@@ -229,12 +229,14 @@ alfam2(
     \item{\code{f}}{fast pool size at \code{ct} (kg/ha)}
     \item{\code{s}}{slow pool size at \code{ct} (kg/ha)}
     \item{\code{j}}{average NH3 flux in interval (kg/ha-h)}
+    \item{\code{jinst}}{instantaneous NH3 flux at given time (kg/ha-h)}
     \item{\code{ei}}{interval emission (kg/ha)}
     \item{\code{e}}{cumulative emission (from time = 0 to \code{ct}) (kg/ha)}
     \item{\code{er}}{relative cumulative emission (fraction of applied TAN)}
   }
 
   If \code{prep.dum} is used, additional dummy variable columns will also be returned.
+  And if a grouping variable is used via \code{group}, this column will be included as well.
 }
 \references{
   Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484. \doi{10.1016/j.atmosenv.2018.11.034}

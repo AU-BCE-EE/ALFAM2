@@ -377,6 +377,9 @@ alfam2 <- function(
   ce$ei <- ce$e - e.prev
   ce$j <- ce$e.int/ce$dt
 
+  # Instantaneous flux
+  ce$jinst <- ce$r1 * ce$f + ce$r3 * ce$s
+
   # Change ct name so it matches input
   names(ce)[names(ce) == 'ct'] <- time.name
 
