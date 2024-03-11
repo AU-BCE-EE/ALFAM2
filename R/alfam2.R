@@ -374,7 +374,7 @@ alfam2 <- function(
 
   e.prev <- c(0, ce$e[-nrow(ce)])
   e.prev[gstart] <- 0
-  ce$e.int <- ce$e - e.prev
+  ce$ei <- ce$e - e.prev
   ce$j <- ce$e.int/ce$dt
 
   # Change ct name so it matches input
