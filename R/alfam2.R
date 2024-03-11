@@ -394,15 +394,15 @@ alfam2 <- function(
   ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
   names(ppars) <- gsub('__', '', names(ppars))
 
-  # Instantaneous flux
-  ce$jinst <- ce$r1 * ce$f + ce$r3 * ce$s
-
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
   out <- data.frame(dat[, c(group, pass.col), drop = FALSE],
                     ce, 
                     ppars,
                     row.names = NULL, check.names = FALSE)
+
+  # Instantaneous flux
+  out$jinst <- out$r1 * out$f + out$r3 * out$s
 
   return(out)
 
