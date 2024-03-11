@@ -433,6 +433,14 @@ plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red',
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 @
 
+Note that instantaneous flux (\texttt{jinst}) will always be lower than interval average flux.
+
+<<>>=
+plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red', 
+     xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
+points(jinst ~ ctime, data = pred7, col = 'blue')
+@
+
 Dynamics in the case of incorporation may be interesting.
 
 <<>>=
