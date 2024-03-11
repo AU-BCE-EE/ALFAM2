@@ -108,6 +108,13 @@ You can open this vignette with the following call.
 vignette("ALFAM2-start")
 @
 
+To check the version of the package, use this:
+
+<<>>=
+packageVersion("ALFAM2")
+@
+
+
 
 \section{The \texttt{alfam2()} function}
 The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{alfam2()}.\footnote{\texttt{ALFAM2mod()} is an alias, and can be used in place of \texttt{alfam2()} in all the examples.}

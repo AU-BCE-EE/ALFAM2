@@ -377,9 +377,6 @@ alfam2 <- function(
   ce$ei <- ce$e - e.prev
   ce$j <- ce$ei / ce$dt
 
-  # Instantaneous flux
-  ce$jinst <- ce$r1 * ce$f + ce$r3 * ce$s
-
   # Change ct name so it matches input
   names(ce)[names(ce) == 'ct'] <- time.name
 
@@ -396,6 +393,9 @@ alfam2 <- function(
   # Get primary parameters (could be done in data.frame() below but there is name issue. . .
   ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
   names(ppars) <- gsub('__', '', names(ppars))
+
+  # Instantaneous flux
+  ce$jinst <- ce$r1 * ce$f + ce$r3 * ce$s
 
   # Add other columns
   # If group not specified by user, group = NULL and is automatically left out
