@@ -375,7 +375,7 @@ alfam2 <- function(
   e.prev <- c(0, ce$e[-nrow(ce)])
   e.prev[gstart] <- 0
   ce$ei <- ce$e - e.prev
-  ce$j <- ce$e.int/ce$dt
+  ce$j <- ce$ei / ce$dt
 
   # Instantaneous flux
   ce$jinst <- ce$r1 * ce$f + ce$r3 * ce$s
