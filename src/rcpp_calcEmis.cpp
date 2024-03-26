@@ -70,7 +70,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
       F[i] = Fti * exp(-rf[i] * ddt[i]);
       S[i] = exp(-rs[i] * ddt[i]) * (Sti + r2[i] * Fti * (1 - exp(-rd[i] * ddt[i])) / rd[i]);
       femis = r1[i] / rf[i] * Fti * (1 - exp(-rf[i] * ddt[i]));
-      semis = r3[i] / rs[i] * (Fti + Sti - F[i] - S[i] - femis)
+      semis = r3[i] / rs[i] * (Fti + Sti - F[i] - S[i] - femis);
       E[i] = Eti + femis + semis;
 
       //save pools for next step
