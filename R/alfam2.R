@@ -315,10 +315,10 @@ alfam2 <- function(
 
   # Calculate primary parameters
   if(length(which0) > 0) dat[, '__f0'] <- calcPParms(pars[which0], dat, warn = warn, tr = 'logistic') else dat[, '__f0'] <- 0
-  if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, warn = warn, upr = 1000)      else dat[, '__r1'] <- 0
-  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, warn = warn, upr = 1E15)      else dat[, '__r2'] <- 0
-  if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat, warn = warn)                  else dat[, '__r3'] <- 0
-  if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, warn = warn, upr = 1000)      else dat[, '__r5'] <- 0
+  if(length(which1) > 0) dat[, '__r1'] <- calcPParms(pars[which1], dat, warn = warn)                  else dat[, '__r1'] <- 0
+  if(length(which2) > 0) dat[, '__r2'] <- calcPParms(pars[which2], dat, warn = warn)                  else dat[, '__r2'] <- 0
+  if(length(which3) > 0) dat[, '__r3'] <- calcPParms(pars[which3], dat, warn = warn, upr = 100)       else dat[, '__r3'] <- 0
+  if(length(which5) > 0) dat[, '__r5'] <- calcPParms(pars[which5], dat, warn = warn, upr = 100)       else dat[, '__r5'] <- 0
   # f4 only calculated where it is already 0 (not default of 1)
   if(length(which4) > 0) dat[dat[, '__f4'] == 0, '__f4'] <- calcPParms(pars[which4], dat[dat[, '__f4'] == 0, ], tr = 'logistic')
 
