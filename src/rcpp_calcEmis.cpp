@@ -59,6 +59,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
     double Fti0 = F0;
     double Sti0 = S0;
     double Eti = 0.;
+    double erdt = 0.;
     
     for (R_xlen_t i = 0; i < l; ++i) {
       // Make incorporation transfer (at *start* of interval) (if none then f4 = 1 and Fti = F[i])
@@ -68,7 +69,11 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
       //Calculate intermediates
       //Calculate pools at *end* of ct[i]
       F[i] = Fti * exp(-rf[i] * ddt[i]);
-      S[i] = exp(-rs[i] * ddt[i]) * (Sti + r2[i] * Fti * (1 - exp(-rd[i] * ddt[i])) / rd[i]);
+      erdt = exp(-rd[i] * ddt[i]);
+      if (erdt > 1.e200) {
+        erdt = 1.e200;
+      }
+      S[i] = exp(-rs[i] * ddt[i]) * (Sti + r2[i] * Fti * (1 - erdt) / rd[i]);
       femis = r1[i] / rf[i] * Fti * (1 - exp(-rf[i] * ddt[i]));
       semis = r3[i] / rs[i] * (Fti + Sti - F[i] - S[i] - femis);
       E[i] = Eti + femis + semis;
