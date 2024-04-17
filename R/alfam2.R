@@ -360,12 +360,6 @@ alfam2 <- function(
   # Keep up with dat to use for sorting below
   dat <- dat[!dat[, '__drop.row'], ]
 
-  if (!add.incorp.rows && prep.dum) {
-    if (!is.null(dum) && nrow(dum) == nrow(ce)) {
-      ce <- cbind(dum, ce)
-    }
-  }
-
   # Recalculate dt, e.int after possibly dropping rows and get j
   gstart <- match(unique(dat[, '__group']), dat[, '__group'])
   ct.prev <- c(0, ce[-nrow(ce), 'ct'])
@@ -389,6 +383,13 @@ alfam2 <- function(
   # Keep up with dat for grouped operation below
   dat <- dat[order(dat$`__orig.order`), ]
   row.names(ce) <- seq.int(nrow(ce))
+
+  # Add dummy variables *after* switching back to original sort order
+  if (!add.incorp.rows && prep.dum) {
+    if (!is.null(dum) && nrow(dum) == nrow(ce)) {
+      ce <- cbind(dum, ce)
+    }
+  }
 
   # Get primary parameters (could be done in data.frame() below but there is name issue. . .
   ppars <- dat[, c('__f0', '__r1', '__r2', '__r3', '__f4', '__r5')]
