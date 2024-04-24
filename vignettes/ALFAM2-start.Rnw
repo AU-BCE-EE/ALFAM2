@@ -650,7 +650,6 @@ predci3
 plot(dat12$man.dm, predci3$er, type = 'o', ylim = c(0, max(predci3$er.upr)))
 lines(dat12$man.dm, predci3$er.lwr, col = 'blue')
 lines(dat12$man.dm, predci3$er.upr, col = 'blue')
-x
 @
 
 By default the model is run with all the different parameter sets provided in \texttt{pars.ci}, which is 100 in the default bootstrap parameter object.
