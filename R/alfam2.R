@@ -418,7 +418,7 @@ alfam2 <- function(
   out$jinst <- out$r1 * out$f + out$r3 * out$s
 
   if (dtinput) {
-    out <- data.table::data.table(dat)
+    out <- data.table::data.table(out)
   }
 
   return(out)
