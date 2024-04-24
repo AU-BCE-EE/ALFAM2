@@ -43,23 +43,22 @@ You can use the ALFAM2 package without much knowledge of R.
 If you are not currently an R user, but you plan on using the ALFAM2 model extensively, it is worthwhile to learn a little bit about R and use the ALFAM2 package, instead of the less efficient Excel spreadsheet model.
 
 \section{Some basics for new R users}
-The information given in this section should be enough for new R users to install the package and learn enough about R to start using the model (albeit with a lack of understanding about some of the code) as described in Section 3.
+The information given in this document should be enough for new R users to install the package and learn enough about R to start using the model (albeit with a lack of understanding about some of the code).
 For a better understanding, check out the sources mentioned below.
 
-\subsection{Getting started with R}
 To use R it must be installed on your computer.
 You can download R and find installation instructions from here: \url{https://www.r-project.org/}.
 And while not required, it is convenient to have a good script editor.
-The RStudio IDE (integrated development environment) is a good (and very popular) choice.
+The RStudio IDE (integrated development environment) is a very popular choice.
 It can be downloaded from here: \url{https://rstudio.com/products/rstudio/download/}.
 
-To use the ALFAM2 package, you will need to install the package, and then call up the function. 
-In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and export data.
+To use the ALFAM2 package, you will need to install the package (done once, or every time an updated version is needed), load the package (done once in each R session), and then call up the \texttt{alfam2()} function. 
+In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and import and export data to/from file.
 For information on these tasks and more, there are many free resources online. 
 CRAN provides various manuals, including a good introduction: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
-RStudio also provides various materials for learning R, although the focus is skewed toward packages developed by RStudio employees: \url{https://education.rstudio.com/learn/}.
-Alternatively, this book I use for a course on R has some details: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
-Alternatively, the instructions given below may be sufficient.
+Posit (RStudio developers) also provides various materials for learning R, although the focus is skewed toward packages from Posit.
+This book I use for a course on R has some details: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
+Alternatively, the examples given below may be sufficient.
 
 \section{Installing the ALFAM2 package}
 The ALFAM2 package is available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
