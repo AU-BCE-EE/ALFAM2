@@ -564,6 +564,146 @@ head(pred9b)
 head(pred9c)
 @
 
+\subsection{Example 7. Confidence intervals}
+
+The \texttt{alfam2()} function can generate confidence intervals if given multiple parameter sets that themselves represent the distribution of possible parameter values.
+
+<<>>=
+set.seed(1201)
+dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
+                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + rnorm(85, 0, 2), 
+                   wind = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
+                              rnorm(85, 0, 0.12)), 
+                   app.mthd = "bc")
+
+@
+
+
+Here is a normal call without confidence intervals (CI).
+
+<<>>=
+pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
+                   warn = FALSE)
+head(pred7)
+@
+
+
+
+Confidence intervals (CI) can be added by specifying a confidence level for the \texttt{conf.int} argument.
+By default, a set of bootstrap parameters will be used.
+
+<<>>=
+predci1 <- alfam2(dat7, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
+                  time.name = 'ctime', warn = FALSE, conf.int = 0.90, 
+                  pars.ci = alfam2pars03var_alpha)
+head(predci1)
+@
+
+They are given in the output with `.lwr` and `.upr` suffixes (for lower and upper).
+By default CI are only returned for variable `er` = relative cumulative emission.
+
+<<>>=
+plot(er ~ ctime, data = predci1, type = 'l', ylim = c(0, max(predci1$er.upr)))
+lines(er.lwr ~ ctime, data = predci1, type = 'l', col = 'blue')
+lines(er.upr ~ ctime, data = predci1, type = 'l', col = 'red')
+@
+
+These results come with some warnings.
+Only uncertainty based on variability in measurements is included; error in model structure or effects of the specific approach used for parameter estimation are not considered.
+Still, the 90\% CI generated with default bootstrap parameter sets is quite wide.
+Furthermore, estimates are incomplete for any scenarios that include incorporation or closed slot injection, since the parameter estimation observations with these came from a small number of institutions.
+
+We can add any output variables for CI calculation, but internally the \texttt{quantile} function is applied by variable, so the limits returned from different variables may be from different parameter sets and so should be considered separately.
+Use the \texttt{var.ci} argument to specify variables.
+Here we request 3 variables.
+
+<<>>=
+predci2 <- alfam2(dat7, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
+                  time.name = 'ctime', warn = FALSE, conf.int = 0.90, 
+                  pars.ci = alfam2pars03var_alpha, var.ci = c('er', 'j', 'r1'))
+head(predci2)
+@
+
+Note that times with any \texttt{NaN} etc. in one of \texttt{var.ci} columns will be dropped before applying the \texttt{quantile()} function.
+So here all \texttt{lwr} and \texttt{upr} limits are \texttt{NA} for time = 0 h.
+
+Confidence intervals can be applied to different groups as well.
+Here is a demonstration where dry matter varies between groups.
+
+<<>>=
+dat12 <- data.frame(ctime = 168, TAN.app = 50, 
+                   man.dm = 1:10, air.temp = 20, wind.2m = 4) 
+@
+
+
+<<>>=
+
+predci3 <- alfam2(dat12, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
+                time.name = 'ctime', group = 'man.dm',
+                conf.int = 0.90, 
+                pars.ci = alfam2pars03var_alpha)
+predci3
+@
+
+
+<<>>=
+plot(dat12$man.dm, predci3$er, type = 'o', ylim = c(0, max(predci3$er.upr)))
+lines(dat12$man.dm, predci3$er.lwr, col = 'blue')
+lines(dat12$man.dm, predci3$er.upr, col = 'blue')
+x
+@
+
+By default the model is run with all the different parameter sets provided in \texttt{pars.ci}, which is 100 in the default bootstrap parameter object.
+
+<<>>=
+dim(alfam2pars03var_alpha)
+@
+
+It is possible to reduce the number used with the \texttt{n.ci} argument.
+
+It may be convenient to combine uncertainty in parameter estimates with uncertainty in model inputs.
+For this, the \texttt{dat} input data frame must have values that reflect input variable uncertainty.
+For example, suppose we know that in a particular slurry application event dry matter uncertainty was 2\% of fresh mass as a standard deviation.
+
+<<>>=
+datuc1 <- data.frame(group = 1:100, ctime = 168, TAN.app = 50, 
+                     man.dm = rnorm(100, mean = 8, sd = 2), 
+                     air.temp = 20, wind.2m = 3)
+quantile(datuc1$man.dm)
+@
+
+In this case, we want to get results for all bootstrap parameter sets, not just the quantiles for the confidence intervals.
+
+<<>>=
+preduc1 <- alfam2(datuc1, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
+                  time.name = 'ctime', group = 'group',
+                  conf.int = 'all', pars.ci = alfam2pars03var_alpha)
+head(preduc1)
+dim(preduc1)
+@
+
+The output has 10000 rows.
+And then, for a 90\% confidence interval that includes uncertainty in both inputs (only dry here) and parameters, we can use \texttt{quatile()}:
+
+<<>>=
+quantile(preduc1$er, c(0.05, 0.95))
+@
+
+Compare this to the confidence interval based on parameter uncertainty only.
+
+<<>>=
+datuc2 <- data.frame(group = 1, ctime = 168, TAN.app = 50, 
+                     man.dm = 8,
+                     air.temp = 20, wind.2m = 3)
+@
+
+<<>>=
+preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
+                  time.name = 'ctime', group = 'group',
+                  conf.int = 0.9, pars.ci = alfam2pars03var_alpha)
+preduc2
+@
+
 \subsection{Data import and export}
 Any of the results shown above can be exported as with any data frame in R.
 The simplest function for this is \texttt{write.csv()}.
@@ -582,11 +722,44 @@ The simplest approach here is to use the \texttt{read.csv()}, \texttt{fread()} o
 Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
 See the book mentioned above for details.
 
+Note that the \texttt{alfam2()} function can accept data.tables and tibbles.
+You can see this by running the code below.
+It is not run here in the vignette because not all users will have the necessary packages installed.
+
+<<eval=FALSE>>=
+library(data.table)
+dat1 <- data.table(ctime = 168, TAN.app = 50, man.dm = 8, 
+                   air.temp = 20, wind.2m = 3, 
+                   app.mthd.bc = TRUE)
+dat1
+@
+
+<<eval=FALSE>>=
+pred1b <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
+pred1b
+@
+
+<<eval=FALSE>>=
+library(tibble)
+dat1 <- tibble(ctime = 168, TAN.app = 50, man.dm = 8, 
+                   air.temp = 20, wind.2m = 3, 
+                   app.mthd.bc = TRUE)
+dat1
+class(dat1)
+@
+
+<<eval=FALSE>>=
+pred1c <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
+class(pred1c)
+class(pred1c)
+@
+
+
 \subsection{Warnings and error messages}
 The \texttt{alfam2()} function will return errors or warnings for some cases of problems with input data.
 The intent of these is to make it easy for users to understand and fix problems with a call or the predictor variable data frame.
 A few are shown here.
-Some checks can be skipped by setting \texttt{check = FALSE}, but doing so increases the risk of getting an unhelpful error message, or worse, overlooking a mistake and proceeding with erroneous output.
+Some checks can be skipped by setting \texttt{check = FALSE}, but doing so increases the risk of getting an unhelpful error message, or worse, overlooking a mistake and proceeding with incorrect output.
 Some warnings can be surpressed with \texttt{warn = FALSE} in order to avoid cluttering up the console or a log or dynamic report.
 But users should be careful here also.
 
