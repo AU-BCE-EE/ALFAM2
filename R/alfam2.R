@@ -86,10 +86,10 @@ alfam2 <- function(
   # Convert data.table to data.frame
   dtinput <- FALSE
   if (class(dat)[1] %in% c('data.table', 'tbl_df')) {
-    dat <- as.data.frame(dat)
     if (class(dat)[1] == 'data.table' & 'data.table' %in% utils::installed.packages()[, 'Package']) {
       dtinput <- TRUE
     }
+    dat <- as.data.frame(dat)
   } 
 
   # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
