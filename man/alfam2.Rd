@@ -52,7 +52,7 @@ alfam2(
     The data frame must include at least the elapsed (cumulative) time since manure was applied in hours, and the application rate of total ammoniaical nitrogen (TAN) in kg/h.
     (Other units could be used but should match parameter units and will affect the units of output.)
     Typically other predictor variables are included.
-    See the Details section below and the vignette for more information.
+    See the details section below and the vignette for more information.
 }
   \item{pars}{
     A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The latest set is described in Hafner et al. (2021, 2024). The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
@@ -74,7 +74,10 @@ alfam2(
 }
   \item{center}{
     numeric vector with means for centering.
-    Set to \code{NULL} or \code{NA} to turn off centering (but only do this if you know what you are doing).
+    Generally should not be changed by users, because parameter values depend on particular centering values, and nonsense predictions can result from changes to even a single centering value.
+    Set to \code{NULL} to turn off centering, but only do this if you know what you are doing.
+    Internally, supplied values are used to either replace or extend centering values by variable, so it is possible to add a new centering value with e.g., \code{center = c(x1 = 10)}, which will not affect any of the default values.
+    In contrast, \code{center = c(wind.2m = 5)} would change the value for the variable \code{wind.2m}.
     Default parameters are based on centered values.
 }
   \item{pass.col}{
@@ -119,8 +122,12 @@ alfam2(
     confidence interval setting.
     Default (\code{NULL}) does not return a confidence interval.
     Use numeric values for confidence interval, e.g., \code{conf.int = 0.90} for 90\% confidence interval.
+    This value will be used with the \code{quantile} function.
     Note that with default \code{pars.ci} like \code{alfam2pars03var_alpha} the returned confidence intervals are an estimate of uncertainty in the \emph{average} response for the particular values provided for input variables. 
     These parameters are based on variability in measured emission among research institutions, and were developed using a bootstrap approach.
+    Set \code{conf.int} to \code{'all'} to have the function return all predictions instead of quantile estimates of the confidence interval.
+    This can be useful for incorporation of uncertainty in input variables.
+    See vignette.
   }
   \item{pars.ci}{
     matrix or data frame of parameter sets for confidence interval calculations.
@@ -181,8 +188,8 @@ alfam2(
   }
   See the vignette for more details.
 
-  Categorical predictor variables are all entered as binary dummy variables.
-  The \code{alfam2} function automatically creates the dummy variables (this can be turned off with \code{prep.dum = FALSE}).
+  Categorical predictor variables can be entered as binary dummy variables or left as character or factors.
+  The \code{alfam2} function automatically creates the dummy variables from from three categorical variables (this can be turned off with \code{prep.dum = FALSE}):
 
   \describe{
     \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing hose, \code{os} for open slot injection, and \code{cs} for closed slot injection}
@@ -215,7 +222,7 @@ alfam2(
 }
 
 \value{
-  A data frame with the same number of rows as \code{dat} (unless \code{add.incorp.rows = TRUE}).
+  By default, a data frame with the same number of rows as \code{dat} (unless \code{add.incorp.rows = TRUE}).
   First column is \code{time.name} column from input data \code{dat}.
   Defaults for following columns are:
   \describe{
@@ -237,7 +244,12 @@ alfam2(
 
   If \code{prep.dum} is used, additional dummy variable columns will also be returned.
   And if a grouping variable is used via \code{group}, this column will be included as well.
+  Any columns listed in \code{pass.cols} will also be returned.
+
+  If \code{value = 'incorp'} is used, the function will return intermediate data processed for incorporation but without emission predictions.
+  See vignette.
 }
+
 \references{
   Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484. \doi{10.1016/j.atmosenv.2018.11.034}
 
