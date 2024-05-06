@@ -249,6 +249,8 @@ alfam2(
 %% ~put references to the literature/web site here ~
 }
 \note{
+  Users are responsible for checking that input variable values are not beyond limits of measurement data used for parameter estimation.
+  For parameter set 2, these were: DM 1- 12\% DM, pH 6.4-8.5 (3.3-8.1 for acidified subset for pH parameters), air temperature -1.9-32 deg. C, and wind speed 0.04-28 m/s.
 }
 \author{
 Sasha D. Hafner, Christoph Haeni, Roland Fuss
