@@ -90,7 +90,8 @@ install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
 Alternatively, to avoid loading devtools, use this syntax.
 
 <<eval=FALSE>>=
-devtools::install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
+devtools::install_github("sashahafner/ALFAM2", 
+                         build_vignettes = TRUE)
 @
 
 These steps only need to be carried out once.
@@ -107,7 +108,7 @@ You can open this vignette with the following call.
 vignette("ALFAM2-start")
 @
 
-To check the version of the package, use this:
+To check the version of the installed package, use this:
 
 <<>>=
 packageVersion("ALFAM2")
@@ -154,7 +155,7 @@ Variable name & Description             & Units          & Notes             &  
   \texttt{app.mthd.bc}  & Broadcast application   & None (logical) & Binary variable   &  \\
   \texttt{app.mthd.ts}  & Trailing shoe application   & None (logical) & Binary variable   &  \\
   \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
-  \texttt{app.rate.ni}   & Manure app. rate (excluding injection) & t/ha           &                   &  \\
+  \texttt{app.rate.ni}   & Manure app. rate (no inj.) & t/ha           &                   &  \\
   \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
   \texttt{man.ph}        & Manure pH               & pH units       & For acidification &  \\
   \texttt{man.source.pig}        & Pig manure    & None (logical)  & Binary variable    &  \\
@@ -309,7 +310,8 @@ Let's run the model for these 5 scenarios.
 
 <<>>=
 pred4 <- alfam2(dat4, app.name = "TAN.app", time.name = "ctime", 
-                   time.incorp = "t.incorp", group = "scenario", warn = FALSE)
+                   time.incorp = "t.incorp", group = "scenario", 
+                   warn = FALSE)
 pred4
 @
 
@@ -384,13 +386,15 @@ alfam2pars02[grepl('^incorp', names(alfam2pars02))]
 
 So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.
 And slurry source is included also.
-To help ensure that incorporation is indeed applied as intended\footnote{The information in \texttt{dat4b} is a bit inconsistent, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
+To help ensure that incorporation is indeed applied as intended\footnote{The information entered in the data frame is inconsistent for rows 1 and 4, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
 
 <<>>=
 dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100, 
-                   man.dm = 5, man.ph = 7.2, air.temp = 10, wind.2m = 2, 
+                   man.dm = 5, man.ph = 7.2, air.temp = 10, 
+                   wind.2m = 2, 
                    man.source = c(rep('Cattle', 2), rep('Pig', 4)),
-                   app.mthd = rep(c('Broadcast', 'Trailing hose'), each = 3),
+                   app.mthd = rep(c('Broadcast', 'Trailing hose'), 
+                                  each = 3),
                    incorp = rep(c('None', 'Shallow', 'Deep'), 2),
                    t.incorp = 4)
 dat6
@@ -431,7 +435,8 @@ We'll create some data to represent this below.
 <<>>=
 set.seed(1201)
 dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
-                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + rnorm(85, 0, 2), 
+                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
+                              rnorm(85, 0, 2), 
                    wind = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
@@ -475,7 +480,8 @@ dat8$t.incorp <- 6.5
 
 <<>>=
 pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
-                   time.incorp = 't.incorp', warn = FALSE, add.incorp.rows = TRUE)
+                time.incorp = 't.incorp', warn = FALSE, 
+                add.incorp.rows = TRUE)
 @
 
 <<>>=
@@ -503,8 +509,10 @@ dat9 <- expand.grid(field = 1:1000, ct = 1:168,
                     man.ph = 7, rain.rate = 0,
                     app.mthd = "bsth")
 
-dat9$air.temp <- 7 + 7*sin(dat9$ct * 2 * pi / 24) + rnorm(1000, 0, 2)
-dat9$wind.2m <- 10^(0.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24) + rnorm(1000, 0, 0.1))
+dat9$air.temp <- 7 + 7*sin(dat9$ct * 2 * pi / 24) + 
+                 rnorm(1000, 0, 2)
+dat9$wind.2m <- 10^(0.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24) + 
+                rnorm(1000, 0, 0.1))
 dat9 <- dat9[order(dat9$field, dat9$ct), ]
 @
 
@@ -603,7 +611,8 @@ The package now includes a draft collection of such parameters.
 <<>>=
 set.seed(2609)
 dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
-                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + rnorm(85, 0, 2), 
+                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
+                              rnorm(85, 0, 2), 
                    wind = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
@@ -625,8 +634,9 @@ Confidence intervals (CI) can be added by specifying a confidence level for the 
 By default, a set of bootstrap parameters will be used.
 
 <<>>=
-predci1 <- alfam2(dat7, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
-                  time.name = 'ctime', warn = FALSE, conf.int = 0.90, 
+predci1 <- alfam2(dat7, pars = alfam2pars03_alpha, 
+                  app.name = 'TAN.app', time.name = 'ctime', 
+                  warn = FALSE, conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha)
 head(predci1)
 @
@@ -635,7 +645,8 @@ Confidence limits are given in the output with `.lwr` and `.upr` suffixes (for l
 By default CI are only returned for variable `er` = relative cumulative emission.
 
 <<>>=
-plot(er ~ ctime, data = predci1, type = 'l', ylim = c(0, max(predci1$er.upr)))
+plot(er ~ ctime, data = predci1, type = 'l', 
+     ylim = c(0, max(predci1$er.upr)))
 lines(er.lwr ~ ctime, data = predci1, type = 'l', col = 'blue')
 lines(er.upr ~ ctime, data = predci1, type = 'l', col = 'red')
 @
@@ -651,9 +662,11 @@ Use the \texttt{var.ci} argument to specify variables.
 Here we request 3 variables.
 
 <<>>=
-predci2 <- alfam2(dat7, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
-                  time.name = 'ctime', warn = FALSE, conf.int = 0.90, 
-                  pars.ci = alfam2pars03var_alpha, var.ci = c('er', 'j', 'r1'))
+predci2 <- alfam2(dat7, pars = alfam2pars03_alpha, 
+                  app.name = 'TAN.app', time.name = 'ctime', 
+                  warn = FALSE, conf.int = 0.90, 
+                  pars.ci = alfam2pars03var_alpha, 
+                  var.ci = c('er', 'j', 'r1'))
 head(predci2)
 @
 
@@ -672,16 +685,17 @@ dat12 <- data.frame(ctime = 168, TAN.app = 50,
 
 <<>>=
 
-predci3 <- alfam2(dat12, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
-                  time.name = 'ctime', group = 'man.dm',
-                  conf.int = 0.90, 
+predci3 <- alfam2(dat12, pars = alfam2pars03_alpha, 
+                  app.name = 'TAN.app', time.name = 'ctime', 
+                  group = 'man.dm', conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha)
 predci3
 @
 
 
 <<>>=
-plot(dat12$man.dm, predci3$er, type = 'o', ylim = c(0, max(predci3$er.upr)))
+plot(dat12$man.dm, predci3$er, type = 'o', 
+     ylim = c(0, max(predci3$er.upr)))
 lines(dat12$man.dm, predci3$er.lwr, col = 'blue')
 lines(dat12$man.dm, predci3$er.upr, col = 'blue')
 @
@@ -710,9 +724,10 @@ In this case, we want to get results for all bootstrap parameter sets, not just 
 We can get these by setting \texttt{conf.int = 'all'}.
 
 <<>>=
-preduc1 <- alfam2(datuc1, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
-                  time.name = 'ctime', group = 'group',
-                  conf.int = 'all', pars.ci = alfam2pars03var_alpha)
+preduc1 <- alfam2(datuc1, pars = alfam2pars03_alpha, 
+                  app.name = 'TAN.app', time.name = 'ctime', 
+                  group = 'group', conf.int = 'all', 
+                  pars.ci = alfam2pars03var_alpha)
 head(preduc1)
 dim(preduc1)
 @
