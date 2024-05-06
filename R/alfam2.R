@@ -115,7 +115,7 @@ alfam2 <- function(
     if (nrow(dat) == 0) stop('dat has no rows!')
 
     # Warning if center is changed
-    if (warn && !identical(center, eval(formals(alfam2)$center))) {
+    if (!identical(center, eval(formals(alfam2)$center))) {
       if (warn) {
         warning('You specified values for the center argument for centering means.\n    Only use this option if you know what you are doing and centering means match the parameter set.\n    User-supplied values will replace or extend default values.')
       }
