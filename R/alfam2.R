@@ -116,7 +116,7 @@ alfam2 <- function(
 
     # Warning if center is changed
     if (warn && !identical(center, eval(formals(alfam2)$center))) {
-      warning('You specified values for the center argument for centering means. Only use this option if you know what you are doing.')
+      warning('You specified values for the center argument for centering means.\n    Only use this option if you know what you are doing and centering means match the parameter set.')
     }
 
     if (!time.name %in% names(dat)) {
@@ -226,18 +226,20 @@ alfam2 <- function(
   }
 
   # Center numeric predictors
-  if(value != 'incorp' && !is.null(center)[1] && !is.na(center)[1]) {
-    # Get columns that will be centered 
-    c_cols <- names(center)[names(center) %in% names(dat)]
+  if(value != 'incorp') {
+    if(!is.null(center)[1] && !is.na(center)[1]) {
+      # Get columns that will be centered 
+      c_cols <- names(center)[names(center) %in% names(dat)]
 
-    # Center
-    if(length(c_cols)) {
-      dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = center[c_cols], scale = FALSE)
-      #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, center[c_cols])
+      # Center
+      if(length(c_cols)) {
+        dat[, c_cols] <- scale(dat[, c_cols, drop = FALSE], center = center[c_cols], scale = FALSE)
+        #dat[, c_cols] <- sweep(dat[, c_cols, drop = FALSE], 2, center[c_cols])
+      }
+    } else if (warn) {
+      # Warning if centering is turned off
+      warning('You turned off centering by setting center = NULL.\n   Only use this option if you know what you are doing,\n   and only with a matching parameter set.')
     }
-  } else if (warn) {
-    # Warning if centering is turned off
-    warning('You turned off centering by setting center = NULL.\n   Only use this option if you know what you are doing,\n   and only with a matching parameter set.')
   }
 
   # Original order (for sorting before return)
