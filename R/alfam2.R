@@ -116,7 +116,9 @@ alfam2 <- function(
 
     # Warning if center is changed
     if (warn && !identical(center, eval(formals(alfam2)$center))) {
-      warning('You specified values for the center argument for centering means.\n    Only use this option if you know what you are doing and centering means match the parameter set.\n    User-supplied values will replace or extend default values.')
+      if (warn) {
+        warning('You specified values for the center argument for centering means.\n    Only use this option if you know what you are doing and centering means match the parameter set.\n    User-supplied values will replace or extend default values.')
+      }
       # Replace or extend center vector 
       center_defaults <- eval(formals(alfam2)$center)
       center <- c(center, center_defaults[!(names(center_defaults) %in% names(center))])
