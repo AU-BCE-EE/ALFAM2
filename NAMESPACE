@@ -1,4 +1,3 @@
-import(parallel)
 import(Rcpp)
 importFrom("stats", "na.omit", "setNames")
 export(alfam2)
