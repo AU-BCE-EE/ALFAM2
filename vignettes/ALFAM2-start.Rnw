@@ -369,7 +369,8 @@ all.equal(pred5b$e, pred5$e)
 Calculated emission is the same as in \texttt{pred5} above, but in \texttt{pred5} we also have the dummy variables returned in the output.
 It is good practice to check these columns to make sure inputs were entered correctly.
 
-This data preparation option invoked by \texttt{prep = TRUE} (default) will automatically calculate dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
+This data preparation option invoked by \texttt{prep.dum = TRUE}, which is the default. 
+The \texttt{alfam2} function will automatically add dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
 For this automatic conversion to take place, column names and factor levels must match the relevant part of the parameter names.
 In the call immediately above, \texttt{app.mthd} matches the beginning of the parameter names \texttt{app.mthd.bc} etc., and the levels \texttt{bc} and \texttt{os} match the final part of these names.
 The level \texttt{th} has no match--it is (correctly) interpreteted as a reference level.
