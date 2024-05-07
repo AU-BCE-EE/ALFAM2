@@ -775,11 +775,13 @@ Alternatively, data can be easily read from Excel files with the \texttt{read\_x
 See the book mentioned above for details.
 
 Note that the \texttt{alfam2()} function can accept data.tables and tibbles.
+But output is always a data frame, which can of course be changed to a data.table or a tibble after the \texttt{alfam2} call.
 You can see this by running the code below.
 It is not run here in the vignette because not all users will have the necessary packages installed.
 
 <<eval=FALSE>>=
 library(data.table)
+library(ALFAM2)
 dat1b <- data.table(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd = 'bc')
@@ -789,6 +791,8 @@ dat1b
 <<eval=FALSE>>=
 pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime')
 pred1b
+class(pred1b)
+setDT(pred1b)
 class(pred1b)
 @
 
@@ -803,6 +807,8 @@ class(dat1c)
 
 <<eval=FALSE>>=
 pred1c <- alfam2(dat1c, app.name = 'TAN.app', time.name = 'ctime')
+class(pred1c)
+pred1c <- as_tibble(pred1c)
 class(pred1c)
 @
 
