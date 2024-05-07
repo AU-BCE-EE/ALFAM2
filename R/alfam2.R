@@ -80,11 +80,7 @@ alfam2 <- function(
   }
 
   # Convert data.table to data.frame
-  dtinput <- FALSE
   if (class(dat)[1] %in% c('data.table', 'tbl_df')) {
-    if (class(dat)[1] == 'data.table' & 'data.table' %in% utils::installed.packages()[, 'Package']) {
-      dtinput <- TRUE
-    }
     dat <- as.data.frame(dat)
   } 
 
@@ -267,9 +263,6 @@ alfam2 <- function(
         warning('You set values = "incorp" so output does not include emission results.')
       }
       dat <- dat[order(dat$`__orig.order`), ]
-      if (dtinput) {
-        dat <- data.table::data.table(dat)
-      }
       return(dat)
     }
   } else {
@@ -418,10 +411,6 @@ alfam2 <- function(
 
   # Instantaneous flux
   out$jinst <- out$r1 * out$f + out$r3 * out$s
-
-  if (dtinput) {
-    out <- data.table::data.table(out)
-  }
 
   return(out)
 
