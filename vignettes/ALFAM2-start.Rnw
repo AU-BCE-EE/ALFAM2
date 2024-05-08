@@ -351,7 +351,7 @@ pred5
 \subsection{Dummy variables}
 \label{sec:dummy}
 Most of the examples given above include "dummy variables", or multiple binary variables that together represent a factor.
-The package (>=v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
+The package ($\geq$v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
 The new columns can be seen in the output from the function--for example \texttt{app.mthd.bc} and the similar columns in \texttt{pred5} above.
 Dummy variables can still be entered manually though.
 For example, we could duplicate the behavior of the call above with the following.
@@ -941,11 +941,6 @@ Hafner, S.D., Kamp, J.N., Pedersen, J.
 \newblock Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. 
 \newblock {\em Agricultural and Forest Meteorology}, 344, 109790, 2024. 
 \newblock \url{https://doi.org/10.1016/j.agrformet.2023.109790}
-
-Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G.
-\newblock A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. 
-\newblock {\em Atmospheric Environment}, 199:474-484, 2018.
-\newblock \url{https://doi.org/10.1016/j.atmosenv.2018.11.034}
 
 \bibitem{efreport2021}
 Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. 
