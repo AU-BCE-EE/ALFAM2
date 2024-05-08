@@ -61,7 +61,16 @@ This book I use for a course on R has some details: \url{https://www.researchgat
 Alternatively, the examples given below may be sufficient.
 
 \section{Installing the ALFAM2 package}
-The ALFAM2 package is available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
+Once the ALFAM2 package is on CRAN, it can be installed in the normal way.
+
+<<>>=
+install.packages('ALFAM2')
+@
+
+
+This is the recommended approach.
+
+The latest and earlier versions of the ALFAM2 package are available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
 Installation of packages from GitHub requires a package called devtools.
 You can run the code below to install devtools and ALFAM2.
 
@@ -94,7 +103,7 @@ devtools::install_github("sashahafner/ALFAM2",
                          build_vignettes = TRUE)
 @
 
-These steps only need to be carried out once.
+Installation only needs to be carried out once.
 
 Finally, every time you open R to use the ALFAM2 package, it must be loaded.
 
@@ -113,8 +122,6 @@ To check the version of the installed package, use this:
 <<>>=
 packageVersion("ALFAM2")
 @
-
-
 
 \section{The \texttt{alfam2()} function}
 The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{alfam2()}.
