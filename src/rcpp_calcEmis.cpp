@@ -50,7 +50,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
     }
 
     //intermediates
-    double femis, semis, em;
+    double femis, semis;
     double Fti, Sti;
     
     //initial values
