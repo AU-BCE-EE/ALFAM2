@@ -18,20 +18,20 @@ install.packages("devtools")
 Then install the latest ALFAM2 release with the following command.
 
 ```
-devtools::install_github("sashahafner/ALFAM2@*release", build_vignettes = TRUE)
+devtools::install_github("AU-BCE-EE/ALFAM2@*release", build_vignettes = TRUE)
 ```
 
 The `build_vignettes` argument is needed in order to get the vignette.
 
-You can just pull from the master branch (`sashahafner/ALFAM2`), but you may get some new changes not yet included in a release.
+You can just pull from the master branch (`AU-BCE-EE/ALFAM2`), but you may get some new changes not yet included in a release.
 
 *You can get any specific release (e.g., to check out a specific version used in a particular paper) with this syntax:*
 
 ```
-devtools::install_github("sashahafner/ALFAM2@v3.2", build_vignettes = TRUE)
+devtools::install_github("AU-BCE-EE/ALFAM2@v3.2", build_vignettes = TRUE)
 ```
 
-See the [Releases page](https://github.com/sashahafner/ALFAM2/releases) for all available releases.
+See the [Releases page](https://github.com/AU-BCE-EE/ALFAM2/releases) for all available releases.
 The `@v3.2` bit in the command above is from the release *tag*.
 
 For other branches using the `ref` argument.
@@ -63,7 +63,7 @@ The value of these parameters are determined by the value of predictor variables
 ![schematic](schematic.png)
 
 # Bugs and requests
-Please use the [Issues](https://github.com/sashahafner/ALFAM2/issues) page.
+Please use the [Issues](https://github.com/AU-BCE-EE/ALFAM2/issues) page.
 
 # Project information
 See www.alfam.dk for more information and resources.
