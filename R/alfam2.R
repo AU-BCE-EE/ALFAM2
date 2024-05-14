@@ -37,7 +37,7 @@ alfam2 <- function(
   # Check CI arguments
   if (check) {
     checkArgClassValue(conf.int, expected.class = c('numeric', 'integer', 'character', 'NULL', 'NA'))
-    if (class(conf.int) == 'character') {
+    if (inherits(conf.int, 'character')) {
       checkArgClassValue(conf.int, expected.class = 'character', expected.values = 'all')
     }
     checkArgClassValue(pars.ci, expected.class = c('data.frame', 'matrix', 'array', 'NULL', 'NA'))
