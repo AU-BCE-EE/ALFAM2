@@ -80,7 +80,7 @@ alfam2 <- function(
   }
 
   # Convert data.table to data.frame
-  if (class(dat)[1] %in% c('data.table', 'tbl_df')) {
+  if (inherits(dat, c('data.table', 'tbl_df'))) {
     dat <- as.data.frame(dat)
   } 
 
