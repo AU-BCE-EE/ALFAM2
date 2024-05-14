@@ -213,6 +213,10 @@ alfam2 <- function(
     }
   }
 
+  # Check for dummy variables problems
+  if (checkDum(dat) == 1) {
+    stop('Dummy variable problem--multiple mututally exclusive dummy variables are 1.\n    Check input data.')
+  }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
