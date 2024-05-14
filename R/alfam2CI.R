@@ -80,13 +80,18 @@ alfam2CI <- function(
 
   if (conf.int == 'all') {
     out <- out.var
+    # Add in dummy variables if there might be some
+    # Also brings in __order__
+    if (prep.dum) {
+      dvcol <- names(out.base)[!names(out.base) %in% names(out)]
+      out <- merge(out.base[, c(group, time.name, dvcol)], out, by = c(group, time.name), all.y = TRUE)
+    }
   } else {
     out.var <- out.var[is.finite(rowSums(out.base[, var.ci, drop = FALSE])), ]
     lwr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
     names(lwr)[-1:-2] <- paste0(names(lwr)[-1:-2], '.lwr')
     upr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, 1 - (1 - conf.int) / 2))
     names(upr)[-1:-2] <- paste0(names(upr)[-1:-2], '.upr')
-    # NTS: sort out sorting order!
     out <- merge(out.base, lwr, by = c(group, time.name), all.x = TRUE)
     out <- merge(out, upr, by = c(group, time.name), all.x = TRUE)
     out <- out[order(out$`__order__`), ]
