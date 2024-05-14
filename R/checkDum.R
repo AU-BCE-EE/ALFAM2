@@ -1,4 +1,5 @@
 # Check for multiple values of mutually exclusive dummy variables
+# Returns 0 for no problems
 
 checkDum <- function(dat, vnames = c('^app\\.mthd\\.[ocbt]', '^incorp\\.[ds]', '^man\\.source\\.[cp]')) {
 
@@ -11,6 +12,8 @@ checkDum <- function(dat, vnames = c('^app\\.mthd\\.[ocbt]', '^incorp\\.[ds]', '
       } else {
         return(0)
       }
+    } else {
+      return(0) 
     }
   }
   
