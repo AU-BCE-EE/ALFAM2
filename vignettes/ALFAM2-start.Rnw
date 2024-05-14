@@ -448,7 +448,7 @@ dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8,
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
 plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
-plot(wind ~ ctime, data = dat7, type = 'o', col = 'blue')
+plot(wind.2m ~ ctime, data = dat7, type = 'o', col = 'blue')
 @
 
 Predictions are made as above.
@@ -507,8 +507,10 @@ The drop in flux immediately after incorportaion is particularly clear in the fl
 
 The \texttt{alfam2} function is not particularly slow, but its speed can become limiting when applied to many individual scenarios or with very high resolution input data.
 For example, we can create some fake input data for 1000 different agricultural fields.
+(These examples are not run during vignette building to avoid excessive check times.
+But readers can copy/paste them into R to see results.)
 
-<<>>=
+<<eval=FALSE>>=
 set.seed(0812)
 dat9 <- expand.grid(field = 1:1000, ct = 1:168, 
                     TAN.app = 100, man.dm = 8, 
@@ -523,12 +525,12 @@ dat9$wind.2m <- 10^(0.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24) +
 dat9 <- dat9[order(dat9$field, dat9$ct), ]
 @
 
-<<>>=
+<<eval=FALSE>>=
 head(dat9)
 dim(dat9)
 @
 
-<<>>=
+<<eval=FALSE>>=
 system.time(
   pred9 <- alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', 
                   group = 'field', warn = FALSE)
@@ -537,7 +539,7 @@ system.time(
 
 Let's take a small subset for plotting.
 
-<<>>=
+<<eval=FALSE>>=
 pred9sub <- subset(pred9, field %in% 1:100)
 pred9sub <- pred9sub[order(pred9sub$field), ]
 pred9sub[pred9sub$ct == 168, c('er', 'j')] <- NA
@@ -545,7 +547,7 @@ pred9sub[pred9sub$ct == 168, c('er', 'j')] <- NA
 
 The last line, setting some observations to \texttt{NA} just makes the plot clearer.
 
-<<>>=
+<<eval=FALSE>>=
 plot(j ~ ct, data = pred9sub, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 @
@@ -553,7 +555,7 @@ plot(j ~ ct, data = pred9sub, type = 'S', log = 'y', col = 'red',
 There are options for improving function speed, but they introduce complexity and increase the possibility of input errors, and so should be avoided unless speed is critical.
 The speed can be slightly improved by eliminating some checks using the \texttt{check} argument.
 
-<<>>=
+<<eval=FALSE>>=
 system.time(
   alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', 
          group = 'field', check = FALSE, warn = FALSE)
@@ -563,14 +565,14 @@ system.time(
 But the improvement is generally trivial.
 With incorporation, the function call tends to be much slower, and there is more room for improvement.
 
-<<>>=
+<<eval=FALSE>>=
 dat9b <- dat9
 dat9b$incorp <- 'shallow'
 dat9b$t.incorp <- 4
 @
 
 
-<<>>=
+<<eval=FALSE>>=
 system.time(
   pred9b <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
                    time.incorp = "t.incorp", group = 'field', 
@@ -583,7 +585,7 @@ This is not a simple process, because incorporation occurs at a particular time,
 Large improvements in speed are possible when these steps are skipped, but doing so requires pre-processing of input data.
 Pre-processing is done with the same \texttt{alfam2} function, but the \texttt{value} argument must be set to \texttt{'incorp'} to get the processed data out.
 
-<<>>=
+<<eval=FALSE>>=
 dat9c <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
                 time.incorp = 't.incorp', group = 'field', 
                 warn = FALSE, value = 'incorp')
@@ -596,7 +598,7 @@ So separating it only saves time if the actual emission predictions are to be ma
 Examples include parameter estimation or cases where other inputs change, e.g., simulations aimed at the effect of changing weather or slurry properties.
 Running the model function to predict emission is now much quicker, because \texttt{prep.incorp} can be set to \texttt{FALSE}.
 
-<<>>=
+<<eval=FALSE>>=
 system.time(
   pred9c <- alfam2(dat9c, app.name = 'TAN.app', time.name = 'ct', 
                    time.incorp = "t.incorp", group = 'field', 
@@ -604,7 +606,7 @@ system.time(
 )
 @
 
-<<>>=
+<<eval=FALSE>>=
 head(pred9b)
 head(pred9c)
 all.equal(pred9b$e, pred9c$e)
