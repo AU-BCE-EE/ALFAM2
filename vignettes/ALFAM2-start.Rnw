@@ -63,7 +63,7 @@ Alternatively, the examples given below may be sufficient.
 \section{Installing the ALFAM2 package}
 Once the ALFAM2 package is on CRAN, it can be installed in the normal way.
 
-<<>>=
+<<eval=FALSE>>=
 install.packages('ALFAM2')
 @
 
