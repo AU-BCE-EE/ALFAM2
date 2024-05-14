@@ -57,7 +57,7 @@ In R, you will need to be able to install and load packages, call functions, and
 For information on these tasks and more, there are many free resources online. 
 CRAN provides various manuals, including a good introduction: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
 Posit (RStudio developers) also provides various materials for learning R, although the focus is skewed toward packages from Posit.
-This book I use for a course on R has some details: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
+This book for a course on R has some details: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
 Alternatively, the examples given below may be sufficient.
 
 \section{Installing the ALFAM2 package}
@@ -433,7 +433,7 @@ All the calls above returned results for a single time per scenario (with the ex
 The \texttt{alfam2} function also predicts dynamics.
 If your interest is final cumulative emission and changes in weather over time are not important, it is not necessary to look at dynamics.
 The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions (e.g., wind or air temperature) are constant.
-However, if detailed temporal weather data are available, running the model with with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
+However, if detailed temporal weather data are available, running the model with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
 Where needed for incorporation calculations, the function will add an interval (row), but these rows are excluded from the results by default (they were returned above by setting the \texttt{add.incorp.rows} argument to \texttt{TRUE}).
 
 Let's assume we have some high resolution measurements of weather conditions with 2 hour intervals.
@@ -762,6 +762,12 @@ preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app',
 preduc2
 @
 
+<<>>=
+preduc2
+@
+
+
+
 \subsection{Data import and export}
 The material in this section is for new R users.
 Any of the results shown above can be exported as with any data frame in R.
@@ -779,7 +785,6 @@ Except for simple scenarios, it is not very efficient to create a data frame for
 A more typical approach will be to read data into R from a file, especially when using the model in association with emission measurements.
 The simplest approach here is to use the \texttt{read.csv()}, \texttt{fread()} or some of the related functions.
 Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
-See the book mentioned above for details.
 
 Note that the \texttt{alfam2()} function can accept data.tables and tibbles.
 But output is always a data frame, which can of course be changed to a data.table or a tibble after the \texttt{alfam2} call.
@@ -925,7 +930,7 @@ pred0 <- alfam2(dat6c, app.name = "TAN.app",
 @
 
 \section*{Acknowledgements}
-Christoph Haeni, Johanna Maria Pedersen, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
+Christoph Haeni, Johanna Maria Pedersen, Frederik Dalby, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
  
 \bibliographystyle{plain}  
 \begin{thebibliography}{1}
