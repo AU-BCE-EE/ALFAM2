@@ -154,7 +154,7 @@ First we need to create a data frame with the input data.
 dat1 <- data.frame(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd = 'bc')
-dat1
+print(dat1)
 ```
 
 Our predictor variable values are in the columns `man.dm` and the following ones.
@@ -180,7 +180,7 @@ We will turn off the warnings in some examples below.
 Let's look at the predictions.
 
 ```{r, }
-pred1
+print(pred1)
 ```
 
 The most interesting columns here are called `e`, which has cumulative emission in the same units as TAN application, and `er`, which has relative cumulative emission, as a fraction of applied TAN.
@@ -202,13 +202,13 @@ Here we are specifying that deep incorporation happens after 0.5 hours.
 ```{r, }
 dat2$incorp <- 'deep'
 dat2$t.incorp <- 0.5
-dat2
+print(dat2)
 ```
 
 ```{r, }
 pred2 <- alfam2(dat2, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
-pred2
+print(pred2)
 ```
 
 Here we see that with incorporation, emission drops to `r round(100 * pred2$er[1])`% of applied TAN.
@@ -218,13 +218,13 @@ Shallow incorporation has less of an effect.
 dat3 <- dat1
 dat3$incorp <- 'shallow'
 dat3$t.incorp <- 0.5
-dat3
+print(dat3)
 ```
 
 ```{r, }
 pred3 <- alfam2(dat3, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
-pred3
+print(pred3)
 ```
 
 ## Multiple scenarios in a single call
@@ -239,7 +239,7 @@ dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50,
                    app.mthd = 'bc',
                    incorp = 'deep',
                    t.incorp = c(0.1, 1, 6, 24, NA))
-dat4
+print(dat4)
 ```
 
 It may seem strange to have a `scenario` column--isn't it clear that each row is a different scenario?
@@ -255,7 +255,7 @@ dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50,
                    app.mthd = 'bc',
                    incorp = c(rep('deep', 4), 'none'),
                    t.incorp = c(0.1, 1, 6, 24, NA))
-dat4
+print(dat4)
 ```
 
 
@@ -265,7 +265,7 @@ Let's run the model for these 5 scenarios.
 pred4 <- alfam2(dat4, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", group = "scenario", 
                    warn = FALSE)
-pred4
+print(pred4)
 ```
 
 We can see that predicted emission increases substantially as incorporation time goes up.
@@ -285,13 +285,13 @@ dat5 <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50,
                    air.temp = c(15, 20, 25),
                    app.mthd = c('bc', 'bsth', 'os')
                    )
-dat5
+print(dat5)
 ```
 
 ```{r, }
 pred5 <- alfam2(dat5, app.name = "TAN.app", time.name = "ctime", 
                    group = "scenario", warn = FALSE)
-pred5
+print(pred5)
 ```
 
 ## Dummy variables
@@ -308,7 +308,7 @@ dat5b <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50,
                    app.mthd.bc = c(TRUE, FALSE, FALSE),
                    app.mthd.os = c(FALSE, FALSE, TRUE)
                    )
-dat5b
+print(dat5b)
 ```
 
 For scenario 2, application method is not explicitly specified, which means it is the default--trailing hose.
@@ -316,7 +316,7 @@ For scenario 2, application method is not explicitly specified, which means it i
 ```{r, }
 pred5b <- alfam2(dat5b, app.name = "TAN.app", time.name = "ctime", 
                     group = "scenario", warn = FALSE)
-pred5b
+print(pred5b)
 all.equal(pred5b$e, pred5$e)
 ```
 
@@ -348,14 +348,14 @@ dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100,
                                   each = 3),
                    incorp = rep(c('None', 'Shallow', 'Deep'), 2),
                    t.incorp = 4)
-dat6
+print(dat6)
 ```
 
 ```{r, }
 pred6 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                 time.incorp = "t.incorp", group = "scenario", 
                 warn = TRUE)
-pred6
+print(pred6)
 ```
 
 Indeed, the incorporation parameters have been used, and the dummy variables all look correct in the output.
@@ -366,7 +366,7 @@ Where needed for incorporation calculations, the function will add extra rows wh
 pred6b <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                  time.incorp = "t.incorp", group = "scenario", 
                  warn = TRUE, add.incorp.rows = TRUE)
-pred6b
+print(pred6b)
 ```
 
 Here we see the expected effects in primary parameters `r3` and `f4` at the incorporation times (`r p <- sub(',(?=[^,]+$)', ' and', paste(i <- which(pred6b$ctime %in% dat6$t.incorp), collapse = ', '), perl = TRUE); if (length(i) > 1) paste('rows', p) else paste('row', p)`).
@@ -642,7 +642,7 @@ predci3 <- alfam2(dat12, pars = alfam2pars03_alpha,
                   app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'man.dm', conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha)
-predci3
+print(predci3)
 ```
 
 
@@ -705,7 +705,7 @@ datuc2 <- data.frame(group = 1, ctime = 168, TAN.app = 50,
 preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
                   time.name = 'ctime', group = 'group',
                   conf.int = 0.9, pars.ci = alfam2pars03var_alpha)
-preduc2
+print(preduc2)
 ```
 
 ```{r, }
