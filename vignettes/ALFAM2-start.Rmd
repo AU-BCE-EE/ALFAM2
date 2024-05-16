@@ -271,7 +271,7 @@ pred4
 We can see that predicted emission increases substantially as incorporation time goes up.
 
 ```{r, }
-plot(dat4$t.incorp, pred4$er, type = 'o')
+barplot(pred4$er, names.arg = paste(dat4$t.incorp), xlab = 't.incorp')
 ```
 
 And incorporation after 24, or really even 6, hours is not much better than no incorporation.
