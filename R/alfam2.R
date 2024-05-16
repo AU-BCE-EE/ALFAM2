@@ -199,7 +199,7 @@ alfam2 <- function(
 
   # Prepare input data (dummy variables)
   if (prep.dum) {
-    dum <- prepDat(dat, value = 'dummy', warn = warn)
+    dum <- prepDat(dat, warn = warn)
     if (!is.null(dum) && nrow(dum) == nrow(dat)) {
       dat <- cbind(dat, dum)
     } else {

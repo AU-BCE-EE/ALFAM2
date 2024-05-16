@@ -10,7 +10,6 @@ prepDat <- function(dat,
                                            cs = c('closed slot injection', 'cs', 'closed-slot injection', 'deep injection', 'nedf\u00E6ldning p\u00E5 sort jord')),
                     incorp.levels = list(shallow = c('shallow', 'harrow'), deep = c('deep', 'plough', 'plow', 'nedbringning')),
                     source.levels = list(pig = c('pig', 'swine', 'svin', 'svinegylle')),
-                    value = 'dummy',
                     all.levels = TRUE,
                     fix.app.rate.ni = TRUE,
                     warn = TRUE
@@ -113,26 +112,14 @@ prepDat <- function(dat,
     }
   }
 
-  if (ndum > 0) {
-    dum <- dat[, 1:ndum + ncc, drop = FALSE]
-    if (value == 'dummy') return(dum)
-  } else {
+  if (ndum == 0) {
     if (warn) {
       warning('Argument prep.dum = TRUE but there are no variables to convert to dummy variables!\n  Ignoring prep.dum = TRUE.') 
     }
     return(NULL)
   }
+  dum <- dat[, 1:ndum + ncc, drop = FALSE]
 
-  return(dat)
+  return(dum)
 }
-
-#dat <- data.frame(ct = 168, app.mthd = c('open slot injection', 'cs', 'bsth'), t.incorp = 12, incorp = c('none', 'shallow', 'deep'), man.source = 'pig')
-#dat
-#prepDat(dat)
-#prepDat(dat, value = 'dat')
-#
-#dat <- data.frame(ct = 168, app.mthd = c('open slot injection', 'cs', 'bsth'), t.incorp = 12, incorp = c('none', 'shallow', 'deep'), man.source = 'pig', app.mthd.cs = FALSE)
-#dat
-#prepDat(dat)
-#prepDat(dat, value = 'dat')
 
