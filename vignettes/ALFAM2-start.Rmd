@@ -303,8 +303,8 @@ For example, we could duplicate the behavior of the call above with the followin
 
 ```{r, }
 dat5b <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
-                   man.dm = 8, air.temp = 15,
-                   wind.2m = 3,
+                   man.dm = 8, wind.2m = 3,
+                   air.temp = c(15, 20, 25),
                    app.mthd.bc = c(TRUE, FALSE, FALSE),
                    app.mthd.os = c(FALSE, FALSE, TRUE)
                    )
