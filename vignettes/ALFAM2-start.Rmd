@@ -83,7 +83,7 @@ The ALFAM2 package includes a single function that is an implementation of the A
 After an explanation of the function, its use is shown in a few examples.
 
 ## Overview of the function
-The `ALFAM2()` function can be used for predicting average volatilization rate and cumulative emission over time.
+The `alfam2()` function can be used for predicting average volatilization rate and cumulative emission over time.
 The function has several arguments, as shown below.
 
 ```{r, }
