@@ -445,7 +445,7 @@ plot(j ~ ctime, data = pred8, type = 'S', log = 'y', col = 'red',
 abline(v = 6.5, col = 'blue', lty = 2)
 ```
 
-The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
+The drop in flux immediately after incorporation is particularly clear in the flux (second) plot.
 
 ## Faster evaluation
 
