@@ -390,8 +390,8 @@ dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8,
                    wind.2m = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
-plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
-plot(wind.2m ~ ctime, data = dat7, type = 'o', col = 'blue')
+plot(air.temp ~ ctime, data = dat7, type = 's', col = 'gray45')
+plot(wind.2m ~ ctime, data = dat7, type = 's', col = 'blue')
 ```
 
 Predictions are made as above.
@@ -405,7 +405,7 @@ pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
 Cumulative emission and average interval flux are plotted below.
 
 ```{r, }
-plot(e ~ ctime, data = pred7, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ctime, data = pred7, type = 's', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 
 plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red', 
@@ -436,7 +436,7 @@ pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
 ```
 
 ```{r, }
-plot(e ~ ctime, data = pred8, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ctime, data = pred8, type = 's', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 abline(v = 6.5, col = 'blue', lty = 2)
 
