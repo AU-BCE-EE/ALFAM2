@@ -708,12 +708,6 @@ preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app',
 print(preduc2)
 ```
 
-```{r, }
-preduc2
-```
-
-
-
 ## Data import and export
 The material in this section is for new R users.
 Any of the results shown above can be exported as with any data frame in R.
