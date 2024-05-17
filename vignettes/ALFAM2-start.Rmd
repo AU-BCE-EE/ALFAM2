@@ -2,7 +2,7 @@
 title: "Getting started with the ALFAM2 package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Getting started with the ALFAM2 package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -83,7 +83,7 @@ The ALFAM2 package includes a single function that is an implementation of the A
 After an explanation of the function, its use is shown in a few examples.
 
 ## Overview of the function
-The `ALFAM2()` function can be used for predicting average volatilization rate and cumulative emission over time.
+The `alfam2()` function can be used for predicting average volatilization rate and cumulative emission over time.
 The function has several arguments, as shown below.
 
 ```{r, }
@@ -154,7 +154,7 @@ First we need to create a data frame with the input data.
 dat1 <- data.frame(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd = 'bc')
-dat1
+print(dat1)
 ```
 
 Our predictor variable values are in the columns `man.dm` and the following ones.
@@ -180,7 +180,7 @@ We will turn off the warnings in some examples below.
 Let's look at the predictions.
 
 ```{r, }
-pred1
+print(pred1)
 ```
 
 The most interesting columns here are called `e`, which has cumulative emission in the same units as TAN application, and `er`, which has relative cumulative emission, as a fraction of applied TAN.
@@ -202,13 +202,13 @@ Here we are specifying that deep incorporation happens after 0.5 hours.
 ```{r, }
 dat2$incorp <- 'deep'
 dat2$t.incorp <- 0.5
-dat2
+print(dat2)
 ```
 
 ```{r, }
 pred2 <- alfam2(dat2, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
-pred2
+print(pred2)
 ```
 
 Here we see that with incorporation, emission drops to `r round(100 * pred2$er[1])`% of applied TAN.
@@ -218,13 +218,13 @@ Shallow incorporation has less of an effect.
 dat3 <- dat1
 dat3$incorp <- 'shallow'
 dat3$t.incorp <- 0.5
-dat3
+print(dat3)
 ```
 
 ```{r, }
 pred3 <- alfam2(dat3, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
-pred3
+print(pred3)
 ```
 
 ## Multiple scenarios in a single call
@@ -239,7 +239,7 @@ dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50,
                    app.mthd = 'bc',
                    incorp = 'deep',
                    t.incorp = c(0.1, 1, 6, 24, NA))
-dat4
+print(dat4)
 ```
 
 It may seem strange to have a `scenario` column--isn't it clear that each row is a different scenario?
@@ -255,7 +255,7 @@ dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50,
                    app.mthd = 'bc',
                    incorp = c(rep('deep', 4), 'none'),
                    t.incorp = c(0.1, 1, 6, 24, NA))
-dat4
+print(dat4)
 ```
 
 
@@ -265,13 +265,13 @@ Let's run the model for these 5 scenarios.
 pred4 <- alfam2(dat4, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", group = "scenario", 
                    warn = FALSE)
-pred4
+print(pred4)
 ```
 
 We can see that predicted emission increases substantially as incorporation time goes up.
 
 ```{r, }
-plot(dat4$t.incorp, pred4$er, type = 'o')
+barplot(pred4$er, names.arg = paste(dat4$t.incorp), xlab = 't.incorp')
 ```
 
 And incorporation after 24, or really even 6, hours is not much better than no incorporation.
@@ -281,17 +281,17 @@ Below, both temperature and application method vary.
 
 ```{r, }
 dat5 <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
-                   man.dm = 8, air.temp = 15,
-                   wind.2m = 3,
+                   man.dm = 8, wind.2m = 3,
+                   air.temp = c(15, 20, 25),
                    app.mthd = c('bc', 'bsth', 'os')
                    )
-dat5
+print(dat5)
 ```
 
 ```{r, }
 pred5 <- alfam2(dat5, app.name = "TAN.app", time.name = "ctime", 
                    group = "scenario", warn = FALSE)
-pred5
+print(pred5)
 ```
 
 ## Dummy variables
@@ -303,12 +303,12 @@ For example, we could duplicate the behavior of the call above with the followin
 
 ```{r, }
 dat5b <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
-                   man.dm = 8, air.temp = 15,
-                   wind.2m = 3,
+                   man.dm = 8, wind.2m = 3,
+                   air.temp = c(15, 20, 25),
                    app.mthd.bc = c(TRUE, FALSE, FALSE),
                    app.mthd.os = c(FALSE, FALSE, TRUE)
                    )
-dat5b
+print(dat5b)
 ```
 
 For scenario 2, application method is not explicitly specified, which means it is the default--trailing hose.
@@ -316,7 +316,7 @@ For scenario 2, application method is not explicitly specified, which means it i
 ```{r, }
 pred5b <- alfam2(dat5b, app.name = "TAN.app", time.name = "ctime", 
                     group = "scenario", warn = FALSE)
-pred5b
+print(pred5b)
 all.equal(pred5b$e, pred5$e)
 ```
 
@@ -336,9 +336,8 @@ Let's check out the incorporation parameters first:
 alfam2pars02[grepl('^incorp', names(alfam2pars02))]
 ```
 
-So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.
-And slurry source is included also.
-To help ensure that incorporation is indeed applied as intended (because the information entered in the data frame is inconsistent for rows 1 and 4, with `incorp` set to `'none'` but `t.incorp` set to `4`, which will not cause problems, but checking is good practice) `warn = TRUE`.
+The following example includes both shallow and deep incorporation combined with trailing hose or broadcast application as well as the slurry source.
+To help ensure that incorporation is indeed applied as intended we set `warn = TRUE` (because the information entered in the data frame is inconsistent for rows 1 and 4, with `incorp` set to `'none'` but `t.incorp` set to `4`, which will not cause problems, but checking is good practice).
 
 ```{r, }
 dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100, 
@@ -349,27 +348,28 @@ dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100,
                                   each = 3),
                    incorp = rep(c('None', 'Shallow', 'Deep'), 2),
                    t.incorp = 4)
-dat6
+print(dat6)
 ```
 
 ```{r, }
 pred6 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                 time.incorp = "t.incorp", group = "scenario", 
                 warn = TRUE)
-pred6
+print(pred6)
 ```
 
 Indeed, the incorporation parameters have been used, and the dummy variables all look correct in the output.
-We could do a more careful check by viewing the times at which incorporation took place.
+We can do a more careful check by viewing the times at which incorporation took place by setting `add.incorp.rows = TRUE`.
+Where needed for incorporation calculations, the function will add extra rows which are excluded from the results by default (they can be returned with the results by setting the `add.incorp.rows` argument to `TRUE`).
 
 ```{r, }
 pred6b <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                  time.incorp = "t.incorp", group = "scenario", 
                  warn = TRUE, add.incorp.rows = TRUE)
-pred6b
+print(pred6b)
 ```
 
-Here we see the expected effects in primary parameters `r3` and `f4` at the incorporation times.
+Here we see the expected effects in primary parameters `r3` and `f4` at the incorporation times (`r p <- sub(',(?=[^,]+$)', ' and', paste(i <- which(pred6b$ctime %in% dat6$t.incorp), collapse = ', '), perl = TRUE); if (length(i) > 1) paste('rows', p) else paste('row', p)`).
 But note that the `f4` mass transfer occurs at the beginning of an interval, and therefore shows up for the 168 h interval in the output, which takes place from 4 to 168 h after slurry application.
 
 ## Volatilization dynamics
@@ -378,7 +378,6 @@ The `alfam2` function also predicts dynamics.
 If your interest is final cumulative emission and changes in weather over time are not important, it is not necessary to look at dynamics.
 The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions (e.g., wind or air temperature) are constant.
 However, if detailed temporal weather data are available, running the model with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
-Where needed for incorporation calculations, the function will add an interval (row), but these rows are excluded from the results by default (they were returned above by setting the `add.incorp.rows` argument to `TRUE`).
 
 Let's assume we have some high resolution measurements of weather conditions with 2 hour intervals.
 We'll create some data to represent this below.
@@ -391,8 +390,8 @@ dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8,
                    wind.2m = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
-plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
-plot(wind.2m ~ ctime, data = dat7, type = 'o', col = 'blue')
+plot(air.temp ~ ctime, data = dat7, type = 's', col = 'gray45')
+plot(wind.2m ~ ctime, data = dat7, type = 's', col = 'blue')
 ```
 
 Predictions are made as above.
@@ -406,7 +405,7 @@ pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
 Cumulative emission and average interval flux are plotted below.
 
 ```{r, }
-plot(e ~ ctime, data = pred7, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ctime, data = pred7, type = 's', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 
 plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red', 
@@ -422,6 +421,7 @@ points(jinst ~ ctime, data = pred7, col = 'blue')
 ```
 
 Dynamics in the case of incorporation may be interesting.
+As mentioned in the previous section, extra intervals (rows) will be added for incorporation calculations. These rows are excluded from the results by default and can be returned with the results by setting the `add.incorp.rows` argument to `TRUE`.
 
 ```{r, }
 dat8 <- dat7
@@ -436,7 +436,7 @@ pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
 ```
 
 ```{r, }
-plot(e ~ ctime, data = pred8, type = 'o', xlab = 'Time (h)', 
+plot(e ~ ctime, data = pred8, type = 's', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 abline(v = 6.5, col = 'blue', lty = 2)
 
@@ -445,7 +445,7 @@ plot(j ~ ctime, data = pred8, type = 'S', log = 'y', col = 'red',
 abline(v = 6.5, col = 'blue', lty = 2)
 ```
 
-The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
+The drop in flux immediately after incorporation is particularly clear in the flux (second) plot.
 
 ## Faster evaluation
 
@@ -642,7 +642,7 @@ predci3 <- alfam2(dat12, pars = alfam2pars03_alpha,
                   app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'man.dm', conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha)
-predci3
+print(predci3)
 ```
 
 
@@ -705,14 +705,8 @@ datuc2 <- data.frame(group = 1, ctime = 168, TAN.app = 50,
 preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
                   time.name = 'ctime', group = 'group',
                   conf.int = 0.9, pars.ci = alfam2pars03var_alpha)
-preduc2
+print(preduc2)
 ```
-
-```{r, }
-preduc2
-```
-
-
 
 ## Data import and export
 The material in this section is for new R users.
