@@ -543,12 +543,14 @@ And note that this pre-processing takes some time.
 So separating it only saves time if the actual emission predictions are to be made multiple times.
 Examples include parameter estimation or cases where other inputs change, e.g., simulations aimed at the effect of changing weather or slurry properties.
 Running the model function to predict emission is now much quicker, because `prep.incorp` can be set to `FALSE`.
+Because we also prepared dummy variables in the call above that created `dat9c`, we should set `prep.dum = FALSE` as well.
 
 ```{r, eval=FALSE}
 system.time(
   pred9c <- alfam2(dat9c, app.name = 'TAN.app', time.name = 'ct', 
                    time.incorp = "t.incorp", group = 'field', 
-                   warn = FALSE, prep.incorp = FALSE, check = FALSE)
+                   warn = FALSE, prep.dum = FALSE, prep.incorp = FALSE, 
+                   check = FALSE)
 )
 ```
 
