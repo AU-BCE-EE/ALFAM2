@@ -370,7 +370,9 @@ print(pred6b)
 ```
 
 Here we see the expected effects in primary parameters `r3` and `f4` at the incorporation times (`r p <- sub(',(?=[^,]+$)', ' and', paste(i <- which(pred6b$ctime %in% dat6$t.incorp), collapse = ', '), perl = TRUE); if (length(i) > 1) paste('rows', p) else paste('row', p)`).
-But note that the `f4` mass transfer occurs at the beginning of an interval, and therefore shows up for the 168 h interval in the output, which takes place from 4 to 168 h after slurry application.
+But note that the `f4` mass transfer occurs at the beginning of an interval, and therefore its effects show up in the row with 168 h in the output.
+This row has results for the interval that starts at the time given in the previous row (or 0, as in scenario 1) and ends at 168 h.
+For the scenarios with incorporation, the parameter values that reflect incorporation effects are present in any intervals that follow incorporation.
 
 ## Volatilization dynamics
 All the calls above returned results for a single time per scenario (with the exception of some incorporation results, but even they were based on a single input row per scenario).
