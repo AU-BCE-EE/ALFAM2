@@ -111,9 +111,6 @@ alfam2 <- function(
       if (warn) {
         warning('You specified values for the center argument for centering means.\n    Only use this option if you know what you are doing and centering means match the parameter set.\n    User-supplied values will replace or extend default values.')
       }
-      # Replace or extend center vector 
-      center_defaults <- eval(formals(alfam2)$center)
-      center <- c(center, center_defaults[!(names(center_defaults) %in% names(center))])
     }
 
     if (!time.name %in% names(dat)) {
@@ -197,9 +194,18 @@ alfam2 <- function(
 
   } # End check skip
 
+  # Extend centering means
+  # Warning if center is changed
+  if (!identical(center, eval(formals(alfam2)$center))) {
+    # Replace or extend center vector 
+    center_defaults <- eval(formals(alfam2)$center)
+    center <- c(center, center_defaults[!(names(center_defaults) %in% names(center))])
+  }
+
+
   # Prepare input data (dummy variables)
   if (prep.dum) {
-    dum <- prepDat(dat, value = 'dummy', warn = warn)
+    dum <- prepDat(dat, warn = warn)
     if (!is.null(dum) && nrow(dum) == nrow(dat)) {
       dat <- cbind(dat, dum)
     } else {
@@ -214,9 +220,13 @@ alfam2 <- function(
   }
 
   # Check for dummy variables problems
-  if (checkDum(dat) == 1) {
-    stop('Dummy variable problem--multiple mututally exclusive dummy variables are 1.\n    Check input data.')
+  if (check && checkDum(dat) != 0) {
+    stop('Dummy variable problem--multiple (suspected) mututally exclusive dummy variables are 1 or TRUE.\n    Check input data.')
   }
+
+  # Set app.rate.ni to 0 for any injection method
+  # app.mthd.os or app.mthd.cs is present and == 1 then app.rate.ni <- 0
+  # check to see if any of these rows have app.rate.ni > 0, if so, warning() and change to 0
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {

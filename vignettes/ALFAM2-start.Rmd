@@ -1,401 +1,345 @@
-%% Next 2 lines needed for non-Sweave vignettes
-%\VignetteEngine{knitr::knitr} 
-%\VignetteIndexEntry{Getting started with the ALFAM2 package}
-%\VignetteKeyword{ALFAM2}
-%\VignetteKeyword{NH3}
-%\VignetteKeyword{slurry}
-%\VignetteKeyword{manure}
-%\VignetteEncoding{UTF-8}
+---
+title: "Getting started with the ALFAM2 package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ALFAM2-start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
-\documentclass{article}
-
-%%\usepackage[version=3]{mhchem} %chemical formulas
-\usepackage[colorlinks = true, urlcolor = blue]{hyperref} % Must be loaded as the last package
-
-<<include=FALSE, cache=FALSE>>=
+```{r, include=FALSE, cache=FALSE}
 library(knitr)
 #opts_chunk$set(cache=FALSE,tidy=FALSE,highlight=FALSE)
+knitr::opts_chunk$set(fig.width=12, fig.height=8, out.width='100%', out.height='100%') 
 opts_chunk$set(cache = FALSE, tidy = FALSE, fig.align = "center")
 library(ALFAM2)
   options(width=65)
-@
+```
 
-\title{Getting started with the ALFAM2 package}
-\author{Sasha D. Hafner (\texttt{sasha.hafner@bce.au.dk})}
-
-\begin{document}
-
-\maketitle
-
-\section{Introduction}
+# Introduction
 The ALFAM2 project is on ammonia volatilization (emission) from field-applied manure, and includes two main products: a database with volatilization measurements and a model for estimating volatilization.
-The model, which is described in detail in \cite{afmod2019}, is the focus of the ALFAM2 R package and this document.
+The model, which is described in detail in Hafner et al. (2019)[^1], is the focus of the ALFAM2 R package and this document.
 The ALFAM2 package is an add-on package for R, which is an environment for statistical computing. 
 With the model, it is possible to predict average volatilization rate and cumulative emission over time, as affected by application method, weather, and manure characteristics.
 This document provides an introduction to the use of the model, and is aimed for users who are new to R.
-Readers with some knowledge of R can skip Section 2.
+Readers with some knowledge of R can skip the next section. 
 
-\subsection{Excel or R?}
+## Excel or R?
 The ALFAM2 model is available in an Excel spreadsheet in addition to the R package that is described in this document.
 For users who would just like to know cumulative emission for a few scenarios with constant conditions, the Excel model is a good choice.
 But to work with many different scenarios, or when weather changes over time (e.g., wind or rain), or if you are interested in emission dynamics and not just final cumulative emission, you should use the R package.
 You can use the ALFAM2 package without much knowledge of R.
 For anyone planning to use the ALFAM2 model extensively, it may be worthwhile to learn a little bit about R and use the ALFAM2 package, instead of the less efficient Excel spreadsheet model.
 
-\section{Some basics for new R users}
+# Some basics for new R users
 The information given in this document should be enough for new R users to install the package and learn enough about R to start using the model (albeit with a lack of understanding about some of the code).
 For a better understanding, check out the sources mentioned below.
 
 To use R it must be installed on your computer.
-You can download R and find installation instructions from here: \url{https://www.r-project.org/}.
+You can download R and find installation instructions from here: <https://www.r-project.org/>.
 And while not required, it is convenient to have a good script editor.
-The RStudio IDE (integrated development environment) is a very popular choice.
-It can be downloaded from here: \url{https://rstudio.com/products/rstudio/download/}.
+The RStudio IDE (integrated development environment) is a popular choice.
+It can be downloaded from here: <https://posit.co/download/rstudio-desktop/>.
 
-To use the ALFAM2 package, you will need to install the package (done once, or every time an updated version is needed), load the package (done once in each R session), and then call up the \texttt{alfam2()} function. 
+To use the ALFAM2 package, you will need to install the package (done once, or every time an updated version is needed), load the package (done once in each R session), and then call up the `alfam2()` function. 
 In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and import and export data to/from file.
 For information on these tasks and more, there are many free resources online. 
-CRAN provides various manuals, including a good introduction: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
+CRAN provides various manuals, including a good introduction: <https://cran.r-project.org/> (select "Manuals" at the lower left).
 Posit (RStudio developers) also provides various materials for learning R, although the focus is skewed toward packages from Posit.
-This book for a course on R has some details: \url{https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners}.
+This book for a course on R has some details: <https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners>.
 Alternatively, the examples given below may be sufficient.
 
-\section{Installing the ALFAM2 package}
+# Installing the ALFAM2 package
 Once the ALFAM2 package is on CRAN, it can be installed in the normal way.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 install.packages('ALFAM2')
-@
-
+```
 
 This is the recommended approach.
 
-The latest and earlier versions of the ALFAM2 package are available from a GitHub repository: \url{https://github.com/sashahafner/ALFAM2}.
-Installation of packages from GitHub requires a package called devtools.
-You can run the code below to install devtools and ALFAM2.
+The latest and earlier versions of the ALFAM2 package are available from a GitHub repository: <https://github.com/AU-BCE-EE/ALFAM2>.
 
-First, install devtools from CRAN.
+Every time you open R to use the ALFAM2 package, it must be loaded.
 
-<<eval=FALSE>>=
-install.packages("devtools")
-@
-
-Then load the package,
-
-<<eval=FALSE>>=
-library(devtools)
-@
-
-and install the ALFAM2 package from GitHub.\footnote{
-  Some additional notes.
-  You need the \texttt{build\_vignettes = TRUE} bit to install this vignette that you are now reading (and any others that may be added in the future).
-  To get the latest version of the package (possible bugs, incomplete testing, and all), add the argument \texttt{ref = "dev"}.
-}
-
-<<eval=FALSE>>=
-install_github("sashahafner/ALFAM2", build_vignettes = TRUE)
-@
-
-Alternatively, to avoid loading devtools, use this syntax.
-
-<<eval=FALSE>>=
-devtools::install_github("sashahafner/ALFAM2", 
-                         build_vignettes = TRUE)
-@
-
-Installation only needs to be carried out once.
-
-Finally, every time you open R to use the ALFAM2 package, it must be loaded.
-
-<<>>=
+```{r, }
 library(ALFAM2)
-@
+```
 
 You can open this vignette with the following call.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 vignette("ALFAM2-start")
-@
+```
 
 To check the version of the installed package, use this:
 
-<<>>=
+```{r, }
 packageVersion("ALFAM2")
-@
+```
 
-\section{The \texttt{alfam2()} function}
-The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: \texttt{alfam2()}.
+# The `alfam2()` function
+The ALFAM2 package includes a single function that is an implementation of the ALFAM2 model: `alfam2()`.
 After an explanation of the function, its use is shown in a few examples.
 
-\subsection{Overview of the function}
-The \texttt{ALFAM2()} function can be used for predicting average volatilization rate and cumulative emission over time.
+## Overview of the function
+The `alfam2()` function can be used for predicting average volatilization rate and cumulative emission over time.
 The function has several arguments, as shown below.
 
-<<>>=
+```{r, }
 args(alfam2)
-@
+```
 
 You can find more details on the arguments (as well as examples) in the help file.
-As with any R function, you can open the file with \texttt{?}:
+As with any R function, you can open the file with `?`:
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 ?alfam2
-@
+```
 
 But the most important arguments are described here.
-Most arguments have default values, and the only one that is required to make predictions is the \texttt{dat} argument, which is a data frame containing some input data, i.e., values of predictor variables and time after slurry application.
-The \texttt{dat} data frame can contain any number of rows (each representing a time interval), but must contain a column with cumulative time in hours, and the name of this column is indicated with \texttt{time.name}.
+Most arguments have default values, and the only one that is required to make predictions is the `dat` argument, which is a data frame containing some input data, i.e., values of predictor variables and time after slurry application.
+The `dat` data frame can contain any number of rows (each representing a time interval), but must contain a column with cumulative time in hours, and the name of this column is indicated with `time.name`.
 Typically the data frame will have predictor variables as well, for example, manure dry matter, application method, air temperature, or wind speed.
-The name of the predictor columns are used to link predictor variables to model parameters, which are set by the \texttt{pars} argument. 
+The name of the predictor columns are used to link predictor variables to model parameters, which are set by the `pars` argument. 
 Usually the default parameter values, based on the measurements in the ALFAM2 database, should be used.
 Predictor variables used in the available default parameter sets and their default names are given in Table 1 below.
 
-\begin{table}[ht!]
-  \caption{Default predictor variables that can be used with \texttt{alfam2()}, as given in the \texttt{alfam2pars02} or \texttt{alfam2pars01} objects.}
-\begin{tabular}{lllll}
-\hline
-Variable name & Description             & Units          & Notes             &  \\
-\hline
-  \texttt{int}           & Intercept terms         & None           &                   &  \\
-  \texttt{app.mthd.os}  & Open slot application   & None (logical) & Binary variable   &  \\
-  \texttt{app.mthd.cs}  & Closed slot application   & None (logical) & Binary variable   &  \\
-  \texttt{app.mthd.bc}  & Broadcast application   & None (logical) & Binary variable   &  \\
-  \texttt{app.mthd.ts}  & Trailing shoe application   & None (logical) & Binary variable   &  \\
-  \texttt{app.rate}      & Manure application rate & t/ha           &                   &  \\
-  \texttt{app.rate.ni}   & Manure app. rate (no inj.) & t/ha           &                   &  \\
-  \texttt{man.dm}        & Manure dry matter       & \%             &                   &  \\
-  \texttt{man.ph}        & Manure pH               & pH units       & For acidification &  \\
-  \texttt{man.source.pig}        & Pig manure    & None (logical)  & Binary variable    &  \\
-\texttt{incorp.deep}    & Deep incorporation      & None (logical) & Binary variable   &  \\
-\texttt{incorp.shallow} & Shallow incorporation   & None (logical) & Binary variable   &  \\
-  \texttt{air.temp}      & Air temperature         & $^\circ$C      &                   &  \\
-  \texttt{wind.2m}       & Wind speed (at 2 m)     & m/s            &                   &  \\
-  \texttt{rain.rate}     & Rainfall rate           & mm/h           &                   &  \\
-  \texttt{rain.cum}      & Cumulative rain         & mm             &                   &  \\
-  \texttt{cereal.hght}      & Cereal height         & cm             &                   &  \\
-\hline
-\end{tabular}
-\end{table}
+| Variable name    | Description                | Units          | Notes             |
+|------------------|----------------------------|----------------|-------------------|
+| `int`            | Intercept terms            | None           |                   |
+| `app.mthd.os`    | Open slot application      | None (logical) | Binary variable   |
+| `app.mthd.cs`    | Closed slot application    | None (logical) | Binary variable   |
+| `app.mthd.bc`    | Broadcast application      | None (logical) | Binary variable   |
+| `app.mthd.ts`    | Trailing shoe application  | None (logical) | Binary variable   |
+| `app.rate`       | Manure application rate    | t/ha           |                   |
+| `app.rate.ni`    | Manure app. rate (no inj.) | t/ha           |                   |
+| `man.dm`         | Manure dry matter          | %             |                   |
+| `man.ph`         | Manure pH                  | pH units       | For acidification |
+| `man.source.pig` | Pig manure                 | None (logical) | Binary variable   |
+| `incorp.deep`    | Deep incorporation         | None (logical) | Binary variable   |
+| `incorp.shallow` | Shallow incorporation      | None (logical) | Binary variable   |
+| `air.temp`       | Air temperature            | $^\circ$C      |                   |
+| `wind.2m`        | Wind speed (at 2 m)        | m/s            |                   |
+| `rain.rate`      | Rainfall rate              | mm/h           |                   |
+| `rain.cum`       | Cumulative rain            | mm             |                   |
+| `cereal.hght`    | Cereal height              | cm             |                   |
 
-Binary variables are dummy variables, and can be created automatically by the \texttt{alfam2} function (see examples below).
-Default model parameters and numeric values in the latest set (currently \texttt{alfam2pars02} object (``Set 2'')) should generally be used. 
-For information on how these values were calculated, see the report on calculation of Danish emission factors \cite{efreport2021} and a later paper \cite{comp2024}.
-(An earlier version (``Set 1'') are available in \texttt{alfam2pars01}. 
-Derivation of these is described in the 2019 paper \cite{afmod2019}.) 
-Comparing the contents of \texttt{alfam2pars02} to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
+Binary variables are dummy variables, and can be created automatically by the `alfam2` function (see examples below).
+Default model parameters and numeric values in the latest set (currently `alfam2pars02` object ("Set 2")) should generally be used. 
+For information on how these values were calculated, see the report on calculation of Danish emission factors[^2] and a later paper[^3].
+(An earlier version ("Set 1") are available in `alfam2pars01`.)
+Derivation of these is described in the 2019 paper listed below.) 
+Comparing the contents of `alfam2pars02` to the variable names given in Table 1, you can see an additional letter and number added to the end of the parameters. 
 
-<<>>=
+```{r, }
 alfam2pars02
-@
+```
 
 These numbers indicate a primary parameter.
-So, for example, the (secondary) parameter \texttt{wind.2m.r1}, which is 0.15 s/m by default, is used in the calculation of the primary parameter $r_1$.
-The most important message here is a simple one: names for predictor variables can be taken from the names given in the default \texttt{pars} argument value, but be sure to omit the last three characters (a ".", a number, and a letter).
+So, for example, the (secondary) parameter `wind.2m.r1`, which is 0.15 s/m by default, is used in the calculation of the primary parameter $r_1$.
+The most important message here is a simple one: names for predictor variables can be taken from the names given in the default `pars` argument value, but be sure to omit the last three characters (a ".", a number, and a letter).
 
-By design, any time a predictor variable is omitted when \texttt{alfam2()} is called, the reference level or value is assumed for that variable.\footnote{
-One exception is \texttt{app.rate.ni}.
-}
-The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in \cite{afmod2019}.
-Predictor values for the default scenario can be found in the \texttt{center} argument.
+By design, any time a predictor variable is omitted when `alfam2()` is called, the reference level or value is assumed for that variable (one exception is `app.rate.ni`).
+The scenario with reference levels for all predictors is the default scenario, and is the one given in the first row of Table 4 in [^1].
+Predictor values for the default scenario can be found in the `center` argument.
 The default application method is trailing hose.
-The \texttt{center} argument is used for centering predictor variables, and this approach facilities the behavior described above.
+The `center` argument is used for centering predictor variables, and this approach facilities the behavior described above.
 
-\subsection{Cumulative emission for a single scenario}
-In this example, let's assume we are interested in broadcast application of manure that has 8\% dry matter (DM), and TAN application of 50 kg/ha. Here wind was 3 m/s, and air temperature 20$^\circ$C.
+## Cumulative emission for a single scenario
+In this example, let's assume we are interested in broadcast application of manure that has 8% dry matter (DM), and TAN application of 50 kg/ha. Here wind was 3 m/s, and air temperature 20$^\circ$C.
 
 First we need to create a data frame with the input data.
-<<>>=
+```{r, }
 dat1 <- data.frame(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd = 'bc')
-dat1
-@
+print(dat1)
+```
 
-Our predictor variable values are in the columns \texttt{man.dm} and the following ones.
+Our predictor variable values are in the columns `man.dm` and the following ones.
 The names for the predictor variables must match those names used in the model parameters, which can be seen by checking the parameter object contents (see just above).
-Here and in most of the example we will let the \texttt{alfam2} function create our application method dummy variable for us by adding a column \texttt{app.mthd = 'bc'}.
-Alternatively, we could use \texttt{app.mthd.bc = TRUE} or \texttt{app.mthd.bc = 1} to add it manually.
-For this example neither approach is clearly easier, but with combinations that include different application methods, it is easier to let the \texttt{alfam2} function do the work, as in the first example above.
-See Section \ref{sec:dummy} for more details.
+Here and in most of the example we will let the `alfam2` function create our application method dummy variable for us by adding a column `app.mthd = 'bc'`.
+Alternatively, we could use `app.mthd.bc = TRUE` or `app.mthd.bc = 1` to add it manually.
+For this example neither approach is clearly easier, but with combinations that include different application methods, it is easier to let the `alfam2` function do the work, as in the first example above.
+See the section on dummy variables for more details.
 
-Time, in hours after application, is given in the column named \texttt{ctime} here, for cumulative time (although any name can be used).
+Time, in hours after application, is given in the column named `ctime` here, for cumulative time (although any name can be used).
 
 And now we can call the model function, using default values for most other arguments.
 We can predict cumulative emission after 7 days (168 hours) with the following call.
 
-<<>>=
+```{r, }
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
-@
+```
 
-The warning messages tell us that the call included some parameters with no associated predictor variables in our data frame given in the \texttt{dat} argument.
+The warning messages tell us that the call included some parameters with no associated predictor variables in our data frame given in the `dat` argument.
 This is discussed more below.
 We will turn off the warnings in some examples below.
 
 Let's look at the predictions.
 
-<<>>=
-pred1
-@
+```{r, }
+print(pred1)
+```
 
-The most interesting columns here are called \texttt{e}, which has cumulative emission in the same units as TAN application, and \texttt{er}, which has relative cumulative emission, as a fraction of applied TAN.
-So in this example, \Sexpr{round(100 * pred1$er, 0)}\% of applied TAN is predicted to be lost by volatilization.
+The most interesting columns here are called `e`, which has cumulative emission in the same units as TAN application, and `er`, which has relative cumulative emission, as a fraction of applied TAN.
+So in this example,  `r round(100 * pred1$er, 0)`% of applied TAN is predicted to be lost by volatilization.
 
 The warning message above is related to an important point: Any excluded predictors are effectively assumed to be at their reference levels.
 
-\subsection{Adding incorporation}
+## Adding incorporation
 To include incorporation of slurry into the soil after application, we need to add a couple columns to our data frame.
 First let's make a new data frame for the example.
 
-<<>>=
+```{r, }
 dat2 <- dat1
-@
+```
 
 And add the two new columns.
 Here we are specifying that deep incorporation happens after 0.5 hours.
 
-<<>>=
+```{r, }
 dat2$incorp <- 'deep'
 dat2$t.incorp <- 0.5
-dat2
-@
+print(dat2)
+```
 
-<<>>=
+```{r, }
 pred2 <- alfam2(dat2, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
-pred2
-@
+print(pred2)
+```
 
-Here we see that with incorporation, emission drops to \Sexpr{round(100 * pred2$er[1])}\% of applied TAN.
+Here we see that with incorporation, emission drops to `r round(100 * pred2$er[1])`% of applied TAN.
 Shallow incorporation has less of an effect.
 
-<<>>=
+```{r, }
 dat3 <- dat1
 dat3$incorp <- 'shallow'
 dat3$t.incorp <- 0.5
-dat3
-@
+print(dat3)
+```
 
-<<>>=
+```{r, }
 pred3 <- alfam2(dat3, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", warn = FALSE)
-pred3
-@
+print(pred3)
+```
 
-\subsection{Multiple scenarios in a single call}
+## Multiple scenarios in a single call
 A single function call can be used for multiple scenarios.
 For example, perhaps we would like to compare 5 different incorporation times.
 First let's create a new data frame that contains the inputs.
-We will need to add a new column with a grouping variable also, to let \texttt{alfam2()} know that each row represents a different scenario.
+We will need to add a new column with a grouping variable also, to let `alfam2()` know that each row represents a different scenario.
 
-<<>>=
+```{r, }
 dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50, 
                    man.dm = 8, air.temp = 20, wind.2m = 4, 
                    app.mthd = 'bc',
                    incorp = 'deep',
                    t.incorp = c(0.1, 1, 6, 24, NA))
-dat4
-@
+print(dat4)
+```
 
-It may seem strange to have a \texttt{scenario} column--isn't it clear that each row is a different scenario?
-The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change (see Section \ref{sec:dynamics}).
+It may seem strange to have a `scenario` column--isn't it clear that each row is a different scenario?
+The answer is no, not when there are multiple time intervals per scenario, for example when one is interested in volatilization rates over time and how they change (see the section on dynamics).
 Also, it is necessary to submit multiple rows per scenario in order to consider changing weather over time.
 Note that there is no incorporation for scenario 5--the last row in the data frame.
-We could also specify this behavior with \texttt{t.incorp = Inf}.
-To be even more clear, we might use the following, although the \texttt{alfam2} function will return the same correct results for either version of the data frame.
+We could also specify this behavior with `t.incorp = Inf`.
+To be even more clear, we might use the following, although the `alfam2` function will return the same (correct) results for either version of the data frame.
 
-<<>>=
+```{r, }
 dat4 <- data.frame(scenario = 1:5, ctime = 168, TAN.app = 50, 
                    man.dm = 8, air.temp = 20, wind.2m = 4, 
                    app.mthd = 'bc',
                    incorp = c(rep('deep', 4), 'none'),
                    t.incorp = c(0.1, 1, 6, 24, NA))
-dat4
-@
+print(dat4)
+```
 
 
 Let's run the model for these 5 scenarios.
 
-<<>>=
+```{r, }
 pred4 <- alfam2(dat4, app.name = "TAN.app", time.name = "ctime", 
                    time.incorp = "t.incorp", group = "scenario", 
                    warn = FALSE)
-pred4
-@
+print(pred4)
+```
 
 We can see that predicted emission increases substantially as incorporation time goes up.
 
-<<>>=
-plot(dat4$t.incorp, pred4$er, type = 'o')
-@
+```{r, }
+barplot(pred4$er, names.arg = paste(dat4$t.incorp), xlab = 't.incorp', ylab = 'er')
+```
 
 And incorporation after 24, or really even 6, hours is not much better than no incorporation.
 
 Scenarios could differ in any way. 
 Below, both temperature and application method vary.
 
-<<>>=
+```{r, }
 dat5 <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
-                   man.dm = 8, air.temp = 15,
-                   wind.2m = 3,
+                   man.dm = 8, wind.2m = 3,
+                   air.temp = c(15, 20, 25),
                    app.mthd = c('bc', 'bsth', 'os')
                    )
-dat5
-@
+print(dat5)
+```
 
-<<>>=
+```{r, }
 pred5 <- alfam2(dat5, app.name = "TAN.app", time.name = "ctime", 
                    group = "scenario", warn = FALSE)
-pred5
-@
+print(pred5)
+```
 
-\subsection{Dummy variables}
-\label{sec:dummy}
+## Dummy variables
 Most of the examples given above include "dummy variables", or multiple binary variables that together represent a factor.
 The package ($\geq$v1.2) includes a helper function to calculate these dummy variables internally, making data entry much simpler (and less error-prone) in some cases.
-The new columns can be seen in the output from the function--for example \texttt{app.mthd.bc} and the similar columns in \texttt{pred5} above.
+The new columns can be seen in the output from the function--for example `app.mthd.bc` and the similar columns in `pred5` above.
 Dummy variables can still be entered manually though.
 For example, we could duplicate the behavior of the call above with the following.
 
-<<>>=
+```{r, }
 dat5b <- data.frame(scenario = 1:3, ctime = 168, TAN.app = 50, 
-                   man.dm = 8, air.temp = 15,
-                   wind.2m = 3,
+                   man.dm = 8, wind.2m = 3,
+                   air.temp = c(15, 20, 25),
                    app.mthd.bc = c(TRUE, FALSE, FALSE),
                    app.mthd.os = c(FALSE, FALSE, TRUE)
                    )
-dat5b
-@
+print(dat5b)
+```
 
 For scenario 2, application method is not explicitly specified, which means it is the default--trailing hose.
 
-<<>>=
+```{r, }
 pred5b <- alfam2(dat5b, app.name = "TAN.app", time.name = "ctime", 
                     group = "scenario", warn = FALSE)
-pred5b
+print(pred5b)
 all.equal(pred5b$e, pred5$e)
-@
+```
 
-Calculated emission is the same as in \texttt{pred5} above, but in \texttt{pred5} we also have the dummy variables returned in the output.
+Calculated emission is the same as in `pred5` above, but in `pred5` we also have the dummy variables returned in the output.
 It is good practice to check these columns to make sure inputs were entered correctly.
 
-This data preparation option invoked by \texttt{prep.dum = TRUE}, which is the default. 
-The \texttt{alfam2} function will automatically add dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
+This data preparation option invoked by `prep.dum = TRUE`, which is the default. 
+The `alfam2` function will automatically add dummy variables for application method, incorporation, and manure source (currently pig is the only level different from the reference).
 For this automatic conversion to take place, column names and factor levels must match the relevant part of the parameter names.
-In the call immediately above, \texttt{app.mthd} matches the beginning of the parameter names \texttt{app.mthd.bc} etc., and the levels \texttt{bc} and \texttt{os} match the final part of these names.
-The level \texttt{th} has no match--it is (correctly) interpreteted as a reference level.
+In the call immediately above, `app.mthd` matches the beginning of the parameter names `app.mthd.bc` etc., and the levels `bc` and `os` match the final part of these names.
+The level `th` has no match--it is (correctly) interpreteted as a reference level.
 
 Here is an example of automatic dummy variable processing with incorporation.
 Let's check out the incorporation parameters first:
 
-<<>>=
+```{r, }
 alfam2pars02[grepl('^incorp', names(alfam2pars02))]
-@
+```
 
-So the following example includes both shallow and deep incorporation combined with trailing hose or broadcast application.
-And slurry source is included also.
-To help ensure that incorporation is indeed applied as intended\footnote{The information entered in the data frame is inconsistent for rows 1 and 4, with \texttt{incorp} set to \texttt{'none'} but \texttt{t.incorp} set to \texttt{4}. The function carries out incorporation only if \textit{both} variables indicate it should.} \texttt{warn = TRUE}.
+The following example includes both shallow and deep incorporation combined with trailing hose or broadcast application as well as the slurry source.
+To help ensure that incorporation is indeed applied as intended we set `warn = TRUE` (because the information entered in the data frame is inconsistent for rows 1 and 4, with `incorp` set to `'none'` but `t.incorp` set to `4`, which will not cause problems, but checking is good practice).
 
-<<>>=
+```{r, }
 dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100, 
                    man.dm = 5, man.ph = 7.2, air.temp = 10, 
                    wind.2m = 2, 
@@ -404,42 +348,43 @@ dat6 <- data.frame(scenario = 1:6, ctime = 168, TAN.app = 100,
                                   each = 3),
                    incorp = rep(c('None', 'Shallow', 'Deep'), 2),
                    t.incorp = 4)
-dat6
-@
+print(dat6)
+```
 
-<<>>=
+```{r, }
 pred6 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                 time.incorp = "t.incorp", group = "scenario", 
                 warn = TRUE)
-pred6
-@
+print(pred6)
+```
 
 Indeed, the incorporation parameters have been used, and the dummy variables all look correct in the output.
-We could do a more careful check by viewing the times at which incorporation took place.
+We can do a more careful check by viewing the times at which incorporation took place by setting `add.incorp.rows = TRUE`.
+Where needed for incorporation calculations, the function will add extra rows which are excluded from the results by default (they can be returned with the results by setting the `add.incorp.rows` argument to `TRUE`).
 
-<<>>=
+```{r, }
 pred6b <- alfam2(dat6, app.name = "TAN.app", time.name = "ctime", 
                  time.incorp = "t.incorp", group = "scenario", 
                  warn = TRUE, add.incorp.rows = TRUE)
-pred6b
-@
+print(pred6b)
+```
 
-Here we see the expected effects in primary parameters \texttt{r3} and \texttt{f4} at the incorporation times.
-But note that the \texttt{f4} mass transfer occurs at the beginning of an interval, and therefore shows up for the 168 h interval in the output, which takes place from 4 to 168 h after slurry application.
+Here we see the expected effects in primary parameters `r3` and `f4` at the incorporation times (`r p <- sub(',(?=[^,]+$)', ' and', paste(i <- which(pred6b$ctime %in% dat6$t.incorp), collapse = ', '), perl = TRUE); if (length(i) > 1) paste('rows', p) else paste('row', p)`).
+But note that the `f4` mass transfer occurs at the beginning of an interval, and therefore its effects show up in the row with 168 h in the output.
+This row has results for the interval that starts at the time given in the previous row (or 0, as in scenario 1) and ends at 168 h.
+For the scenarios with incorporation, the parameter values that reflect incorporation effects are present in any intervals that follow incorporation.
 
-\subsection{Volatilization dynamics}
-\label{sec:dynamics}
+## Volatilization dynamics
 All the calls above returned results for a single time per scenario (with the exception of some incorporation results, but even they were based on a single input row per scenario).
-The \texttt{alfam2} function also predicts dynamics.
+The `alfam2` function also predicts dynamics.
 If your interest is final cumulative emission and changes in weather over time are not important, it is not necessary to look at dynamics.
 The model uses an analytical expression in each interval, and so results are independent of time step size, as long as conditions (e.g., wind or air temperature) are constant.
 However, if detailed temporal weather data are available, running the model with multiple intervals will generally improve the accuracy of prediction of final cumulative emission.
-Where needed for incorporation calculations, the function will add an interval (row), but these rows are excluded from the results by default (they were returned above by setting the \texttt{add.incorp.rows} argument to \texttt{TRUE}).
 
 Let's assume we have some high resolution measurements of weather conditions with 2 hour intervals.
 We'll create some data to represent this below.
 
-<<>>=
+```{r, }
 set.seed(1201)
 dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
@@ -447,70 +392,71 @@ dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8,
                    wind.2m = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
-plot(air.temp ~ ctime, data = dat7, type = 'o', col = 'gray45')
-plot(wind.2m ~ ctime, data = dat7, type = 'o', col = 'blue')
-@
+plot(air.temp ~ ctime, data = dat7, type = 's', col = 'gray45')
+plot(wind.2m ~ ctime, data = dat7, type = 's', col = 'blue')
+```
 
 Predictions are made as above.
-By default, multiple rows in \texttt{dat} are assumed to all belog to the same scenario (same plot, same emission trial).\footnote{This is the reason the \texttt{group} argument was needed above.}
+By default, multiple rows in `dat` are assumed to all belog to the same scenario (same plot, same emission trial) (this is the reason the `group` argument was needed above).
 
-<<>>=
+```{r, }
 pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
                    warn = FALSE)
-@
+```
 
 Cumulative emission and average interval flux are plotted below.
 
-<<>>=
-plot(e ~ ctime, data = pred7, type = 'o', xlab = 'Time (h)', 
+```{r, }
+plot(e ~ ctime, data = pred7, type = 's', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 
 plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
-@
+```
 
-Note that instantaneous flux (\texttt{jinst}) will always be lower than interval average flux when flux monotonically decreases over time.
+Note that instantaneous flux (`jinst`) will always be lower than interval average flux when flux monotonically decreases over time.
 
-<<>>=
+```{r, }
 plot(j ~ ctime, data = pred7, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 points(jinst ~ ctime, data = pred7, col = 'blue')
-@
+```
 
 Dynamics in the case of incorporation may be interesting.
+As mentioned in the previous section, extra intervals (rows) will be added for incorporation calculations. These rows are excluded from the results by default and can be returned with the results by setting the `add.incorp.rows` argument to `TRUE`.
 
-<<>>=
+```{r, }
 dat8 <- dat7
 dat8$incorp <- "deep"
 dat8$t.incorp <- 6.5
-@
+```
 
-<<>>=
+```{r, }
 pred8 <- alfam2(dat8, app.name = 'TAN.app', time.name = 'ctime',
                 time.incorp = 't.incorp', warn = FALSE, 
                 add.incorp.rows = TRUE)
-@
+```
 
-<<>>=
-plot(e ~ ctime, data = pred8, type = 'o', xlab = 'Time (h)', 
+```{r, }
+plot(e ~ ctime, data = pred8, type = 's', xlab = 'Time (h)', 
      ylab = 'Cumulative emission (kg/ha)')
 abline(v = 6.5, col = 'blue', lty = 2)
 
 plot(j ~ ctime, data = pred8, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
 abline(v = 6.5, col = 'blue', lty = 2)
-@
+```
 
-The drop in flux immediately after incorportaion is particularly clear in the flux (second) plot.
+The drop in flux immediately after incorporation is particularly clear in the flux (second) plot.
 
-\subsection{Faster evaluation}
+## Faster evaluation
 
-The \texttt{alfam2} function is not particularly slow, but its speed can become limiting when applied to many individual scenarios or with very high resolution input data.
+The `alfam2` function is not particularly slow, but its speed can become limiting when applied to many individual scenarios or with very high resolution input data.
 For example, we can create some fake input data for 1000 different agricultural fields.
 (These examples are not run during vignette building to avoid excessive check times.
 But readers can copy/paste them into R to see results.)
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 set.seed(0812)
 dat9 <- expand.grid(field = 1:1000, ct = 1:168, 
                     TAN.app = 100, man.dm = 8, 
@@ -523,101 +469,103 @@ dat9$air.temp <- 7 + 7*sin(dat9$ct * 2 * pi / 24) +
 dat9$wind.2m <- 10^(0.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24) + 
                 rnorm(1000, 0, 0.1))
 dat9 <- dat9[order(dat9$field, dat9$ct), ]
-@
+```
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 head(dat9)
 dim(dat9)
-@
+```
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 system.time(
   pred9 <- alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', 
                   group = 'field', warn = FALSE)
 )
-@
+```
 
 Let's take a small subset for plotting.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 pred9sub <- subset(pred9, field %in% 1:100)
 pred9sub <- pred9sub[order(pred9sub$field), ]
 pred9sub[pred9sub$ct == 168, c('er', 'j')] <- NA
-@
+```
 
-The last line, setting some observations to \texttt{NA} just makes the plot clearer.
+The last line, setting some observations to `NA` just makes the plot clearer.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 plot(j ~ ct, data = pred9sub, type = 'S', log = 'y', col = 'red', 
      xlab = 'Time (h)', ylab = 'Average flux (kg/ha-h)')
-@
+```
 
 There are options for improving function speed, but they introduce complexity and increase the possibility of input errors, and so should be avoided unless speed is critical.
-The speed can be slightly improved by eliminating some checks using the \texttt{check} argument.
+The speed can be slightly improved by eliminating some checks using the `check` argument.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 system.time(
   alfam2(dat9, app.name = 'TAN.app', time.name = 'ct', 
          group = 'field', check = FALSE, warn = FALSE)
 )
-@
+```
 
 But the improvement is generally trivial.
 With incorporation, the function call tends to be much slower, and there is more room for improvement.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 dat9b <- dat9
 dat9b$incorp <- 'shallow'
 dat9b$t.incorp <- 4
-@
+```
 
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 system.time(
   pred9b <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
                    time.incorp = "t.incorp", group = 'field', 
                    warn = FALSE)
 )
-@
+```
 
 The issue is preparation of incorporation inputs and determination of parameters.
 This is not a simple process, because incorporation occurs at a particular time, which may not correspond to a row in the input data, and may differ among locations.
 Large improvements in speed are possible when these steps are skipped, but doing so requires pre-processing of input data.
-Pre-processing is done with the same \texttt{alfam2} function, but the \texttt{value} argument must be set to \texttt{'incorp'} to get the processed data out.
+Pre-processing is done with the same `alfam2` function, but the `value` argument must be set to `'incorp'` to get the processed data out.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 dat9c <- alfam2(dat9b, app.name = 'TAN.app', time.name = 'ct', 
                 time.incorp = 't.incorp', group = 'field', 
                 warn = FALSE, value = 'incorp')
 head(dat9c)
-@
+```
 
 Note the new, somewhat strange, columns that have been added.
 And note that this pre-processing takes some time.
 So separating it only saves time if the actual emission predictions are to be made multiple times.
 Examples include parameter estimation or cases where other inputs change, e.g., simulations aimed at the effect of changing weather or slurry properties.
-Running the model function to predict emission is now much quicker, because \texttt{prep.incorp} can be set to \texttt{FALSE}.
+Running the model function to predict emission is now much quicker, because `prep.incorp` can be set to `FALSE`.
+Because we also prepared dummy variables in the call above that created `dat9c`, we should set `prep.dum = FALSE` as well.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 system.time(
   pred9c <- alfam2(dat9c, app.name = 'TAN.app', time.name = 'ct', 
                    time.incorp = "t.incorp", group = 'field', 
-                   warn = FALSE, prep.incorp = FALSE, check = FALSE)
+                   warn = FALSE, prep.dum = FALSE, prep.incorp = FALSE, 
+                   check = FALSE)
 )
-@
+```
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 head(pred9b)
 head(pred9c)
 all.equal(pred9b$e, pred9c$e)
-@
+```
 
-\subsection{Confidence intervals}
+## Confidence intervals
 
-The \texttt{alfam2()} function can generate confidence intervals if given multiple parameter sets that themselves represent the distribution of possible parameter values.
+The `alfam2()` function can generate confidence intervals if given multiple parameter sets that themselves represent the distribution of possible parameter values.
 The package now includes a draft collection of such parameters.
 
-<<>>=
+```{r, }
 set.seed(2609)
 dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
@@ -626,264 +574,258 @@ dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8,
                               rnorm(85, 0, 0.12)), 
                    app.mthd = "bc")
 
-@
+```
 
 
 Here is a normal call without confidence intervals (CI).
 
-<<>>=
+```{r, }
 pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
                    warn = FALSE)
 head(pred7)
-@
+```
 
 
 
-Confidence intervals (CI) can be added by specifying a confidence level for the \texttt{conf.int} argument.
+Confidence intervals (CI) can be added by specifying a confidence level for the `conf.int` argument.
 By default, a set of bootstrap parameters will be used.
 
-<<>>=
+```{r, }
 predci1 <- alfam2(dat7, pars = alfam2pars03_alpha, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   warn = FALSE, conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha)
 head(predci1)
-@
+```
 
 Confidence limits are given in the output with `.lwr` and `.upr` suffixes (for lower and upper).
 By default CI are only returned for variable `er` = relative cumulative emission.
 
-<<>>=
+```{r, }
 plot(er ~ ctime, data = predci1, type = 'l', 
      ylim = c(0, max(predci1$er.upr)))
 lines(er.lwr ~ ctime, data = predci1, type = 'l', col = 'blue')
 lines(er.upr ~ ctime, data = predci1, type = 'l', col = 'red')
-@
+```
 
 These results come with some warnings.
 Only uncertainty based on variability in measurements is included; error in model structure or effects of the specific approach used for parameter estimation are not considered.
 Still, the 90\% CI generated with default bootstrap parameter sets is quite wide.
 Furthermore, estimates are incomplete for any scenarios that include incorporation or closed slot injection, since the parameter estimation observations with these came from a small number of institutions.
 
-We can add any output variables for CI calculation, but internally the \texttt{quantile} function is applied by variable, so the limits returned from different variables may be from different parameter sets and so should be considered separately.
-(Alternatively, all results from the \texttt{pars.ci} can be returned for external data processing by setting \texttt{conf.int = 'all'}.)
-Use the \texttt{var.ci} argument to specify variables.
+We can add any output variables for CI calculation, but internally the `quantile` function is applied by variable, so the limits returned from different variables may be from different parameter sets and so should be considered separately.
+(Alternatively, all results from the `pars.ci` can be returned for external data processing by setting `conf.int = 'all'`.)
+Use the `var.ci` argument to specify variables.
 Here we request 3 variables.
 
-<<>>=
+```{r, }
 predci2 <- alfam2(dat7, pars = alfam2pars03_alpha, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   warn = FALSE, conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha, 
                   var.ci = c('er', 'j', 'r1'))
 head(predci2)
-@
+```
 
-Note that times with any \texttt{NaN} etc. in one of \texttt{var.ci} columns will be dropped before applying the \texttt{quantile()} function.
-So here all \texttt{lwr} and \texttt{upr} limits are \texttt{NA} for time = 0 h because \texttt{j} is \texttt{-Inf}.
+Note that times with any `NaN` etc. in one of `var.ci` columns will be dropped before applying the `quantile()` function.
+So here all `lwr` and `upr` limits are `NA` for time = 0 h because `j` is `-Inf`.
 
 Confidence intervals can be applied to different groups as well.
 Here is a demonstration where dry matter varies between groups.
 
-<<>>=
+```{r, }
 dat12 <- data.frame(ctime = 168, TAN.app = 50, 
                     app.mthd = 'bc', 
                     man.dm = 1:10, air.temp = 20, wind.2m = 4) 
-@
+```
 
 
-<<>>=
+```{r, }
 
 predci3 <- alfam2(dat12, pars = alfam2pars03_alpha, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'man.dm', conf.int = 0.90, 
                   pars.ci = alfam2pars03var_alpha)
-predci3
-@
+print(predci3)
+```
 
 
-<<>>=
+```{r, }
 plot(dat12$man.dm, predci3$er, type = 'o', 
      ylim = c(0, max(predci3$er.upr)))
 lines(dat12$man.dm, predci3$er.lwr, col = 'blue')
 lines(dat12$man.dm, predci3$er.upr, col = 'blue')
-@
+```
 
-By default the model is run with all the different parameter sets provided in \texttt{pars.ci}, which is 100 in the default bootstrap parameter object.
+By default the model is run with all the different parameter sets provided in `pars.ci`, which is 100 in the default bootstrap parameter object.
 
-<<>>=
+```{r, }
 dim(alfam2pars03var_alpha)
-@
+```
 
-It is possible to reduce the number used with the \texttt{n.ci} argument.
+It is possible to reduce the number used with the `n.ci` argument.
 
 It may be convenient to combine uncertainty in parameter estimates with uncertainty in model inputs.
-For this, the \texttt{dat} input data frame must have values that reflect input variable uncertainty.
+For this, the `dat` input data frame must have values that reflect input variable uncertainty.
 For example, suppose we know that in a particular slurry application event dry matter uncertainty was 2\% of fresh mass as a standard deviation.
 
-<<>>=
+```{r, }
 datuc1 <- data.frame(group = 1:100, ctime = 168, TAN.app = 50, 
                      app.mthd = 'bc', 
                      man.dm = rnorm(100, mean = 8, sd = 2), 
                      air.temp = 20, wind.2m = 3)
 quantile(datuc1$man.dm)
-@
+```
 
 In this case, we want to get results for all bootstrap parameter sets, not just the quantiles for the confidence intervals.
-We can get these by setting \texttt{conf.int = 'all'}.
+We can get these by setting `conf.int = 'all'`.
 
-<<>>=
+```{r, }
 preduc1 <- alfam2(datuc1, pars = alfam2pars03_alpha, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'group', conf.int = 'all', 
                   pars.ci = alfam2pars03var_alpha)
 head(preduc1)
 dim(preduc1)
-@
+```
 
 The output has 10000 rows.
-And then, for a 90\% confidence interval that includes uncertainty in both inputs (only dry matter here) and parameters, we can use \texttt{quatile()}:
+And then, for a 90\% confidence interval that includes uncertainty in both inputs (only dry matter here) and parameters, we can use `quatile()`:
 
-<<>>=
+```{r, }
 quantile(preduc1$er, c(0.05, 0.95))
-@
+```
 
 Compare this to the confidence interval based on parameter uncertainty only.
 
-<<>>=
+```{r, }
 datuc2 <- data.frame(group = 1, ctime = 168, TAN.app = 50, 
                      app.mthd = 'bc', 
                      man.dm = 8,
                      air.temp = 20, wind.2m = 3)
-@
+```
 
-<<>>=
+```{r, }
 preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
                   time.name = 'ctime', group = 'group',
                   conf.int = 0.9, pars.ci = alfam2pars03var_alpha)
-preduc2
-@
+print(preduc2)
+```
 
-<<>>=
-preduc2
-@
-
-
-
-\subsection{Data import and export}
+## Data import and export
 The material in this section is for new R users.
 Any of the results shown above can be exported as with any data frame in R.
-The simplest function for this is \texttt{write.csv()}.
-The CRAN manuals mentioned above include one on import and export: \url{https://cran.r-project.org/} (select "Manuals" at the lower left).
+The simplest function for this is `write.csv()`.
+The CRAN manuals mentioned above include one on import and export: <https://cran.r-project.org/> (select "Manuals" at the lower left).
 The following call will create a comma delimited text file that can be opened with spreadsheet or text editor programs.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 write.csv(pred7, 'pred7.csv', row.names = FALSE)
-@
+```
 
-Alternatives include \texttt{write.csv2}, \texttt{write.table}, and for users of the data.table package, \texttt{fwrite}, along with any of the various functions in add-on packages for writing to Excel files.
+Alternatives include `write.csv2`, `write.table`, and for users of the data.table package, `fwrite`, along with any of the various functions in add-on packages for writing to Excel files.
 
 Except for simple scenarios, it is not very efficient to create a data frame for entering predictor variable values.
 A more typical approach will be to read data into R from a file, especially when using the model in association with emission measurements.
-The simplest approach here is to use the \texttt{read.csv()}, \texttt{fread()} or some of the related functions.
-Alternatively, data can be easily read from Excel files with the \texttt{read\_xls} and related functions in the readxl package.
+The simplest approach here is to use the `read.csv()`, `fread()` or some of the related functions.
+Alternatively, data can be easily read from Excel files with the `read\_xls` and related functions in the readxl package.
 
-Note that the \texttt{alfam2()} function can accept data.tables and tibbles.
-But output is always a data frame, which can of course be changed to a data.table or a tibble after the \texttt{alfam2} call.
+Note that the `alfam2()` function can accept data.tables and tibbles.
+But output is always a data frame, which can of course be changed to a data.table or a tibble after the `alfam2` call.
 You can see this by running the code below.
 It is not run here in the vignette because not all users will have the necessary packages installed.
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 library(data.table)
 library(ALFAM2)
 dat1b <- data.table(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd = 'bc')
 dat1b
-@
+```
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime')
 pred1b
 class(pred1b)
 setDT(pred1b)
 class(pred1b)
-@
+```
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 library(tibble)
 dat1c <- tibble(ctime = 168, TAN.app = 50, man.dm = 8, 
                    air.temp = 20, wind.2m = 3, 
                    app.mthd.bc = TRUE)
 dat1c
 class(dat1c)
-@
+```
 
-<<eval=FALSE>>=
+```{r, eval=FALSE}
 pred1c <- alfam2(dat1c, app.name = 'TAN.app', time.name = 'ctime')
 class(pred1c)
 pred1c <- as_tibble(pred1c)
 class(pred1c)
-@
+```
 
 
-\subsection{Warnings and error messages}
-The \texttt{alfam2()} function will return errors or warnings for some cases of problems with input data.
+## Warnings and error messages
+The `alfam2()` function will return errors or warnings for some cases of problems with input data.
 The intent of these is to make it easy for users to understand and fix problems with a call or the predictor variable data frame.
 A few are shown here.
-Some checks can be skipped by setting \texttt{check = FALSE}, but doing so increases the risk of getting an unhelpful error message, or worse, overlooking a mistake and proceeding with incorrect output.
-Some warnings can be surpressed with \texttt{warn = FALSE} in order to avoid cluttering up the console or a log or dynamic report.
+Some checks can be skipped by setting `check = FALSE`, but doing so increases the risk of getting an unhelpful error message, or worse, overlooking a mistake and proceeding with incorrect output.
+Some warnings can be surpressed with `warn = FALSE` in order to avoid cluttering up the console or a log or dynamic report.
 But users should be careful here also.
 
-The calls above already demonstrate the information on missing predictor variables (which can be supressed by setting \texttt{warn = FALSE}).
+The calls above already demonstrate the information on missing predictor variables (which can be supressed by setting `warn = FALSE`).
 
 Missing values in predictors:
-<<error=TRUE>>=
+```{r, error=TRUE}
 dat6b <- dat6
 dat6b[3, 'wind.2m'] <- NA
 
 alfam2(dat6b, app.name = "TAN.app", time.name = "ctime", 
        time.incorp = "t.incorp", group = "scenario", 
        check = TRUE, warn = FALSE)
-@
+```
 
 The printed messages identify which variables and which rows are missing.
 
 Using the wrong names when referring to a column:
-<<error=TRUE>>=
+```{r, error=TRUE}
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = "t.incorp", group = "scenario")
-@
+```
 
 Negative time in input data:
-<<error=TRUE>>=
+```{r, error=TRUE}
 dat6c <- dat6
 dat6c[1, 'ctime'] <- -10
 
 pred0 <- alfam2(dat6c, app.name = "TAN.app", time.name = "ctime", 
        time.incorp = "t.incorp", group = "scenario", warn = TRUE)
-@
+```
 
 Trying to use dummy variable prep when it isn't needed:
-<<error=TRUE>>=
+```{r, error=TRUE}
 dat7 <- data.frame(ctime = 1:10, TAN.app = 100)
 pred0 <- alfam2(dat7, app.name = "TAN.app", time.name = "ctime")
-@
+```
 
 Using an external parameter set (better know what you are doing, not like the example below!):
 
-<<error=TRUE>>=
+```{r, error=TRUE}
 pred0 <- alfam2(dat6, pars = c(int.f0 = -1, int.r1 = 0), app.name = "TAN.app", 
                 time.name = "ctime", time.incorp = "t.incorp", 
                 group = "scenario")
-@
+```
 
 Note the additional warning about incorporation.
 
-With \texttt{check = TRUE} the \texttt{alfam2} function checks that all arguments are the right type, and in some cases, contain acceptable values.
+With check = TRUE} the `alfam2` function checks that all arguments are the right type, and in some cases, contain acceptable values.
 For example, 
 
-<<error=TRUE>>=
+```{r, error=TRUE}
 alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = TRUE, group = "scenario")
 
@@ -892,69 +834,53 @@ alfam2(dat6, app.name = 95, time.name = "ctim",
 
 alfam2(c(ct = 10, man.dm = 2), app.name = 'TAN.app', time.name = "ctim", 
        time.incorp = 6, group = "scenario")
-@
+```
 
 Resulting messages are helpful for identifying problems.
 Without these checks, the function would typically still return an error, but with a nearly useless message (or worse, incorrect output).
 For example,
 
-<<error=TRUE>>=
+```{r, error=TRUE}
 alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = TRUE, group = "scenario", check = FALSE)
-@
+```
 
 Other examples include the following.
 
 Unavailable options.
 
-<<error=TRUE>>=
+```{r, error=TRUE}
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
                 time.incorp = "t.incorp", group = "scenario", 
                 value = "something else")
-@
+```
 
 Empty input data frame.
 
-<<error=TRUE>>=
+```{r, error=TRUE}
 datnull <- data.frame()
 pred0 <- alfam2(datnull, app.name = "TAN.app", time.name = "ctim", 
                 time.incorp = "t.incorp", group = "scenario") 
-@
+```
 
 Using reserved names.
 
-<<error=TRUE>>=
+```{r, error=TRUE}
 dat6c <- dat6
 dat6c$"__r1" <- 0
 pred0 <- alfam2(dat6c, app.name = "TAN.app", 
                 time.name = "ctime", time.incorp = "t.incorp", 
                 group = "scenario")
-@
+```
 
-\section*{Acknowledgements}
+# Acknowledgements
 Christoph Haeni, Johanna Maria Pedersen, Frederik Dalby, and Anders Peter Adamsen provided helpful suggestions and identified errors in earlier drafts of this vignette. Thank you!
- 
-\bibliographystyle{plain}  
-\begin{thebibliography}{1}
 
-\bibitem{afmod2019}
-Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G.
-\newblock A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. 
-\newblock {\em Atmospheric Environment}, 199:474-484, 2018.
-\newblock \url{https://doi.org/10.1016/j.atmosenv.2018.11.034}
+# References
+[^1]: Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. *Atmospheric Environment*, 199:474-484, 2018. <https://doi.org/10.1016/j.atmosenv.2018.11.034>
 
-\bibitem{comp2024}
-Hafner, S.D., Kamp, J.N., Pedersen, J.
-\newblock Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. 
-\newblock {\em Agricultural and Forest Meteorology}, 344, 109790, 2024. 
-\newblock \url{https://doi.org/10.1016/j.agrformet.2023.109790}
+[^2]: Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. <https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf>
 
-\bibitem{efreport2021}
-Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. 
-\newblock Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. 
-\newblock Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. 
-\newblock \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
+[^3]: Hafner, S.D., Kamp, J.N., Pedersen, J. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. *Agricultural and Forest Meteorology*, 344, 109790, 2024. <https://doi.org/10.1016/j.agrformet.2023.109790>
 
-\end{thebibliography}
-\end{document}
 
