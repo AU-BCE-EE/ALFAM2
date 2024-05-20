@@ -2,7 +2,7 @@
 title: "Getting started with the ALFAM2 package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ALFAM2-start}
+  %\VignetteIndexEntry{Getting started with the ALFAM2 package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

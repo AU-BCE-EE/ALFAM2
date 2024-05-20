@@ -3,7 +3,7 @@ Model for ammonia volatilization (loss) from field-applied manure.
 
 # Maintainer
 Sasha D. Hafner.
-Contact information here: <https://au.dk/sasha.hafner@bce.au.dk>.
+Contact information here: <https://www.au.dk/vis/person/sasha.hafner@bce.au.dk>.
 
 # Installation
 Installation of packages from GitHub requires a package called devtools.

@@ -267,15 +267,9 @@ alfam2(
 \author{
 Sasha D. Hafner, Christoph Haeni, Roland Fuss
 }
-\note{
-%%  ~~further notes~~
-}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 # Example 1
 # Create predictor variable data
