@@ -34,7 +34,7 @@ function(p, dat, tr = 'log10', upr = Inf, warn = TRUE) {
 
 logistic <-
 function (x) {
-  exp(x)/(1 + exp(x))
+  1 / (1 + exp(-x))
 }
 
 logit <-
