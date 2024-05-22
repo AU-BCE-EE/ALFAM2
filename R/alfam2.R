@@ -226,7 +226,8 @@ alfam2 <- function(
 
   # Set app.rate.ni to 0 for any injection method
   # check to see if any of these rows have app.rate.ni > 0, if so, warning() and change to 0
-  if (check && any(c('app.mthd.os', 'app.mthd.cs') %in% names(dat)) && 'app.rate.ni' %in% names(dat)) {
+  if (check && any(c('app.mthd.os', 'app.mthd.cs') %in% names(dat)) && 'app.rate.ni' %in% names(dat) && 
+      any(dat[rowSums(abs(dat[, grepl('app.mthd.[oc]s', names(dat))])) > 0, 'app.rate.ni'] > 0)) {
     # abs() included below just in case there is somehow a negative value (should never occur, but user could do it manually)
     dat[rowSums(abs(dat[, grepl('app.mthd.[oc]s', names(dat))])) > 0, 'app.rate.ni'] <- 0
     if (warn) {
