@@ -225,8 +225,14 @@ alfam2 <- function(
   }
 
   # Set app.rate.ni to 0 for any injection method
-  # app.mthd.os or app.mthd.cs is present and == 1 then app.rate.ni <- 0
   # check to see if any of these rows have app.rate.ni > 0, if so, warning() and change to 0
+  if (check && any(c('app.mthd.os', 'app.mthd.cs') %in% names(dat)) && 'app.rate.ni' %in% names(dat)) {
+    # abs() included below just in case there is somehow a negative value (should never occur, but user could do it manually)
+    dat[rowSums(abs(dat[, grepl('app.mthd.[oc]s', names(dat))])) > 0, 'app.rate.ni'] <- 0
+    if (warn) {
+      warning('Input data dat had application rate app.rate.ni > 0 for injection application methods app.mthd.os or app.mthd.cs.\n    But app.rate.ni should not affect emissions from injection\n   (ni = no injection), so app.rate.ni was set to 0 for these rows.')
+    }
+  }
 
   # If there is no grouping variable, add one to simplify code below (only one set, for groups)
   if(is.null(group)) {
