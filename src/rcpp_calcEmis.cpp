@@ -36,7 +36,7 @@ List rcpp_calcEmis(const NumericVector cta, const NumericVector F0a,
     double femis, semis;
     double Fti, Sti;
     double F, S, E;
-    double r1, r2, r3, f4, r5, rf, rs, rd;
+    double r1, r2, r3, f4, rf, rs, rd;
     double ddt;
     
     for (R_xlen_t i = 0; i < gl; ++i) {
