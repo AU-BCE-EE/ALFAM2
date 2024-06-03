@@ -591,10 +591,10 @@ Confidence intervals (CI) can be added by specifying a confidence level for the 
 By default, a set of bootstrap parameters will be used.
 
 ```{r, }
-predci1 <- alfam2(dat7, pars = alfam2pars03_alpha, 
+predci1 <- alfam2(dat7, pars = alfam2pars03, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   warn = FALSE, conf.int = 0.90, 
-                  pars.ci = alfam2pars03var_alpha)
+                  pars.ci = alfam2pars03var)
 head(predci1)
 ```
 
@@ -619,10 +619,10 @@ Use the `var.ci` argument to specify variables.
 Here we request 3 variables.
 
 ```{r, }
-predci2 <- alfam2(dat7, pars = alfam2pars03_alpha, 
+predci2 <- alfam2(dat7, pars = alfam2pars03, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   warn = FALSE, conf.int = 0.90, 
-                  pars.ci = alfam2pars03var_alpha, 
+                  pars.ci = alfam2pars03var, 
                   var.ci = c('er', 'j', 'r1'))
 head(predci2)
 ```
@@ -642,10 +642,10 @@ dat12 <- data.frame(ctime = 168, TAN.app = 50,
 
 ```{r, }
 
-predci3 <- alfam2(dat12, pars = alfam2pars03_alpha, 
+predci3 <- alfam2(dat12, pars = alfam2pars03, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'man.dm', conf.int = 0.90, 
-                  pars.ci = alfam2pars03var_alpha)
+                  pars.ci = alfam2pars03var)
 print(predci3)
 ```
 
@@ -660,7 +660,7 @@ lines(dat12$man.dm, predci3$er.upr, col = 'blue')
 By default the model is run with all the different parameter sets provided in `pars.ci`, which is 100 in the default bootstrap parameter object.
 
 ```{r, }
-dim(alfam2pars03var_alpha)
+dim(alfam2pars03var)
 ```
 
 It is possible to reduce the number used with the `n.ci` argument.
@@ -681,10 +681,10 @@ In this case, we want to get results for all bootstrap parameter sets, not just 
 We can get these by setting `conf.int = 'all'`.
 
 ```{r, }
-preduc1 <- alfam2(datuc1, pars = alfam2pars03_alpha, 
+preduc1 <- alfam2(datuc1, pars = alfam2pars03, 
                   app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'group', conf.int = 'all', 
-                  pars.ci = alfam2pars03var_alpha)
+                  pars.ci = alfam2pars03var)
 head(preduc1)
 dim(preduc1)
 ```
@@ -706,9 +706,9 @@ datuc2 <- data.frame(group = 1, ctime = 168, TAN.app = 50,
 ```
 
 ```{r, }
-preduc2 <- alfam2(datuc2, pars = alfam2pars03_alpha, app.name = 'TAN.app', 
+preduc2 <- alfam2(datuc2, pars = alfam2pars03, app.name = 'TAN.app', 
                   time.name = 'ctime', group = 'group',
-                  conf.int = 0.9, pars.ci = alfam2pars03var_alpha)
+                  conf.int = 0.9, pars.ci = alfam2pars03var)
 print(preduc2)
 ```
 
