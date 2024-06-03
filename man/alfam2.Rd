@@ -2,8 +2,8 @@
 \alias{alfam2}
 \alias{alfam2pars01}
 \alias{alfam2pars02}
-\alias{alfam2pars03_alpha}
-\alias{alfam2pars03var_alpha}
+\alias{alfam2pars03}
+\alias{alfam2pars03var}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
@@ -17,7 +17,7 @@ The model is described in Hafner et al. (2019).
 \usage{
 alfam2(
   dat, 
-  pars = ALFAM2::alfam2pars02, 
+  pars = ALFAM2::alfam2pars03, 
   add.pars = NULL,
   app.name = 'TAN.app', 
   time.name = 'ct', 
@@ -123,7 +123,7 @@ alfam2(
     Default (\code{NULL}) does not return a confidence interval.
     Use numeric values for confidence interval, e.g., \code{conf.int = 0.90} for 90\% confidence interval.
     This value will be used with the \code{quantile} function.
-    Note that with default \code{pars.ci} like \code{alfam2pars03var_alpha} the returned confidence intervals are an estimate of uncertainty in the \emph{average} response for the particular values provided for input variables. 
+    Note that with default \code{pars.ci} like \code{alfam2pars03var} the returned confidence intervals are an estimate of uncertainty in the \emph{average} response for the particular values provided for input variables. 
     These parameters are based on variability in measured emission among research institutions, and were developed using a bootstrap approach.
     Set \code{conf.int} to \code{'all'} to have the function return all predictions instead of quantile estimates of the confidence interval.
     This can be useful for incorporation of uncertainty in input variables.
@@ -131,7 +131,7 @@ alfam2(
   }
   \item{pars.ci}{
     matrix or data frame of parameter sets for confidence interval calculations.
-    See \code{alfam2pars03var_alpha} for an example.
+    See \code{alfam2pars03var} for an example.
   }
   \item{n.ci}{
     number of parameter sets to use.
