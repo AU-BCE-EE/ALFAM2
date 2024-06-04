@@ -5,3 +5,5 @@
 ^\.Rproj\.user$
 ^\.github
 ^README.md
+^doc$
+^Meta$

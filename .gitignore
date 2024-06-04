@@ -5,3 +5,5 @@
 *.dll
 *.so
 *.o
+/doc/
+/Meta/
