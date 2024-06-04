@@ -1,8 +1,8 @@
 Package: ALFAM2
 Type: Package
 Title: Dynamic Model of Ammonia Emission from Field-Applied Manure
-Version: 3.128
-Date: 2024-06-03
+Version: 3.130
+Date: 2024-06-04
 Authors@R: c(person("Sasha D.", "Hafner", role = c("aut", "cre"), email = "sasha.hafner@bce.au.dk"),
              person("Christoph", "Haeni", role = "aut"),
              person("Roland", "Fuss", role = "aut", email = "roland.fuss@thuenen.de"),
@@ -13,8 +13,9 @@ Maintainer: Sasha D. Hafner <sasha.hafner@bce.au.dk>
 Depends: R (>= 3.5.0)
 Imports: Rcpp (>= 1.0.8), stats
 Suggests: tinytest, knitr, rmarkdown
-Description: An implementation of the ALFAM2 model for ammonia emission from field-applied manure. Model can be used with default parameters or applied to specific cases (locations, application methods, etc.)
+Description: An implementation of the ALFAM2 dynamic emission model for ammonia volatilization from field-applied animal slurry (manure with dry matter below about 15%). The model can be used to predict cumulative emission and emission rate of ammonia following field application of slurry. Predictions may be useful for emission inventory calculations, fertilizer management, assessment of mitigation strategies, or reseach on understanding ammonia emission. Default parameter sets include effects of application method, slurry composition, and weather. The model structure is a simplified representation of the physical-chemical slurry-soil-atmosphere system. See <doi:/10.1016/j.atmosenv.2018.11.034> for information on the model and <doi:10.1016/j.agrformet.2017.11.027> for more on the measurement data used for parameter development.
 License: GPL-3
+URL: https://github.com/AU-BCE-EE/ALFAM2/, https://projects.au.dk/alfam/
 VignetteBuilder: knitr
 LazyData: true
 LinkingTo: Rcpp

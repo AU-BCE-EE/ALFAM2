@@ -40,7 +40,7 @@ alfam2(
   warn = TRUE,
   value = 'emis',
   conf.int = NULL,
-  pars.ci = NULL,
+  pars.ci = ALFAM2::alfam2pars03var,
   n.ci = NULL,
   var.ci = 'er',
   ...)
