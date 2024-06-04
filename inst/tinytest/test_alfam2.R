@@ -99,7 +99,8 @@ expect_equal(nrow(dat0ip), 2)
 expect_equal(predex$er, predin$er)
 
 # NAs in input variables should throw an error ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-dat0 <- data.frame(ctime = 168, TAN.app = 100, wind.2m = c(1, NA))
+# Note that the input variables must be in the default parameter set, of course
+dat0 <- data.frame(ctime = 168, TAN.app = 100, wind.2m = c(1, NA), air.temp = c(NA, 10))
 expect_error(alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE))
 
 # Predictor and other varibles can be added at end

@@ -1,7 +1,7 @@
 Package: ALFAM2
 Type: Package
 Title: Dynamic Model of Ammonia Emission from Field-Applied Manure
-Version: 3.130
+Version: 3.131
 Date: 2024-06-04
 Authors@R: c(person("Sasha D.", "Hafner", role = c("aut", "cre"), email = "sasha.hafner@bce.au.dk"),
              person("Christoph", "Haeni", role = "aut"),
