@@ -55,7 +55,7 @@ alfam2(
     See the details section below and the vignette for more information.
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Two parameter sets are provided with the package: \code{pars01} and \code{pars02}, with \code{pars02} recommended. The latest set is described in Hafner et al. (2021, 2024). The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars02} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
+    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Three parameter sets are provided with the package: \code{alfam2pars01}, \code{alfam2pars02} and \code{alfam2pars03}, with \code{alfam2pars03} recommended. The latest set is described in a forthcoming paper. Set 2 is described in Hafner et al. (2021, 2024). The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars03} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
   \item{add.pars}{
     additional parameter values that will extend or overwrite the \code{pars}
@@ -147,36 +147,6 @@ alfam2(
 }
 }
 \details{
-  Default parameter sets are provided for convenience. 
-
-  For the latest set, Set 2, \code{alfam2pars02}, some parameters were removed, and others added, and all values changed at least slightly.
-  Calculation of this set is described in a report on Danish emission factors (Hafner et al., 2021) and a paper (Hafner et al., 2024).
-
-  \code{c(int.f0            = -0.605683,
-           app.mthd.os.f0    = -1.74351,
-           app.rate.ni.f0    = -0.0111490,
-           man.dm.f0         = 0.399670,
-           man.source.pig.f0 = -0.592028,
-           app.mthd.cs.f0    = -7.63373,
-           int.r1            = -0.939215,
-           app.mthd.bc.r1    = 0.793524,
-           man.dm.r1         = -0.139881,
-           air.temp.r1       = 0.0735427,
-           wind.2m.r1        = 0.150267,
-           app.mthd.ts.r1    = -0.459071,
-           ts.cereal.hght.r1 = -0.244712,
-           man.ph.r1         = 0.665,
-           int.r2            = -1.79919,
-           rain.rate.r2      = 0.394022,
-           int.r3            = -3.22841,
-           app.mthd.bc.r3    = 0.561540,
-           app.mthd.cs.r3    = -0.666474,
-           man.ph.r3         = 0.238,
-           incorp.shallow.f4 = -0.964967,
-           incorp.shallow.r3 = -0.580527,
-           incorp.deep.f4    = -3.69495,
-           incorp.deep.r3    = -1.26570)}
-
   Names and units (matching units is essential) for numerical predictors are:
   \describe{
     \item{\code{app.rate.ni}}{manure application rate, but not for injection (\code{app.mthd = "os"} or \code{app.mthd = "cs"}) in t/ha}
@@ -192,33 +162,16 @@ alfam2(
   The \code{alfam2} function automatically creates the dummy variables from from three categorical variables (this can be turned off with \code{prep.dum = FALSE}):
 
   \describe{
-    \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing hose, \code{os} for open slot injection, and \code{cs} for closed slot injection}
+    \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing hose, \code{os} for open slot injection, and \code{cs} for closed slot injection} (and see examples and vignette for aliases)
     \item{\code{man.source}}{type (source) of manure, \code{pig} for pig, otherwise assumed to cattle or other (reference)}
-    \item{\code{incorp}}{incorporation, eith \code{shallow} or \code{deep} (change in levels would require change in \code{incorp.names} as well as parameter values)}
+    \item{\code{incorp}}{incorporation, either \code{shallow} or \code{deep} (change in levels would require change in \code{incorp.names} as well as parameter values)}
   }
 
-  Parameter set 1 (\code{alfam2pars01}) (Hafner et al., 2019) is retained in the package for reproducibility.
-  It contains the following values:
-  \code{c(int.f0            = -0.7364889,
-           int.r1            = -1.1785848,
-           int.r2            = -0.9543731,
-           int.r3            = -2.9012937,
-           app.mthd.os.f0    = -1.1717859,
-           app.rate.f0       = -0.0134681,
-           man.dm.f0         =  0.407466,
-           incorp.deep.f4    = -3.6477259,
-           incorp.shallow.f4 = -0.4121023,
-           app.mthd.bc.r1    =  0.6283396,
-           man.dm.r1         = -0.075822,
-           air.temp.r1       =  0.0492777,
-           wind.2m.r1        =  0.0486651,
-           man.ph.r1         =  0.5327231,
-           air.temp.r3       =  0.0152419,
-           incorp.deep.r3    = -0.3838862,
-           app.mthd.os.r3    = -0.122883,
-           man.ph.r3         =  0.2663616,
-           rain.rate.r2      =  0.4327281,
-           rain.cum.r3       = -0.0300936)}
+  For parameter set values, see the \code{alfam2pars02}, \code{alfam2pars02}, or \code{alfam2pars03} objects.
+
+  Users are responsible for checking that input variable values are not beyond limits of measurement data used for parameter estimation.
+  For parameter set 3, recommended limits are: DM 1-15\% DM, pH 5.5-9.0, air temperature 0-30 deg. C, wind speed 0-10 m/s, rainfall rate 0-2.5 mm/h, and duration 0-168 h.
+
 }
 
 \value{
@@ -261,8 +214,6 @@ alfam2(
 %% ~put references to the literature/web site here ~
 }
 \note{
-  Users are responsible for checking that input variable values are not beyond limits of measurement data used for parameter estimation.
-  For parameter set 2, these were: DM 1- 12\% DM, pH 6.4-8.5 (3.3-8.1 for acidified subset for pH parameters), air temperature -1.9-32 deg. C, and wind speed 0.04-28 m/s.
 }
 \author{
 Sasha D. Hafner, Christoph Haeni, Roland Fuss
@@ -273,19 +224,19 @@ Sasha D. Hafner, Christoph Haeni, Roland Fuss
 \examples{
 # Example 1
 # Create predictor variable data
-dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
+dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd = 'trailing shoe')
 
 # Run model, using default parameter values
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
 pred1
 plot(e ~ ctime, data = pred1, type = 'o')
 
-# For fixed variables (constant over time), they can be given as optional argument.
+# For fixed variables (same for all rows), they can be given as optional argument.
 dat1b <- data.frame(ctime = 0:12*4)
 
 # Run model, using default parameter values
 pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime', 
-                 TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
+                 TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd = 'trailing shoe')
 
 all.equal(pred1, pred1b)
 
@@ -293,8 +244,9 @@ all.equal(pred1, pred1b)
 # Example 2
 # Add incorporation (can occur at any time)
 dat2 <- dat1
-dat2$incorp.deep <- TRUE
+dat2$incorp <- 'deep'
 dat2$t.incorp <- 3.5
+dat2
 
 pred2 <- alfam2(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
 # Note change in r3
@@ -303,14 +255,14 @@ lines(e ~ ctime, data = pred2, type = 'o', col = 'red')
 
 # Example 3
 # Time step doesn't matter
-dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd.bc = TRUE)
+dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd = 'trailing shoe')
 pred3 <- alfam2(dat3, app.name = 'TAN.app', time.name = 'ctime')
 lines(e ~ ctime, data = pred3, type = 'o', col = 'blue')
 
 # Example 4
 # Incorporation does not need to occur at end of interval
 dat4 <- dat3
-dat4$incorp.deep <- TRUE
+dat4$incorp <- 'deep'
 dat4$t.incorp <- 4
 pred4 <- alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
 lines(e ~ ctime, data = pred4, type = 'o', col = 'orange')
@@ -324,13 +276,14 @@ alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4,
 
 # Example 5
 # Function accepts multiple groups
+# Also shown here: some aliases for the different application methods
 dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, 
-                   app.mthd.bc = TRUE, t.incorp = 4)
+                   app.mthd = c('bc', 'th', 'ts', 'os', 'cs'), t.incorp = 4)
 pred5 <- alfam2(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', 
                    time.incorp = 't.incorp')
 pred5
 
-# See vignette for more examples. Run:
+# See vignette for more examples and explanation. Run:
 # vignette("ALFAM2-start")
 
 }

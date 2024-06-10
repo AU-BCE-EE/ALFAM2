@@ -209,6 +209,31 @@ So in this example,  `r round(100 * pred1$er, 0)`% of applied TAN is predicted t
 
 The warning message above is related to an important point: Any excluded predictors are effectively assumed to be at their reference levels.
 
+## Application method names
+The secondary parameters and dummy variables use two-letter codes for application methods: `'bc'` (broadcast), `'ts'` (trailing shoe), `'os'` (open slot injection), and `'cs'` (closed slot injection).
+Trailing hose is the reference method.
+These can be used directly as values in a `app.mthd` column in input data.
+But there are some aliases that can be used in the `app.mthd` column: `'broadcast'`, and `'broadspread'` for `'bc'`;  `'trailing shoe'` for `'ts'`; `'open slot injection'`, `'open-slot injection'`, and `'shallow injection'` for `'os'`; and `'closed slot injection'`, `'closed-slot injection'`, and `'deep injection'` for `'cs'`.
+These are not case sensitive.
+So the following is effectively the same as the previous example.
+
+```{r, }
+dat1b <- data.frame(ctime = 168, TAN.app = 50, man.dm = 8, 
+                   air.temp = 20, wind.sqrt = 2, 
+                   app.mthd = 'Broadcast')
+print(dat1b)
+```
+
+```{r, }
+pred1b <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
+```
+
+```{r}
+all.equal(pred1, pred1b)
+```
+
+The two-letter codes are probably safer, but in any case the output can be checked for the expected dummy variables.
+
 ## Adding incorporation
 To include incorporation of slurry into the soil after application, we need to add a couple columns to our data frame.
 First let's make a new data frame for the example.
@@ -584,7 +609,7 @@ all.equal(pred9b$e, pred9c$e)
 ## Confidence intervals
 
 The `alfam2()` function can generate confidence intervals if given multiple parameter sets that themselves represent the distribution of possible parameter values.
-The package now includes a draft collection of such parameters.
+The package now includes a collection of such parameters that is associated with the default parameter set 3.
 
 ```{r, }
 set.seed(2609)
