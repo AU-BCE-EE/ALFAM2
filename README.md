@@ -6,6 +6,16 @@ Sasha D. Hafner.
 Contact information here: <https://www.au.dk/vis/person/sasha.hafner@bce.au.dk>.
 
 # Installation
+The ALFAM2 package is now on [CRAN](https://cran.r-project.org/), so it can be installed in the normal way:
+
+```
+install.packages("ALFAM2")
+```
+
+This will install the latest version available on CRAN.
+
+Earlier versions can still be found here on the ALFAM2 GitHub repository.
+And as package development continues, there will be times when the CRAN version is not the latest one.
 Installation of packages from GitHub requires a package called devtools.
 You can run the code below to install devtools and ALFAM2.
 
@@ -15,7 +25,7 @@ If you don't already have it, first install devtools from CRAN.
 install.packages("devtools")
 ```
 
-Then install the latest ALFAM2 release with the following command.
+Then install the latest [ALFAM2 release](https://github.com/AU-BCE-EE/ALFAM2/releases) from this ALFAM2 repository with the following command.
 
 ```
 devtools::install_github("AU-BCE-EE/ALFAM2@*release", build_vignettes = TRUE)
@@ -24,8 +34,7 @@ devtools::install_github("AU-BCE-EE/ALFAM2@*release", build_vignettes = TRUE)
 The `build_vignettes` argument is needed in order to get the vignette.
 
 You can just pull from the master branch (`AU-BCE-EE/ALFAM2`), but you may get some new changes not yet included in a release.
-
-*You can get any specific release (e.g., to check out a specific version used in a particular paper) with this syntax:*
+And you can get any specific release (e.g., to check out a specific version used in a particular paper) with the following syntax.
 
 ```
 devtools::install_github("AU-BCE-EE/ALFAM2@v3.2", build_vignettes = TRUE)
@@ -34,7 +43,7 @@ devtools::install_github("AU-BCE-EE/ALFAM2@v3.2", build_vignettes = TRUE)
 See the [Releases page](https://github.com/AU-BCE-EE/ALFAM2/releases) for all available releases.
 The `@v3.2` bit in the command above is from the release *tag*.
 
-For other branches using the `ref` argument.
+For other branches using the `ref` argument, but based on how the branches are used, this doesn't typically make sense for regular users.
 
 # Package use
 Once the package is installed, load it.
@@ -48,6 +57,8 @@ And see a vignette to get started.
 ```
 vignette("ALFAM2-start")
 ```
+
+Or download the CRAN version [here](https://CRAN.R-project.org/package=ALFAM2).
 
 # Model description
 The following paper describes the model in some detail:
