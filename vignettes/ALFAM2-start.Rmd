@@ -435,7 +435,7 @@ set.seed(1201)
 dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 2), 
-                   wind.sqrt = sqrt(10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24)) + 
+                   wind.sqrt = sqrt(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 0.12)), 
                    app.mthd = 'ts')
 plot(air.temp ~ ctime, data = dat7, type = 's', col = 'gray45')
