@@ -435,11 +435,11 @@ set.seed(1201)
 dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 2), 
-                   wind.sqrt = sqrt(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
-                              rnorm(85, 0, 0.12)), 
+                   wind.sqrt = sqrt(1.5 + 0.4*sin(0:84*2 * 2*pi/24)) + 
+                              rnorm(85, 0, 0.12), 
                    app.mthd = 'ts')
 plot(air.temp ~ ctime, data = dat7, type = 's', col = 'gray45')
-plot(wind.sqrt ~ ctime, data = dat7, type = 's', col = 'blue')
+plot(wind.sqrt^2 ~ ctime, data = dat7, type = 's', col = 'blue')
 ```
 
 Predictions are made as above.
@@ -512,8 +512,8 @@ dat9 <- expand.grid(field = 1:1000, ct = 1:168,
 
 dat9$air.temp <- 7 + 7*sin(dat9$ct * 2 * pi / 24) + 
                  rnorm(1000, 0, 2)
-dat9$wind.sqrt <- sqrt(10^(0.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24) + 
-                       rnorm(1000, 0, 0.1)))
+dat9$wind.sqrt <- sqrt(1.5 + 0.4*sin(dat9$ct * 2 * 2 * pi / 24)) + 
+                       rnorm(1000, 0, 0.1)
 dat9 <- dat9[order(dat9$field, dat9$ct), ]
 ```
 
@@ -613,11 +613,11 @@ The package now includes a collection of such parameters that is associated with
 
 ```{r, }
 set.seed(2609)
-dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
+dat10 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8, 
                    air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
                               rnorm(85, 0, 2), 
-                   wind.sqrt = 10^(0.5 + 0.4*sin(0:84*2 * 2*pi/24) + 
-                              rnorm(85, 0, 0.12)), 
+                   wind.sqrt = sqrt(1.5 + 0.4*sin(0:84*2 * 2*pi/24)) + 
+                              rnorm(85, 0, 0.12), 
                    app.mthd = 'bsth')
 
 ```
@@ -626,18 +626,16 @@ dat7 <- data.frame(ctime = 0:84*2, TAN.app = 100, man.dm = 8,
 Here is a normal call without confidence intervals (CI).
 
 ```{r, }
-pred7 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime',
+pred10 <- alfam2(dat10, app.name = 'TAN.app', time.name = 'ctime',
                    warn = FALSE)
-head(pred7)
+head(pred10)
 ```
-
-
 
 Confidence intervals (CI) can be added by specifying a confidence level for the `conf.int` argument.
 By default, a set of bootstrap parameters (in `alfam2pars03var`) are used.
 
 ```{r, }
-predci1 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime', 
+predci1 <- alfam2(dat10, app.name = 'TAN.app', time.name = 'ctime', 
                   warn = FALSE, conf.int = 0.90)
 head(predci1)
 ```
@@ -663,7 +661,7 @@ Use the `var.ci` argument to specify variables.
 Here we request 3 variables.
 
 ```{r, }
-predci2 <- alfam2(dat7, app.name = 'TAN.app', time.name = 'ctime', 
+predci2 <- alfam2(dat10, app.name = 'TAN.app', time.name = 'ctime', 
                   warn = FALSE, conf.int = 0.90, var.ci = c('er', 'j', 'r1'))
 head(predci2)
 ```
@@ -675,7 +673,7 @@ Confidence intervals can be applied to different groups as well.
 Here is a demonstration where dry matter varies between groups.
 
 ```{r, }
-dat12 <- data.frame(ctime = 168, TAN.app = 50, 
+dat11 <- data.frame(ctime = 168, TAN.app = 50, 
                     app.mthd = 'bc', 
                     man.dm = 1:10, air.temp = 20, wind.sqrt = 2) 
 ```
@@ -683,17 +681,17 @@ dat12 <- data.frame(ctime = 168, TAN.app = 50,
 
 ```{r, }
 
-predci3 <- alfam2(dat12, app.name = 'TAN.app', time.name = 'ctime', 
+predci3 <- alfam2(dat11, app.name = 'TAN.app', time.name = 'ctime', 
                   group = 'man.dm', conf.int = 0.90)
 print(predci3)
 ```
 
 
 ```{r, }
-plot(dat12$man.dm, predci3$er, type = 'o', 
+plot(dat11$man.dm, predci3$er, type = 'o', 
      ylim = c(0, max(predci3$er.upr)))
-lines(dat12$man.dm, predci3$er.lwr, col = 'blue')
-lines(dat12$man.dm, predci3$er.upr, col = 'blue')
+lines(dat11$man.dm, predci3$er.lwr, col = 'blue')
+lines(dat11$man.dm, predci3$er.upr, col = 'blue')
 ```
 
 By default the model is run with all the different parameter sets provided in `pars.ci`, which is 100 in the default bootstrap parameter object.
