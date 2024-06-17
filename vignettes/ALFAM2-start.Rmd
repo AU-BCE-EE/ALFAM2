@@ -807,7 +807,7 @@ class(pred1c)
 ## Warnings and error messages
 The `alfam2()` function will return errors or warnings for some cases of problems with input data.
 The intent of these is to make it easy for users to understand and fix problems with a call or the predictor variable data frame.
-A few are shown here.
+A few are shown here (but they are not evaluated in order to avoid problems during package checking, so copy and paste the code to see the actual messages).
 Some checks can be skipped by setting `check = FALSE`, but doing so increases the risk of getting an unhelpful error message, or worse, overlooking a mistake and proceeding with incorrect output.
 Some warnings can be surpressed with `warn = FALSE` in order to avoid cluttering up the console or a log or dynamic report.
 But users should be careful here also.
@@ -815,7 +815,7 @@ But users should be careful here also.
 The calls above already demonstrate the information on missing predictor variables (which can be supressed by setting `warn = FALSE`).
 
 Missing values in predictors:
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 dat6b <- dat6
 dat6b[3, 'wind.sqrt'] <- NA
 
@@ -827,13 +827,13 @@ alfam2(dat6b, app.name = "TAN.app", time.name = "ctime",
 The printed messages identify which variables and which rows are missing.
 
 Using the wrong names when referring to a column:
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = "t.incorp", group = "scenario")
 ```
 
 Negative time in input data:
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 dat6c <- dat6
 dat6c[1, 'ctime'] <- -10
 
@@ -842,14 +842,14 @@ pred0 <- alfam2(dat6c, app.name = "TAN.app", time.name = "ctime",
 ```
 
 Trying to use dummy variable prep when it isn't needed:
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 dat7 <- data.frame(ctime = 1:10, TAN.app = 100)
 pred0 <- alfam2(dat7, app.name = "TAN.app", time.name = "ctime")
 ```
 
 Using an external parameter set (better know what you are doing, not like the example below!):
 
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 pred0 <- alfam2(dat6, pars = c(int.f0 = -1, int.r1 = 0), app.name = "TAN.app", 
                 time.name = "ctime", time.incorp = "t.incorp", 
                 group = "scenario")
@@ -860,7 +860,7 @@ Note the additional warning about incorporation.
 With `check = TRUE` the `alfam2` function checks that all arguments are the right type, and in some cases, contain acceptable values.
 For example, 
 
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = TRUE, group = "scenario")
 
@@ -875,7 +875,7 @@ Resulting messages are helpful for identifying problems.
 Without these checks, the function would typically still return an error, but with a nearly useless message (or worse, incorrect output).
 For example,
 
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
        time.incorp = TRUE, group = "scenario", check = FALSE)
 ```
@@ -884,7 +884,7 @@ Other examples include the following.
 
 Unavailable options.
 
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim", 
                 time.incorp = "t.incorp", group = "scenario", 
                 value = "something else")
@@ -892,7 +892,7 @@ pred0 <- alfam2(dat6, app.name = "TAN.app", time.name = "ctim",
 
 Empty input data frame.
 
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 datnull <- data.frame()
 pred0 <- alfam2(datnull, app.name = "TAN.app", time.name = "ctim", 
                 time.incorp = "t.incorp", group = "scenario") 
@@ -900,7 +900,7 @@ pred0 <- alfam2(datnull, app.name = "TAN.app", time.name = "ctim",
 
 Using reserved names.
 
-```{r, error=TRUE, purl=TRUE}
+```{r, eval=FALSE}
 dat6c <- dat6
 dat6c$"__r1" <- 0
 pred0 <- alfam2(dat6c, app.name = "TAN.app", 
