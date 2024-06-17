@@ -857,7 +857,7 @@ pred0 <- alfam2(dat6, pars = c(int.f0 = -1, int.r1 = 0), app.name = "TAN.app",
 
 Note the additional warning about incorporation.
 
-With check = TRUE} the `alfam2` function checks that all arguments are the right type, and in some cases, contain acceptable values.
+With `check = TRUE` the `alfam2` function checks that all arguments are the right type, and in some cases, contain acceptable values.
 For example, 
 
 ```{r, error=TRUE, purl=TRUE}
