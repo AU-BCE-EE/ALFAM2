@@ -28,11 +28,7 @@ alfam2CI <- function(
   checkArgClassValue(pars.ci, expected.class = c('data.frame', 'matrix', 'array'))
   checkArgClassValue(var.ci, expected.class = 'character', expected.values = c('f0', 'r1', 'r2', 'r3', 'f4', 'r5', 'f', 's', 'j', 'ei', 'e', 'er'))
 
-  if (is.null(n.ci) || is.na(n.ci)) {
-    n.ci <- nrow(pars.ci)
-  }
-
-  checkArgClassValue(n.ci, expected.class = c('integer', 'numeric'), expected.range = c(0, nrow(pars.ci)))
+  checkArgClassValue(n.ci, expected.class = c('integer', 'numeric', 'NULL'), expected.range = c(0, nrow(pars.ci)))
 
   group.orig <- group
   if (is.null(group.orig)) {
@@ -74,6 +70,7 @@ alfam2CI <- function(
                      prep.dum = FALSE, prep.incorp = FALSE,
                      check = FALSE, warn = FALSE, value = 'emis')
 
+    out.it$par.id <- i
     out.var <- rbind(out.var, out.it)
 
   }
@@ -85,7 +82,9 @@ alfam2CI <- function(
     if (prep.dum) {
       dvcol <- names(out.base)[!names(out.base) %in% names(out)]
       out <- merge(out.base[, c(group, time.name, dvcol)], out, by = c(group, time.name), all.y = TRUE)
+      # Sort (merge screws up order)
     }
+    out <- out[order(out[, '__order__'], out[, 'par.id']), ]
   } else {
     out.var <- out.var[is.finite(rowSums(out.base[, var.ci, drop = FALSE])), ]
     lwr <- aggregate(out.var[, var.ci, drop = FALSE], out.var[, c(group, time.name)], function(x) quantile(x, (1 - conf.int) / 2))
@@ -95,12 +94,13 @@ alfam2CI <- function(
     out <- merge(out.base, lwr, by = c(group, time.name), all.x = TRUE)
     out <- merge(out, upr, by = c(group, time.name), all.x = TRUE)
     out <- out[order(out$`__order__`), ]
-    out$`__order__` <- NULL
   }
 
   if (is.null(group.orig)) {
     out[, group] <- NULL
   }
+
+  out$`__order__` <- NULL
 
   return(out)
 

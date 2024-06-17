@@ -136,8 +136,14 @@ alfam2 <- function(
     # Tell user whether default or user-supplied parameters are in use
     # version note: update message with changes to default parameters!
     if (warn) {
-      if (!identical(pars, eval(formals(alfam2)$pars))) {
-        message('Default parameters (Set 2) are being used.')
+      if (identical(pars, eval(formals(alfam2)$pars))) {
+	if (identical(pars, ALFAM2::alfam2pars01)) {
+          message('Default parameters (Set 1) are being used.')
+	} else if (identical(pars, ALFAM2::alfam2pars02)) {
+          message('Default parameters (Set 2) are being used.')
+	} else if (identical(pars, ALFAM2::alfam2pars03)) {
+          message('Default parameters (Set 3) are being used.')
+	}
       } else {
         message('User-supplied parameters are being used.')
       }
