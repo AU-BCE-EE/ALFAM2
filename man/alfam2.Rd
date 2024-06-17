@@ -224,7 +224,8 @@ Sasha D. Hafner, Christoph Haeni, Roland Fuss
 \examples{
 # Example 1
 # Create predictor variable data
-dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd = 'trailing shoe')
+dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, 
+		   app.mthd = 'trailing shoe')
 
 # Run model, using default parameter values
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
@@ -255,7 +256,8 @@ lines(e ~ ctime, data = pred2, type = 'o', col = 'red')
 
 # Example 3
 # Time step doesn't matter
-dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd = 'trailing shoe')
+dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, 
+		   app.mthd = 'trailing shoe')
 pred3 <- alfam2(dat3, app.name = 'TAN.app', time.name = 'ctime')
 lines(e ~ ctime, data = pred3, type = 'o', col = 'blue')
 
