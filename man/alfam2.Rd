@@ -213,8 +213,6 @@ alfam2(
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
 }
-\note{
-}
 \author{
 Sasha D. Hafner, Christoph Haeni, Roland Fuss
 }
