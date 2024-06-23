@@ -305,7 +305,7 @@ alfam2 <- function(
     # Note that dum is just for output (not calculations at this point, those already in dat)
     dum <- dum[, !(jj <- grepl(paste(incorp.names, collapse = '|'), names(dum)))]
     if (warn) {
-      warning(paste('Incorporation colums', paste(names.orig[ii], collapse = ', '), 'were dropped \n    because argument time.incorp is NULL\n    So there is no incorporation.\n    Set check = FALSE to not drop, but then check output.\n'))
+      warning(paste('Incorporation columns', paste(names.orig[ii], collapse = ', '), 'were dropped \n    because argument time.incorp is NULL\n    So there is no incorporation.\n    Set check = FALSE to not drop, but then check output.\n'))
     }
   }
 
