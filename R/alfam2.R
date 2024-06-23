@@ -298,6 +298,18 @@ alfam2 <- function(
     }
   }
 
+  if (check && is.null(time.incorp)) {
+    # Remove any incorporation columns if no incorporation time is provided (to avoid incorrect incorp effect on r3)
+    names.orig <- names(dat)
+    dat <- dat[, !(ii <- grepl(paste(incorp.names, collapse = '|'), names(dat)))]
+    # Note that dum is just for output (not calculations at this point, those already in dat)
+    dum <- dum[, !(jj <- grepl(paste(incorp.names, collapse = '|'), names(dum)))]
+    if (warn) {
+      warning(paste('Incorporation colums', paste(names.orig[ii], collapse = ', '), 'were dropped \n    because argument time.incorp is NULL\n    So there is no incorporation.\n    Set check = FALSE to not drop, but then check output.\n'))
+    }
+  }
+
+
   # Drop parameters for missing predictors
   p.orig <- pars
   ppnames <- gsub('\\.{1}[rf]{1}[0-9]$', '', names(pars))
@@ -361,7 +373,7 @@ alfam2 <- function(
 
   # Pare down to essential columns
   # No good reason for this anymore except debugging ease
-  dat <- dat[, c('__group', '__orig.order', time.name, app.name, group, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', pass.col)]
+  dat <- dat[, c(group, '__group', '__orig.order', time.name, app.name, '__add.row', '__f4', '__f0', '__r1', '__r2', '__r3', '__r5', '__drop.row', pass.col)]
 
   # Sort required for gstart and gend to work, also ct loop
   # _orig.order used to sort back to original order later
