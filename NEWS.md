@@ -1,5 +1,13 @@
 # NEWS for ALFAM2 R package
 
+# ALFAM2 v4.1.5 (23 June 2024)
+
+## Bug fixes
+Fix a phantom incorporation effect on the r3 parameter that could show up with inconsistent user inputs (see issue [#87](https://github.com/AU-BCE-EE/ALFAM2/issues/87)).
+
+## New content
+A NEWS.md file (this file) has been added.
+
 # ALFAM2 v4.1.3 (17 June 2024)
 
 ## Bug fixes
