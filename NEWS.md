@@ -1,5 +1,9 @@
 # NEWS for ALFAM2 R package
 
+# ALFAM2 v4.1.6 (31 July 2024)
+## Other changes
+`alfam2()` function now checks that all `pass.col` are in the `dat` data frame (see issue [#92](https://github.com/AU-BCE-EE/ALFAM2/issues/92)).
+
 # ALFAM2 v4.1.5 (23 June 2024)
 
 ## Bug fixes

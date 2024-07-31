@@ -113,12 +113,17 @@ alfam2 <- function(
       }
     }
 
+    # Check that arguments that should be column names are actually present in dat
     if (!time.name %in% names(dat)) {
       stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
     }
 
     if (!app.name %in% names(dat)) {
       stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
+    }
+
+    if (!all(pass.col %in% names(dat))) {
+      stop(paste0('One or some values of pass.col you specified (', paste(pass.col, collapse = ', '), ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
     }
 
     if (!is.null(group) && !group %in% names(dat)) {
