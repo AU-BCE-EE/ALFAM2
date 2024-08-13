@@ -60,6 +60,14 @@ vignette("ALFAM2-start")
 
 Or download the CRAN version [here](https://CRAN.R-project.org/package=ALFAM2).
 
+# Citations
+When referring to the ALFAM2 model predictions in publications, be sure to include
+
+1. the version of the software used (e.g., "R package version 4.1.8") and
+2. the parameter set used (e.g., "parameter set 3").
+
+You can get citations to the R package and relevant publications with `citation('ALFAM2')` in R.
+
 # Model description
 The following paper describes the model in some detail:
 
