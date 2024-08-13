@@ -1,0 +1,61 @@
+bibentry('Manual',
+         mheader      = 'To cite package \'ALFAM2\' in publications please refer to these documents.',
+         header       = 'The R package: ',
+         other = unlist(citation(auto = meta), recursive = FALSE))
+
+bibentry('Article',
+         title        = 'A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry',
+         header       = 'The original paper describing the model:',
+         author       = c(person('Sasha D.', 'Hafner', 
+                                 email = 'sasha.hafner@bce.au.dk',
+                                 comment = c(ORCID = '0000-0003-0955-0327')),
+                          person('Andreas', 'Pacholski'),
+                          person('Shabtai', 'Bittman'),
+                          person('Marco', 'Carozzi'),
+                          person('Martin', 'Chantigny'),
+                          person('Sophie', 'Genermont'),
+                          person('Christoph', 'Haeni'),
+                          person('Martin', 'Hansen'),
+                          person('Jan', 'Huijsmans'),
+                          person('Thomas', 'Kupper'),
+                          person('Tom', 'Misselbrook'),
+                          person('Albrecht', 'Neftel'),
+                          person('Tavs', 'Nyord'),
+                          person('Sven', 'Sommer')
+                          ),
+         journal      = 'Atmospheric Environment',
+         year         = '2019',
+         volume       = '199',
+         pages        = '474--484',
+         doi          = '10.1016/j.atmosenv.2018.11.034')
+
+bibentry('Article',
+         title        = 'Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry',
+         header       = 'A paper describing parameter set 2:',
+         author       = c(person('Sasha D.', 'Hafner', 
+                                 email = 'sasha.hafner@bce.au.dk',
+                                 comment = c(ORCID = '0000-0003-0955-0327')),
+                          person('Jesper N.', 'Kamp'),
+                          person('Johanna', 'Pedersen')
+                          ),
+         journal      = 'Agricultural and Forest Meteorology',
+         year         = '2024',
+         volume       = '344',
+         pages        = '109790',
+         doi          = '10.1016/j.agrformet.2023.109790')
+
+bibentry('TechReport',
+         title        = 'Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019',
+         header       = 'A national report that includes a description of the development of parameter set 2:',
+         author       = c(person('Sasha D.', 'Hafner', 
+                                 email = 'sasha.hafner@bce.au.dk',
+                                 comment = c(ORCID = '0000-0003-0955-0327')),
+                          person('Tavs', 'Nyord'),
+                          person('Sven G.', 'Sommer'),
+                          person('Anders Peter S.', 'Adamsen')
+                          ),
+         institution  = 'Danish Centre for Food and Agriculture, Aarhus University',
+         year         = '2021',
+         url          = 'https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf')
+
+
