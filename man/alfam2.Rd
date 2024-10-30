@@ -3,6 +3,7 @@
 \alias{alfam2pars01}
 \alias{alfam2pars02}
 \alias{alfam2pars03}
+\alias{alfam2pars03.1}
 \alias{alfam2pars03var}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
@@ -17,7 +18,7 @@ The model is described in Hafner et al. (2019).
 \usage{
 alfam2(
   dat, 
-  pars = ALFAM2::alfam2pars03, 
+  pars = ALFAM2::alfam2pars03.1, 
   add.pars = NULL,
   app.name = 'TAN.app', 
   time.name = 'ct', 
