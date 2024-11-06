@@ -89,7 +89,7 @@ alfam2 <- function(
     checkArgClassValue(dat, expected.class = 'data.frame')
     checkArgClassValue(pars, expected.class = c('numeric', 'list'), allow.na = FALSE)
     checkArgClassValue(add.pars, expected.class = c('numeric', 'list', 'NULL'), allow.na = FALSE)
-    checkArgClassValue(app.name, expected.class = 'character', allow.na = FALSE)
+    checkArgClassValue(app.name, expected.class = c('character', 'NULL'), allow.na = TRUE)
     checkArgClassValue(time.name, expected.class = 'character', allow.na = FALSE)
     checkArgClassValue(time.incorp, expected.class = c('character', 'numeric', 'integer', 'NULL'))
     checkArgClassValue(group, expected.class = c('character', 'NULL'))
@@ -113,13 +113,19 @@ alfam2 <- function(
       }
     }
 
+    # Relative emission only if app.name is missing
+    if (is.null(app.name) || is.na(app.name) || !app.name %in% names(dat)) {
+      if (warn) {
+        warning('Argument app.name is missing or dat is missing column of given name.\n    So function will return relative emission only.\n')
+      }
+      relonly <- TRUE
+      dat$`__appplaceholder94` <- 1
+      app.name <- '__appplaceholder94'
+    }
+
     # Check that arguments that should be column names are actually present in dat
     if (!time.name %in% names(dat)) {
       stop(paste0('time.name argument you specified (', time.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
-    }
-
-    if (!app.name %in% names(dat)) {
-      stop(paste0('app.name argument you specified (', app.name, ') is not present in dat data frame, which has these columns: ', paste(names(dat), collapse = ', ')))
     }
 
     if (!all(pass.col %in% names(dat))) {
