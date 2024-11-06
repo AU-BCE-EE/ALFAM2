@@ -10,7 +10,7 @@ pars0 <- c(int.f0 = 0.5, int.r1 = -1, int.r2 = -2, int.r3 = -3)
 pred0 <- alfam2(dat0, pars = pars0, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
 expect_equal(pred0$er, 0.63257, tolerance = 0.001)
 
-# Predictions with default parameter set are approximately as expected
+# Predictions with current default parameter set are approximately as expected
 dat1 <- data.frame(ctime = 168, TAN.app = 100, app.mthd = c('bc', 'bsth', 'ts', 'os', 'cs'))
 pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE, group = 'app.mthd')
 # Comparison seems to be relative
@@ -156,6 +156,15 @@ pred2 <- alfam2(dat0, pars = p2, app.name = 'TAN.app', time.name = 'ctime', warn
 pred3 <- alfam2(dat0, pars = p3, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
 expect_equal(pred1, pred2)
 expect_equal(pred1, pred3)
+
+# Missing app.name returns relative emission~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# But with TAN application it does not
+dat0 <- data.frame(ctime = c(0, 10, 168))
+dat1 <- data.frame(ctime = c(0, 10, 168), TAN.app = 100)
+pred0 <- alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
+pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
+expect_equal(pred0$e, pred0$er, tolerance = 0.00001)
+expect_equal(pred1$e / 100, pred1$er, tolerance = 0.00001)
 
 # Tests are needed for groups and pass_cols
 # Also perhaps for additional warnings or errors
