@@ -2,7 +2,7 @@
 
 alfam2 <- function(
   dat,
-  pars = ALFAM2::alfam2pars03.1,
+  pars = ALFAM2::alfam2pars03,
   add.pars = NULL,
   app.name = 'TAN.app',
   time.name = 'ct',

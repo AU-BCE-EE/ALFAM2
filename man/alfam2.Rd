@@ -18,7 +18,7 @@ The model is described in Hafner et al. (2019).
 \usage{
 alfam2(
   dat, 
-  pars = ALFAM2::alfam2pars03.1, 
+  pars = ALFAM2::alfam2pars03, 
   add.pars = NULL,
   app.name = 'TAN.app', 
   time.name = 'ct', 

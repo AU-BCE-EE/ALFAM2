@@ -18,14 +18,3 @@ save(alfam2pars03, file = '../data/alfam2pars03.rda')
 alfam2pars03var <- read.csv('pars_set3_var.csv', header = TRUE)
 alfam2pars03var <- as.matrix(alfam2pars03var)
 save(alfam2pars03var, file = '../data/alfam2pars03var.rda')
-
-# Set 3.1 (from accepted version of ALFAM2-dev paper)
-pars03.1 <- read.csv('pars_set3.1.csv', row.names = 1, header = TRUE)
-alfam2pars03.1 <- as.matrix(pars03.1)[, 1]
-save(alfam2pars03.1, file = '../data/alfam2pars03.1.rda')
-
-alfam2pars03.1var <- read.csv('pars_set3.1_var.csv', header = TRUE)
-alfam2pars03.1var <- as.matrix(alfam2pars03.1var)
-save(alfam2pars03.1var, file = '../data/alfam2pars03.1var.rda')
-
-
