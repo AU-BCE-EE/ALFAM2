@@ -1,4 +1,5 @@
 \name{alfam2pars}
+\alias{alfam2pars}
 \alias{alfam2pars01}
 \alias{alfam2pars02}
 \alias{alfam2pars03}
@@ -45,7 +46,7 @@ Sasha D. Hafner, Christoph Haeni, Roland Fuss
 
 \examples{
 # To view parameter values
-pars03
+alfam2pars03
 
 # One possible way to facilitate comparison of different sets
 nms <- unique(c(names(alfam2pars01), names(alfam2pars02), names(alfam2pars03)))
