@@ -13,10 +13,11 @@ These default parameter sets can be used to generate average predictions for the
 They are described in the papers cited below.
 }
 
-\usage{alfam2pars01}
-\usage{alfam2pars02}
-\usage{alfam2pars03}
-\usage{alfam2pars}
+\usage{
+alfam2pars01
+alfam2pars02
+alfam2pars03
+}
 
 \details{
   In general, the latest default parameter set (highest version number) should be used.
