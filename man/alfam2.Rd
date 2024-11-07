@@ -1,10 +1,5 @@
 \name{alfam2}
 \alias{alfam2}
-\alias{alfam2pars01}
-\alias{alfam2pars02}
-\alias{alfam2pars03}
-\alias{alfam2pars03.1}
-\alias{alfam2pars03var}
 \title{
 Predict Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
@@ -56,13 +51,15 @@ alfam2(
     See the details section below and the vignette for more information.
 }
   \item{pars}{
-    A numeric vector (or a list of vectors) with model parameters (secondary parameters). Three parameter sets are provided with the package: \code{alfam2pars01}, \code{alfam2pars02} and \code{alfam2pars03}, with \code{alfam2pars03} recommended. The latest set is described in a forthcoming paper. Set 2 is described in Hafner et al. (2021, 2024). The earlier set is described in Hafner et al. (2019). Note that the function could be called with \code{pars = alfam2pars03} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
+    A named numeric vector (or a list of vectors) with model parameters (secondary parameters). Three parameter sets are provided with the package: \code{alfam2pars01}, \code{alfam2pars02} and \code{alfam2pars03}, with \code{alfam2pars03} recommended. See \code{\link{alfam2pars}} for details. Note that the function could be called with \code{pars = alfam2pars03} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
   \item{add.pars}{
-    additional parameter values that will extend or overwrite the \code{pars}
+    additional parameter values that will extend or overwrite the \code{pars}.
+    Named numeric vector.
 }
   \item{app.name}{
-    name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha)
+    name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha).
+    If omitted, function will return relative emission (fraction of applied TAN).
 }
   \item{time.name}{
     name of column in \code{dat} that contains cumulative time since manure was applied (h)
@@ -209,7 +206,9 @@ alfam2(
 
   Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
 
-  Hafner, S.D., Kamp, J.N., Pedersen, J., 2024. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. Agricultural and Forest Meteorology 344, 109790. \doi{10.1016/j.agrformet.2023.109790}
+  Hafner, S.D., Kamp, J.N., Pedersen, J., 2024a. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. Agricultural and Forest Meteorology 344, 109790. \doi{10.1016/j.agrformet.2023.109790}
+  
+  Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. Atmospheric Environment. \doi{10.1016/j.atmosenv.2024.120910}
 
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
