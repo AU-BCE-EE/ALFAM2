@@ -2,7 +2,7 @@
 
 # ALFAM2 v4.2 (8 Nov 2024)
 
-## Bug fixes
+## Parameter correction
 The latest default parameter set was revised slightly to reflect new results after making corrections to the parameter estimation procedure.
 Resulting predictions will be slightly different than in v4.1.11 and earlier.
 In some cases the change may be around 1% of applied TAN, but is typically smaller.
