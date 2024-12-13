@@ -10,20 +10,21 @@ A wrapper for the \code{\link{alfam2}} function for emissions inventory applicat
 }
 
 \usage{
-alfamei(
+alfamei <- function(
   dat, 
   pars = ALFAM2::alfam2pars03, 
   time.name,
   app.tan.name = 'app.tan',
-  time.incorp,
-  eventkey,
-  aggkey = eventkey,
-  uncert = c('pars', 'input'),
+  time.incorp = NULL,
+  eventkey = NULL,
+  aggkey = NULL,
+  uncert = NULL,
   pars.uncert = ALFAM2::alfam2pars03var,
   uncert.settings = NULL,
   nu = 100,
   cl = 0.8,
-  seed = 1,
+  seed = NULL,
+  quiet = FALSE,
   ...
 )
 }
@@ -39,153 +40,49 @@ alfamei(
   \item{pars}{
     A named numeric vector (or a list of vectors) with model parameters (secondary parameters). Three parameter sets are provided with the package: \code{alfam2pars01}, \code{alfam2pars02} and \code{alfam2pars03}, with \code{alfam2pars03} recommended. See \code{\link{alfam2pars}} for details. Note that the function could be called with \code{pars = alfam2pars03} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
-  \item{add.pars}{
-    additional parameter values that will extend or overwrite the \code{pars}.
-    Named numeric vector.
-}
-  \item{app.name}{
-    name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha).
-    If omitted, function will return relative emission (fraction of applied TAN).
-}
   \item{time.name}{
-    name of column in \code{dat} that contains cumulative time since manure was applied (h)
+	  x.
+}
+  \item{app.tan.name}{
+	  x
 }
   \item{time.incorp}{
-    either name of column in \code{dat} that contains time at which incorporation occurred (h), or length-one numeric value giving time that incorporation occurred (h). Omit if there was no incorporation or if incorporation is not a predictor variable. Optional.
+	  x
 }
-  \item{group}{
-    name of column in \code{dat} that contains a grouping variable for identifying individual plots or locations. Optional.
+  \item{eventkey}{
+	  x
 }
-  \item{center}{
-    numeric vector with means for centering.
-    Generally should not be changed by users, because parameter values depend on particular centering values, and nonsense predictions can result from changes to even a single centering value.
-    Set to \code{NULL} to turn off centering, but only do this if you know what you are doing.
-    Internally, supplied values are used to either replace or extend centering values by variable, so it is possible to add a new centering value with e.g., \code{center = c(x1 = 10)}, which will not affect any of the default values.
-    In contrast, \code{center = c(wind.2m = 5)} would change the value for the variable \code{wind.2m}.
-    Default parameters are based on centered values.
+  \item{aggkey}{
+	  x
 }
-  \item{pass.col}{
-    character vector with name(s) of column(s) in \code{dat} that should be passed through to the returned data frame.
+  \item{uncert}{
+	  x
 }
-  \item{incorp.names}{
-    character vector with name(s) of column(s) in \code{dat} that contain binary incorporation variables.
+  \item{pars.uncert}{
+	  x
 }
-  \item{prep.dum}{
-    if \code{TRUE} (default), function will automatically prepare dummy variables from input data. 
-    If \code{FALSE}, any necessary dummy variables must already be present in \code{dat}. 
-    See vignette.
-    Length one logical vector.
+  \item{uncert.settings}{
+	  x
+}
+  \item{nu}{
+	  Number of uncertainty iterations.
 }  
-  \item{prep.incorp}{
-    if \code{TRUE} (default), function will automatically prepare incorporation inputs from input data. 
-    See vignette.
-    Length one logical vector.
+  \item{cl}{
+	  x
 }
-  \item{add.incorp.rows}{
-    function will add additional rows that exactly match the incorporation time(s) (no more than one per level of \code{group}) if they are not already present. Should these be returned or left out (default)?
-    Length one logical vector.
+  \item{seed}{
 }
-  \item{check}{
-    should the function check inputs, including for \code{NA} values in calculation of primary parameters?
-    Default of \code{TRUE} is recommended.
+  \item{quiet}{
 }
-  \item{warn}{
-    set to \code{FALSE} to suppress some warnings and messages.
-    Doing so is useful for reducing console or report clutter, but use with caution, because problems with the input data or call could be missed.
-    Even with \code{warn = FALSE} the \code{alfam2} function may make some substitutions in inputs (see vignette).
-}  
-  \item{value}{
-    type of output.
-    Set to \code{"incorp"} to return results early with incorporation (or dummy variable) pre-processing and no emission calculations.
-    Output can be used to run \code{alfam2} with \code{prep.incorp = FALSE} to speed up evaluation.
-    Otherwise must be \code{"emis"} for "emission".
-    See vignette.
-    Length one character.
-}  
-  \item{conf.int}{
-    confidence interval setting.
-    Default (\code{NULL}) does not return a confidence interval.
-    Use numeric values for confidence interval, e.g., \code{conf.int = 0.90} for 90\% confidence interval.
-    This value will be used with the \code{quantile} function.
-    Note that with default \code{pars.ci} like \code{alfam2pars03var} the returned confidence intervals are an estimate of uncertainty in the \emph{average} response for the particular values provided for input variables. 
-    These parameters are based on variability in measured emission among research institutions, and were developed using a bootstrap approach.
-    Set \code{conf.int} to \code{'all'} to have the function return all predictions instead of quantile estimates of the confidence interval.
-    This can be useful for incorporation of uncertainty in input variables.
-    See vignette.
-  }
-  \item{pars.ci}{
-    matrix or data frame of parameter sets for confidence interval calculations.
-    See \code{alfam2pars03var} for an example.
-  }
-  \item{n.ci}{
-    number of parameter sets to use.
-    Defaults to total number available.
-  }
-  \item{var.ci}{
-    calculate confidence intervals for these variables.
-    Calculation is done separately by variable and time interval.
-  }
   \item{...}{
-    additional optional arguments as length-one vectors that set values of fixed predictor variables.
-    See examples.
+    additional optional arguments to \code{\link{alfam2}}.
 }
 }
+
 \details{
-  Names and units (matching units is essential) for numerical predictors are:
-  \describe{
-    \item{\code{app.rate.ni}}{manure application rate, but not for injection (\code{app.mthd = "os"} or \code{app.mthd = "cs"}) in t/ha}
-    \item{\code{man.dm}}{slurry dry matter, percentage of fresh matter}
-    \item{\code{man.ph}}{slurry pH, pH units}
-    \item{\code{air.temp}}{air temperature, degress C}
-    \item{\code{wind.2m}}{wind speed measured (or adjusted to) 2 m height, m/s}
-    \item{\code{rain.rate}}{rainfall rate, mm/h}
-  }
-  See the vignette for more details.
-
-  Categorical predictor variables can be entered as binary dummy variables or left as character or factors.
-  The \code{alfam2} function automatically creates the dummy variables from from three categorical variables (this can be turned off with \code{prep.dum = FALSE}):
-
-  \describe{
-    \item{\code{app.mthd}}{application method, \code{bc} for broadcast, \code{ts} for trailing shoe, \code{os} for open slot injection, and \code{cs} for closed slot injection} (and see examples and vignette for aliases)
-    \item{\code{man.source}}{type (source) of manure, \code{pig} for pig, otherwise assumed to cattle or other (reference)}
-    \item{\code{incorp}}{incorporation, either \code{shallow} or \code{deep} (change in levels would require change in \code{incorp.names} as well as parameter values)}
-  }
-
-  For parameter set values, see the \code{\link{alfam2pars02}}, \code{\link{alfam2pars02}}, or \code{\link{alfam2pars03}} objects.
-
-  Users are responsible for checking that input variable values are not beyond limits of measurement data used for parameter estimation.
-  For parameter set 3, recommended limits are: DM 1-15\% DM, pH 5.5-9.0, air temperature 0-30 deg. C, wind speed 0-10 m/s, rainfall rate 0-2.5 mm/h, and duration 0-168 h.
-
 }
 
 \value{
-  By default, a data frame with the same number of rows as \code{dat} (unless \code{add.incorp.rows = TRUE}).
-  First column is \code{time.name} column from input data \code{dat}.
-  All masses are intended to be as kg ammonia N, or TAN (for totoal ammoniacal nitrogen), but reflect the application rate variable used as input.
-  Defaults for following columns are:
-  \describe{
-    \item{\code{dt}}{interval duration (time step)}
-    \item{\code{f0}}{f0 parameter}
-    \item{\code{r1}}{r1 parameter}
-    \item{\code{r2}}{r2 parameter}
-    \item{\code{r3}}{r3 parameter}
-    \item{\code{r4}}{r4 parameter}
-    \item{\code{r5}}{r5 parameter}
-    \item{\code{f}}{fast pool size at \code{ct} (kg/ha)}
-    \item{\code{s}}{slow pool size at \code{ct} (kg/ha)}
-    \item{\code{j}}{average NH3 flux in interval (kg/ha-h)}
-    \item{\code{jinst}}{instantaneous NH3 flux at given time (kg/ha-h)}
-    \item{\code{ei}}{interval emission (kg/ha)}
-    \item{\code{e}}{cumulative emission (from time = 0 to \code{ct}) (kg/ha)}
-    \item{\code{er}}{relative cumulative emission (fraction of applied TAN)}
-  }
-
-  If \code{prep.dum} is used, additional dummy variable columns will also be returned.
-  And if a grouping variable is used via \code{group}, this column will be included as well.
-  Any columns listed in \code{pass.cols} will also be returned.
-
-  If \code{value = 'incorp'} is used, the function will return intermediate data processed for incorporation but without emission predictions.
-  See vignette.
 }
 
 \references{

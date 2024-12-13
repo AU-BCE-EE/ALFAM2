@@ -196,6 +196,7 @@ alfamei <- function(
 
   # Drop added columns
   dat.final[, c('__eventkeydum')] <- NULL 
+  dat.uc.final[, c('__eventkeydum')] <- NULL 
   pred.ref[, c('__eventkeydum')] <- NULL 
 
   return(list(emisdis = dat.final, emisagg = s0, predref = pred.ref, emisuc = dat.uc.final, preduc = pred.uc))

@@ -71,7 +71,7 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
 The function returns a list of 5 elements.
 
 ```{r}
-names(eipred)
+names(ei)
 ```
 
 For aggregated TAN application and emission, totals in this case, see the following element.
@@ -106,11 +106,16 @@ ei$emisagg
 ```
 
 The `alfamei()` function can also incorporate uncertainty from `alfam2()` predictor variables, as well as in TAN application.
-This requires setting some inputs 
+This requires setting some inputs in a data frame that is then passed to the `uncert.settings` argument.
+These settings can specify values for either uniform or normal distributions for uncertainty.
+Furthermore, uncertainty can be relative (a fraction of the value given in `dat`) or adjusted to the center.
+And even with a normal distribution a minimum and maximum can be specified.
+Here we will use a normal distribution for slurry dry matter (DM) and pH, as well as TAN application.
+Other predictor variables are used in the predictions, but because we have omitted them, their uncertainty is not included.
 
 
 ```{r}
-uset <- data.frame(pvar = c('man.dm', 'man.ph', 'wind.sqrt', 'air.temp', 'TAN.app.tot'),
+uset <- data.frame(pvar = c('man.dm', 'man.ph',  'TAN.app.tot'),
 		   rel = 'Relative',
 		   dist.type = 'Normal',
 		   sd = 0.2,
@@ -119,31 +124,55 @@ uset <- data.frame(pvar = c('man.dm', 'man.ph', 'wind.sqrt', 'air.temp', 'TAN.ap
 uset
 ```
 
+Here is the effect of this additional uncertainty on predicted confidence limits.
+
+
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-              uncert = c('pars', 'input'), uncert.settings = uset)
+              uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
 ```{r}
 ei$emisagg
 ```
 
-Check the values used
+The 20% relative standard deviation in TAN application alone has a large effect--see the limits for `TAN.app.tot`.
+The default confidence interval level is 80%, and it could be adjusted with `cl`.
 
 ```{r}
-aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'air.temp', 'wind.sqrt')], 
+alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+        uncert = c('pars', 'vars'), uncert.settings = uset, cl = 0.9)$emisagg
+```
+
+We can see the input variable values used in the `emisuc` element.
+Here is the range and standard deviation.
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
           ei$emisuc[, c('zone', 'sector')], FUN = range)
 ```
 
 ```{r}
-uset[2, c(2:6)] <- list('Centered', 'Uniform', NA, -1, 1)
-uset[4, c(2:4)] <- list('Absolute', 'Normal', 2)
+aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = sd)
+```
+
+A relative error does not make much sense for pH.
+And we should include weather as well.
+
+```{r}
+uset <- data.frame(pvar = c('man.dm', 'man.ph', 'air.temp', 'wind.sqrt', 'TAN.app.tot'),
+		   rel = c('Relative', 'Centered', 'Absolute', 'Absolute',  'Relative'),
+		   dist.type = c('Normal', 'Uniform', 'Normal', 'Normal', 'Normal'),
+		   sd = c(0.2, NA, 3, 0.5, 0.2),
+		   min = c(NA, -0.7, NA, NA, NA),
+		   max = c(NA, 0.7, NA, NA, NA))
 uset
 ```
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-              uncert = c('pars', 'input'), uncert.settings = uset)
+              uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
 ```{r}
@@ -155,53 +184,45 @@ aggregate(ei$emisuc[, c('man.ph', 'air.temp')],
 
 Better!
 
+Note that estimated errors are applied to a copy of the entire input data frame.
+That is, the estimates are at the level of the entire analysis.
+
 
 ```{r}
 ei$emisagg
 ```
 
-We can separately look at the contributions of parameter and input variable uncertainty.
+With these uncertainty settings, overall uncertainty in emissions is high.
+
+To separately look at the contributions of parameter and input variable uncertainty, or make any other quantitative comparion of oncertainty, the random number seed should be set for reproducibility with the `seed` argument.
+(The function calls `set.seed()`.)
 
 Parameters:
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-        uncert = c('pars'), uncert.settings = uset)$emisagg[, c(4, 3, 5)]
+        uncert = c('pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
 Predictor variables:
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-        uncert = c('vars'), uncert.settings = uset)$emisagg[, c(4, 3, 5)]
+        uncert = c('vars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
 Together:
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-        uncert = c('vars', 'pars'), uncert.settings = uset)$emisagg[, c(4, 3, 5)]
+        uncert = c('vars', 'pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
-For reproducibility in uncertainty estimates, the `seed` argument must be used.
-(It calls `set.seed()`.)
-
-```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-        uncert = c('vars', 'pars'), uncert.settings = uset, 
-        seed = 1)$emisagg[, c(4, 3, 5)]
-```
-
-Repeating the call will give an identical result.
-
-```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-        uncert = c('vars', 'pars'), uncert.settings = uset, 
-        seed = 1)$emisagg[, c(4, 3, 5)]
-```
+So in this hypothetical example with no more than guesses for variable uncertainty inputs, that uncertainty is more important than from parameter values.
 
 Note that estimated confidence limits are independent.
-So for example, in the result below, the lower limit for total emission is *not* the product of the emission factor and TAN application lower limits, but is higher (less extreme, closer to the main estimate).
+All variables are calculated for each uncertainty iteration, and then quantiles are used to estimate limits, separately for all variables.
+So for example, in the result below, the limits for total emission are *not* the product of the emission factor and TAN application limits, but less extreme (closer to the main estimate).
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
@@ -212,9 +233,9 @@ ei$emis.fact.lwr * ei$TAN.app.tot.lwr
 ei$emis.fact.upr * ei$TAN.app.tot.upr
 ```
 
-All variables are calculated for each uncertainty iteration, and then quantiles are used to estimate limits, separately for all variables.
-
 # Higher resolution weather
+
+We can use some artificial hourly weather data made with some code from the ALFAM2-start vignette.
 
 ```{r}
 wthr <- data.frame(time.h = 0:84*2, 
@@ -226,14 +247,11 @@ plot(air.temp ~ time.h, data = wthr, type = 'o')
 ```
 
 Here we will use these weather data with different types of slurry.
+Importantly, because we will now have multiple rows per slurry application event, we need an "application event key", which we will specify in the `eventkey` argument.
 
 ```{r}
 dat <- data.frame(ekey = rep(1:3, each = 85), wthr[rep(1:85, 3), ])
-head(dat)
-tail(dat)
 ```
-
-Here we need to explicitly add an application event key column, because we have multiple rows (168) for each event.
 
 ```{r}
 slurry <- data.frame(ekey = 1:3, man.soure = c('cattle', 'pig', 'cattle'),
@@ -243,11 +261,17 @@ dat <- merge(dat, slurry)
 head(dat)
 ```
 
+So in this example we want to calculate emission for each of 3 application events, considering the effect of hourly weather changes.
+
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               eventkey = 'ekey',
-              uncert = c('pars', 'input'), uncert.settings = uset)
+              uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
+
+Note how the `eventkey` issue is handled differently in the `alfam2()` function.
+With that, each separate row in `dat` is taken as another time interval in a single application event, unless `group` is given and the value differs between rows.
+In `alfamei()`, each row is assumed to be a separate application event unless the value of the column given in the `eventkey` argument says otherwise.
 
 ```{r}
 ei$emisdis
@@ -256,6 +280,8 @@ ei$emisagg
 
 # Aggregation
 Any variable (or combination of variables) can be used to aggregate results.
+By default `alfamei()` gives the totals.
+Let's modify the first example by expanding it over multiple years.
 
 ```{r}
 dat <- data.frame(app.key = 1:5,
@@ -278,34 +304,40 @@ dat <- data.frame(year = rep(2010:2015, each = 5), dat[rep(1:5, 6), ])
 ```
 
 ```{r}
-args(alfamei)
-```
-
-```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-              uncert = c('pars', 'input'), uncert.settings = uset)
+              uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
-Here our default aggregation, which gives the total for all events, doesn't make much sense because multiple years are combined.
+Here our default aggregation combines multiple years.
 
 ```{r}
 ei$emisagg
 ```
 
-```{r}
-args(alfamei)
-```
+We can have it do something else using the `aggkey` argument.
+For example, by `year`.
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 	aggkey = 'year', 
-        uncert = c('pars', 'input'), uncert.settings = uset)$emisagg
+        uncert = c('pars', 'vars'), uncert.settings = uset)$emisagg
 ```
+
+Values are identical across years because inputs and TAN application are identical!
+
+We could aggregate by multiple variables.
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-	aggkey = c('zone', 'man.source', 'year'), 
-        uncert = c('pars', 'input'), uncert.settings = uset)$emisagg
+	aggkey = c('man.source', 'year'), 
+        uncert = c('pars', 'vars'), uncert.settings = uset)$emisagg
 ```
 
+If aggregation at multiple levels is needed, it is best to make a single `alfamei()` call and extract the results from the expanded uncertainty data frame for external aggregation.
+The `ukey` column is unique for each uncertainty input dataset, and may be helpful for that task.
+
+```{r}
+head(ei$emisuc)
+dim(ei$emisuc)
+```
 
