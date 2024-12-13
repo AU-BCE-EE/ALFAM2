@@ -1,13 +1,16 @@
 # Creates parameter objects
 
+# Set 1
 pars01 <- read.csv('pars_set1.csv', row.names = 1, header = FALSE)
 alfam2pars01 <- as.matrix(pars01)[, 1]
 save(alfam2pars01, file = '../data/alfam2pars01.rda')
 
+# Set 2
 pars02 <- read.csv('pars_set2.csv', row.names = 1, header = FALSE)
 alfam2pars02 <- as.matrix(pars02)[, 1]
 save(alfam2pars02, file = '../data/alfam2pars02.rda')
 
+# Set 3 (from draft version of ALFAM2-dev paper)
 pars03 <- read.csv('pars_set3.csv', row.names = 1, header = TRUE)
 alfam2pars03 <- as.matrix(pars03)[, 1]
 save(alfam2pars03, file = '../data/alfam2pars03.rda')

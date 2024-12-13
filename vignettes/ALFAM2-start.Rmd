@@ -18,7 +18,7 @@ library(ALFAM2)
 
 # Introduction
 The ALFAM2 project is on ammonia volatilization (emission) from field-applied manure, and includes two main products: a database with volatilization measurements and a model for estimating volatilization.
-The model, which is described in detail in Hafner et al. (2019)[^1], is the focus of the ALFAM2 R package and this document.
+The model, which is described in Hafner et al. (2019)[^1] and Hafner et al. (2024b)[^2], is the focus of the ALFAM2 R package and this document.
 The ALFAM2 package is an add-on package for R, which is an environment for statistical computing. 
 With the model, it is possible to predict average volatilization rate and cumulative emission over time, as affected by application method, weather, and manure characteristics.
 This document provides an introduction to the use of the model, and is aimed for users who are new to R.
@@ -50,7 +50,7 @@ This book for a course on R has some details: <https://www.researchgate.net/publ
 Alternatively, the examples given below may be sufficient.
 
 # Installing the ALFAM2 package
-Once the ALFAM2 package is on CRAN, it can be installed in the normal way.
+Because the ALFAM2 package is on CRAN, it can be installed in the normal way.
 
 ```{r, eval=FALSE}
 install.packages('ALFAM2')
@@ -58,7 +58,7 @@ install.packages('ALFAM2')
 
 This is the recommended approach.
 
-The latest and earlier versions of the ALFAM2 package are available from a GitHub repository: <https://github.com/AU-BCE-EE/ALFAM2>.
+The latest and earlier versions of the ALFAM2 package are available from a GitHub repository, which includes installation instructions: <https://github.com/AU-BCE-EE/ALFAM2>.
 
 Every time you open R to use the ALFAM2 package, it must be loaded.
 
@@ -128,9 +128,9 @@ Predictor variables used in the available default parameter sets and their defau
 
 Binary variables are dummy variables, and can be created automatically by the `alfam2` function (see examples below).
 Default model parameters and numeric values in the latest set (currently `alfam2pars03` object ("Set 3")) should generally be used. 
-Development of this parameter set will be described in a forthcoming paper.
+Development of this parameter set is described in Hafner et al. (2024b)[^2].
 There are two earlier versions: "Set 1" is available in `alfam2pars01`, and "Set 2" in `alfam2pars02`.
-Set 2 is described in a report on calculation of Danish emission factors[^2] and a later paper[^3].
+Set 2 is described in a report on calculation of Danish emission factors[^3] and a later paper[^4].
 And set 1 in the 2019 paper listed below[^1]. 
 
 Because values of predicted emission depend on parameter values (strongly depend, in some cases), it is essential that the any application of the model lists the parameter set that was used.
@@ -272,6 +272,31 @@ pred3 <- alfam2(dat3, app.name = "TAN.app", time.name = "ctime",
                    time.incorp = "t.incorp", warn = FALSE)
 print(pred3)
 ```
+
+## Relative emission only
+By default the `alfam2()` function expects TAN application rate to be in a column named `TAN.app`.
+Different names can be specified using the `app.name` argument.
+If the specified name is not present in input data frame, the function returns relative emission only (emission as a fraction of applied TAN), with a warning.
+This can be convenient when only relative (not absolute) emission is needed.
+
+```{r}
+datr <- data.frame(ctime = 168)
+print(datr)
+```
+
+```{r}
+predr <- alfam2(datr, app.name = 'TAN.app', time.name = 'ctime')
+predr
+```
+
+Notice how the column `e` (emission) is equal to `er` (relative emission).
+Even flux is relative, in fraction of applied TAN per hour, so multiplying it by the single interval duration will give total relative emission.
+
+```{r}
+predr$j * predr$dt
+```
+
+With this functionality, a minimal example of `dat` is a data frame with only cumulative time, as in `datr` above.
 
 ## Multiple scenarios in a single call
 A single function call can be used for multiple scenarios.
@@ -913,9 +938,11 @@ Christoph Haeni, Johanna Maria Pedersen, Frederik Dalby, and Anders Peter Adamse
 
 # References
 [^1]: Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment. *Atmospheric Environment*, 199:474-484, 2018. <https://doi.org/10.1016/j.atmosenv.2018.11.034>
+	
+[^2]: Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. *Atmospheric Environment*. <https://doi.org/10.1016/j.atmosenv.2024.120910>
 
-[^2]: Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. <https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf>
+[^3]: Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. <https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf>
 
-[^3]: Hafner, S.D., Kamp, J.N., Pedersen, J. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. *Agricultural and Forest Meteorology*, 344, 109790, 2024. <https://doi.org/10.1016/j.agrformet.2023.109790>
+[^4]: Hafner, S.D., Kamp, J.N., Pedersen, J. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. *Agricultural and Forest Meteorology*, 344, 109790, 2024. <https://doi.org/10.1016/j.agrformet.2023.109790>
 
 

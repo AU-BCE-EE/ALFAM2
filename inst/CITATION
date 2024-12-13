@@ -44,6 +44,27 @@ bibentry('Article',
          pages        = '109790',
          doi          = '10.1016/j.agrformet.2023.109790')
 
+bibentry('Article',
+         title        = 'Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database',
+         header       = 'A paper describing the extended version of the model (>=v2.15) and parameter set 3:',
+         author       = c(person('Sasha D.', 'Hafner', 
+                                 email = 'sasha.hafner@bce.au.dk',
+                                 comment = c(ORCID = '0000-0003-0955-0327')),
+                          person("Johanna", "Pedersen", comment = c(ORCID = "0000-0002-9026-5031")),
+                          person("Roland", "Fuss", comment = c(ORCID = "0000-0002-0274-0809")),
+                          person('Jesper N.', 'Kamp'),
+                          person("Frederik", "Dalby", comment = c(ORCID = "0000-0003-2437-064X")),
+                          person('Barbara', 'Amon'),
+                          person('Andreas', 'Pacholski'),
+                          person('Anders Peter S.', 'Adamsen'),
+                          person('Sven Gjedde', 'Sommer')
+                          ),
+         journal      = 'Atmospheric Environment',
+         year         = '2024',
+         volume       = '',
+         pages        = '',
+         doi          = '10.1016/j.atmosenv.2024.120910')
+
 bibentry('TechReport',
          title        = 'Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019',
          header       = 'A national report that includes a description of the development of parameter set 2:',
