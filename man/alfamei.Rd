@@ -1,5 +1,5 @@
-\name{alfam2}
-\alias{alfam2}
+\name{alfamei}
+\alias{alfamei}
 \title{
 Emissions Inventory Calculations of Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
@@ -10,7 +10,7 @@ A wrapper for the \code{\link{alfam2}} function for emissions inventory applicat
 }
 
 \usage{
-alfamei <- function(
+alfamei(
   dat, 
   pars = ALFAM2::alfam2pars03, 
   time.name,
@@ -71,8 +71,10 @@ alfamei <- function(
 	  x
 }
   \item{seed}{
+	  x
 }
   \item{quiet}{
+	  x
 }
   \item{...}{
     additional optional arguments to \code{\link{alfam2}}.
@@ -103,75 +105,12 @@ Sasha D. Hafner, Christoph Haeni, Roland Fuss
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
-\code{\link{alfam2pars}}
+\code{\link{alfam2}}
 }
 
 \examples{
-# Example 1
-# Create predictor variable data
-dat1 <- data.frame(ctime = 0:12*4, TAN.app = 100, man.dm = 8, air.temp = 15, 
-		   app.mthd = 'trailing shoe')
-
-# Run model, using default parameter values
-pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime')
-pred1
-plot(e ~ ctime, data = pred1, type = 'o')
-
-# For fixed variables (same for all rows), they can be given as optional argument.
-dat1b <- data.frame(ctime = 0:12*4)
-
-# Run model, using default parameter values
-pred1b <- alfam2(dat1b, app.name = 'TAN.app', time.name = 'ctime', 
-                 TAN.app = 100, man.dm = 8, air.temp = 15, app.mthd = 'trailing shoe')
-
-all.equal(pred1, pred1b)
-
-
-# Example 2
-# Add incorporation (can occur at any time)
-dat2 <- dat1
-dat2$incorp <- 'deep'
-dat2$t.incorp <- 3.5
-dat2
-
-pred2 <- alfam2(dat2, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
-# Note change in r3
-pred2
-lines(e ~ ctime, data = pred2, type = 'o', col = 'red')
-
-# Example 3
-# Time step doesn't matter
-dat3 <- data.frame(ctime = c(0, 48), TAN.app = 100, man.dm = 8, air.temp = 15, 
-		   app.mthd = 'trailing shoe')
-pred3 <- alfam2(dat3, app.name = 'TAN.app', time.name = 'ctime')
-lines(e ~ ctime, data = pred3, type = 'o', col = 'blue')
-
-# Example 4
-# Incorporation does not need to occur at end of interval
-dat4 <- dat3
-dat4$incorp <- 'deep'
-dat4$t.incorp <- 4
-pred4 <- alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 't.incorp')
-lines(e ~ ctime, data = pred4, type = 'o', col = 'orange')
-
-# Incorporation time can be numeric also (not very practical for groups)
-alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4)
-
-# To see incorporation time in output, use add.incorp.rows
-alfam2(dat4, app.name = 'TAN.app', time.name = 'ctime', time.incorp = 4, 
-       add.incorp.rows = TRUE)
-
-# Example 5
-# Function accepts multiple groups
-# Also shown here: some aliases for the different application methods
-dat5 <- data.frame(field.plot = 1:5, ctime = 48, TAN.app = 100, man.dm = 5, air.temp = 15, 
-                   app.mthd = c('bc', 'th', 'ts', 'os', 'cs'), t.incorp = 4)
-pred5 <- alfam2(dat5, app.name = 'TAN.app', time.name = 'ctime', group = 'field.plot', 
-                   time.incorp = 't.incorp')
-pred5
-
 # See vignette for more examples and explanation. Run:
-# vignette("ALFAM2-start")
+# vignette("ALFAM2-inventory")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

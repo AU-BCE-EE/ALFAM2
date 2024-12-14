@@ -1,4 +1,4 @@
 import(Rcpp)
-importFrom("stats", "na.omit", "setNames", "aggregate", "quantile")
-export(alfam2)
+importFrom("stats", "na.omit", "setNames", "aggregate", "quantile", "rnorm", "runif")
+export(alfam2,alfamei)
 useDynLib(ALFAM2)

@@ -55,10 +55,6 @@ For now we will set these issues aside.
 The `alfamei()` function needs these inputs along with a few settings.
 
 ```{r}
-devtools::load_all()
-```
-
-```{r}
 args(alfamei)
 ```
 
@@ -94,7 +90,7 @@ ei$predref
 
 ## Estimating uncertainty
 
-To estimate uncertainty in predicted emissions based on uncertainty in model parameter values, set `r uncert = 'pars')`.
+To estimate uncertainty in predicted emissions based on uncertainty in model parameter values, set `r uncert = 'pars'`.
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',

@@ -8,14 +8,8 @@
 
 aggregate2 <- function(dat, x, by, FUN, sep = '.', sort = TRUE, ...) {
 
-  # Convert data.table to data frame
-  DT <- FALSE
-  if (class(dat)[1] == 'data.table') {
-    dat <- as.data.frame(dat)
-    if (requireNamespace('data.table', quietly = TRUE)) {
-      DT <- TRUE
-    }
-  }
+  # Convert e.g., data.table to data frame
+  dat <- as.data.frame(dat)
 
   for (i in 1:length(FUN)) {
     d <- aggregate(x = dat[, x, drop = FALSE], by = dat[, by, drop = FALSE], FUN = FUN[[i]], ...) 
@@ -31,10 +25,6 @@ aggregate2 <- function(dat, x, by, FUN, sep = '.', sort = TRUE, ...) {
     if (sort) {
       res <- res[, c(by, sort(names(res)[!names(res) %in% by]))]
     }
-  }
-
-  if (DT) {
-    res <- data.table(res)
   }
 
   return(res)
