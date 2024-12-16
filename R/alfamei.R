@@ -138,7 +138,12 @@ alfamei <- function(
       if (!is.null(seed) && !is.na(seed)) {
         set.seed(seed)
       }
-      whichpars <- sample(1:nrow(pars.uncert), nu)
+      replace <- FALSE
+      if (nu > nrow(pars.uncert)) {
+        message('Sampling from pars.uncert with replacement because nu > nrow(pars.uncert)')
+        replace <- TRUE
+      }
+      whichpars <- sample(1:nrow(pars.uncert), nu, replace = replace)
     } else {
       whichpars <- 0
       pp <- pars

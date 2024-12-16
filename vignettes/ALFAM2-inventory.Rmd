@@ -17,7 +17,7 @@ options(width=65)
 
 # Introduction
 An obvious application of the `alfam2()` function is emissions inventory calculations.
-The `alfamei()` function simplifies this type of work by
+The `alfamei()` function facilitates this type of work by
 
 1. estimating uncertainty from both model input variables and parameter values, 
 2. aggregating results, and
@@ -29,11 +29,13 @@ The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
 
 # A simple example
 
-Let's pretend that we are interested in inventory estimates of ammonia emission from field-applied cattle and pig slurry in some geographic area.
+Let's pretend that we are interested in inventory estimates of ammonia emission from field-applied cattle and pig slurry in some area.
 We have input data at a geographic scale we'll call "sector" here.
-In our hypothetical input data there are two sectors in one of our "zones", and three other zones with one sector each.
-We also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather.
-(Without data like these, the benefit from using this function for inventory calculations is not clear.)
+In our input data there are two sectors in one of our "zones", and three other zones with one sector each.
+These data are imaginary and the important point is that input data must be at least as disaggregated as the required output.
+In practice users might work at the district, county, state, or country level.
+In our example, we also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather.
+Without data like these, most of the benefit from using this function for inventory calculations is lost.
 
 ```{r}
 dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
@@ -76,13 +78,24 @@ For aggregated TAN application and emission, totals in this case, see the follow
 ei$emisagg
 ```
 
+Total emission is given in the `emis.tot` column, and its units match TAN application units from the input.
+The `emis.fact` column has an effective emission factor, total emission divided by total applied TAN (`TAN.app.tot` here).
+
 Disaggregated data are included as well.
 
 ```{r}
 ei$emisdis
 ```
 
-And to see more detailed ALFAM2 predictions from the `alfam2()` function,
+Note that the emission factors given are always based on aggregation level represented by each row in an output object.
+The `alfamei()` function does not calculate simple average emission factors, although if those are of interest they could be calculated from disaggregated results.
+But here we will just show that that overall value of `emis.factor` is not the simple average.
+
+```{r}
+mean(ei$emisdis$emis.fact)
+```
+
+To see more detailed ALFAM2 predictions from the `alfam2()` function, check the `predref` element, which has all the otput from `alfam2()` applied to the input data given in the `alfamei()` call.
 
 ```{r}
 ei$predref
@@ -90,7 +103,7 @@ ei$predref
 
 ## Estimating uncertainty
 
-To estimate uncertainty in predicted emissions based on uncertainty in model parameter values, set `r uncert = 'pars'`.
+To estimate uncertainty in predicted emissions based on uncertainty in model parameter values, set `uncert = 'pars'`.
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
@@ -101,10 +114,12 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 ei$emisagg
 ```
 
-The `alfamei()` function can also incorporate uncertainty from `alfam2()` predictor variables, as well as in TAN application.
-This requires setting some inputs in a data frame that is then passed to the `uncert.settings` argument.
+By default, `alfamei()` uses 100 "plausible" parameter sets (the `alfam2pars03var` object) that were developed using a bootstrap approach as descibed in the latest ALFAM2 model paper[^1].
+
+The `alfamei()` function can also incorporate uncertainty from `alfam2()` predictor variables, as well as in TAN application, using a Monte Carlo approach.
+Getting uncertainty estimates requires setting some inputs in a data frame that is then passed to the `uncert.settings` argument.
 These settings can specify values for either uniform or normal distributions for uncertainty.
-Furthermore, uncertainty can be relative (a fraction of the value given in `dat`) or adjusted to the center.
+Furthermore, uncertainty can be relative (a fraction of the value given in `dat`) or adjusted to the center (so estimated uncertainty is added to input values).
 And even with a normal distribution a minimum and maximum can be specified.
 Here we will use a normal distribution for slurry dry matter (DM) and pH, as well as TAN application.
 Other predictor variables are used in the predictions, but because we have omitted them, their uncertainty is not included.
@@ -229,6 +244,11 @@ ei$emis.fact.lwr * ei$TAN.app.tot.lwr
 ei$emis.fact.upr * ei$TAN.app.tot.upr
 ```
 
+The `nu` argument controls the number of iterations to used for uncertainty estimation.
+If considering only parameter uncertainty, no benefit will come from setting `nu` above the number of sets (which is 100 for the default).
+But with `'vars'` included, stability should improve with more.
+
+
 # Higher resolution weather
 
 We can use some artificial hourly weather data made with some code from the ALFAM2-start vignette.
@@ -336,4 +356,8 @@ The `ukey` column is unique for each uncertainty input dataset, and may be helpf
 head(ei$emisuc)
 dim(ei$emisuc)
 ```
+
+# References
+[^1]: Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. *Atmospheric Environment*. <https://doi.org/10.1016/j.atmosenv.2024.120910>
+
 
