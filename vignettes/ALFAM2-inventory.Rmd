@@ -46,7 +46,7 @@ dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
 		  man.dm = c(7, 4, 6.5, 6.5, 4),
 		  man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
 		  app.mthd = c(rep('trailing hose', 4), 'broadcast'),
-		  wind.2m = c(2.2, 2.1, 4.0, 3.7, 4.0),
+		  wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
 		  air.temp = c(12, 8, 8, 15, 14),
 		  time.h = 168,
 		  TAN.app.tot = c(2000, 1500, 80, 4300, 25))
@@ -183,7 +183,14 @@ aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')],
           ei$emisuc[, c('zone', 'sector')], FUN = sd)
 ```
 
-A relative error does not make much sense for pH.
+The relative standard deviation is constant for all each variable.
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = function(x) sd(x) / mean(x))
+```
+
+Let's use some different approaches.
 And we should include weather as well.
 
 ```{r}
@@ -204,11 +211,10 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 ```{r}
 aggregate(ei$emisuc[, c('man.ph', 'air.temp')], 
           ei$emisuc[, c('zone', 'sector')], FUN = range)
+
 aggregate(ei$emisuc[, c('man.ph', 'air.temp')], 
           ei$emisuc[, c('zone', 'sector')], FUN = sd)
 ```
-
-Better!
 
 Note that estimated errors are applied to a copy of the entire input data frame.
 That is, the estimates are at the level of the entire analysis.
@@ -219,7 +225,7 @@ ei$emisagg
 
 With these uncertainty settings, overall uncertainty in emissions is high.
 
-To separately look at the contributions of parameter and input variable uncertainty, or make any other quantitative comparison of uncertainty, the random number seed should be set for reproducibility with the `seed` argument.
+To separately look at the contributions of parameter and input variable uncertainty, or make any other quantitative comparison of uncertainty, the random number seed can be set for reproducibility with the `seed` argument.
 (The function calls `set.seed()`.)
 
 Parameters:
@@ -243,19 +249,19 @@ alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('vars', 'pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
-So in this hypothetical example with no more than guesses for variable uncertainty inputs, that uncertainty is more important than from parameter values.
+So in this hypothetical example with no more than guesses for variable uncertainty inputs, that uncertainty in variables is more important than from parameter values.
 
 Note that estimated confidence limits are independent.
 All variables are calculated for each uncertainty iteration, and then quantiles are used to estimate limits, separately for all variables.
-So for example, in the result below, the limits for total emission are *not* the product of the emission factor and TAN application limits, but less extreme (closer to the main estimate).
+So for example, in the result below, the limits for total emission are *not* the product of the emission factor and TAN application limits, but less extreme (closer to the main estimate), as they should be.
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('vars', 'pars'), uncert.settings = uset, 
-        seed = 1)$emisagg
-ei
-ei$emis.fact.lwr * ei$TAN.app.tot.lwr
-ei$emis.fact.upr * ei$TAN.app.tot.upr
+        seed = 1)
+ei$emisagg
+ei$emisagg$emis.fact.lwr * ei$emisagg$TAN.app.tot.lwr
+ei$emisagg$emis.fact.upr * ei$emisagg$TAN.app.tot.upr
 ```
 
 The `nu` argument controls the number of iterations to used for uncertainty estimation.
@@ -274,21 +280,25 @@ wthr <- data.frame(time.h = 0:84*2,
                    wind.sqrt = sqrt(1.5 + 0.4*sin(0:84*2 * 2*pi/24)) + 
                       rnorm(85, 0, 0.12)) 
 plot(air.temp ~ time.h, data = wthr, type = 'o')
+plot(wind.sqrt ~ time.h, data = wthr, type = 'o')
 ```
 
 Here we will use these weather data with different types of slurry.
-Importantly, because we will now have multiple rows per slurry application event, we need an "application event key", which we will specify in the `eventkey` argument.
+Importantly, because we will now have multiple rows per slurry application event (because of the higher resolution weather), we need an "application event key" to group these, which we will specify using the `eventkey` argument.
 
 ```{r}
 dat <- data.frame(ekey = rep(1:3, each = 85), wthr[rep(1:85, 3), ])
 ```
 
+We'll make up some slurry properties for each of the three application events used in this example.
+
 ```{r}
 slurry <- data.frame(ekey = 1:3, man.soure = c('cattle', 'pig', 'cattle'),
                      TAN.app.tot = c(1, 2, 3),
                      man.dm = c(6.2, 3.9, 8.0), man.ph = c(7.0, 7.5, 7.9))
-dat <- merge(dat, slurry)
+dat <- merge(dat, slurry, by = 'ekey')
 head(dat)
+tail(dat)
 ```
 
 So in this example we want to calculate emission for each of 3 application events, considering the effect of hourly weather changes.
@@ -300,12 +310,19 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 ```
 
 Note how the `eventkey` issue is handled differently in the `alfam2()` function.
-With that, each separate row in `dat` is taken as another time interval in a single application event, unless `group` is given and the value differs between rows.
+For `alfam2()`, each separate row in `dat` is taken as another time interval in a single application event, unless `group` is given and the value differs between rows.
 In `alfamei()`, each row is assumed to be a separate application event unless the value of the column given in the `eventkey` argument says otherwise.
 
 ```{r}
 ei$emisdis
 ei$emisagg
+```
+
+If we want the high-resolution predictions, they are in `predref`.
+
+```{r}
+head(ei$predref)
+dim(ei$predref)
 ```
 
 # Aggregation
@@ -315,16 +332,16 @@ Let's modify the first example by expanding it over multiple years.
 
 ```{r}
 dat <- data.frame(app.key = 1:5,
-		  zone = c('north', 'north', 'south', 'east', 'west'),
-		  sector = c(1, 2, 1, 1, 1),
-		  man.source = c('cattle', 'pig', 'cattle', 'cattle', 'pig'),
-		  man.dm = c(7, 4, 6.5, 6.5, 4),
-		  man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
-		  app.mthd = c(rep('trailing hose', 4), 'broadcast'),
-		  wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
-		  air.temp = c(12, 8, 8, 15, 14),
-		  time.h = 168,
-		  TAN.app.tot = c(2000, 1500, 80, 4300, 25))
+		              zone = c('north', 'north', 'south', 'east', 'west'),
+		              sector = c(1, 2, 1, 1, 1),
+		              man.source = c('cattle', 'pig', 'cattle', 'cattle', 'pig'),
+		              man.dm = c(7, 4, 6.5, 6.5, 4),
+		              man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
+		              app.mthd = c(rep('trailing hose', 4), 'broadcast'),
+		              wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
+		              air.temp = c(12, 8, 8, 15, 14),
+		              time.h = 168,
+		              TAN.app.tot = c(2000, 1500, 80, 4300, 25))
 ```
 
 Apply in multiple years.
@@ -332,6 +349,15 @@ Apply in multiple years.
 ```{r}
 dat <- data.frame(year = rep(2010:2015, each = 5), dat[rep(1:5, 6), ])
 ```
+
+And change at least the TAN application values among the years, to make the ultimate output more interesting.
+
+```{r}
+dat$TAN.app.tot <- dat$TAN.app.tot * (1 + as.numeric(factor(dat$year)) / 10)
+```
+
+Here we have a single row per application event.
+We don't actually need the `app.key` column.
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
@@ -349,27 +375,33 @@ For example, by `year`.
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-	aggkey = 'year', 
-        uncert = c('pars', 'vars'), uncert.settings = uset)$emisagg
+	      aggkey = 'year', uncert = c('pars', 'vars'), uncert.settings = uset)$emisagg
 ```
 
-Values are identical across years because inputs and TAN application are identical!
+Emission factors are identical across years because predictor variable values are identical (only TAN application differed)!
 
 We could aggregate by multiple variables.
 
 ```{r}
 alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-	aggkey = c('man.source', 'year'), 
-        uncert = c('pars', 'vars'), uncert.settings = uset)$emisagg
+	      aggkey = c('zone', 'man.source', 'year'), uncert = c('pars', 'vars'), 
+        uncert.settings = uset)$emisagg
 ```
 
-If aggregation at multiple levels is needed, it is best to make a single `alfamei()` call and extract the results from the expanded uncertainty data frame for external aggregation.
+If multiple aggregation combinations are needed, it may be best to make a single `alfamei()` call and extract the results from the expanded uncertainty data frame for external aggregation.
 The `ukey` column is unique for each uncertainty input dataset, and may be helpful for that task.
 
 ```{r}
 head(ei$emisuc)
 dim(ei$emisuc)
 ```
+
+```{r}
+head(ei$emisdis)
+dim(ei$emisdis)
+```
+
+
 
 # References
 [^1]: Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. *Atmospheric Environment*. <https://doi.org/10.1016/j.atmosenv.2024.120910>
