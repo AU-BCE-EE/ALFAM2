@@ -1,5 +1,5 @@
 ---
-title: "Emissions inventory calculations with the ALFAM2 package"
+title: "Emission inventory calculations with the ALFAM2 package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Emissions inventory calculations with the ALFAM2 package}
@@ -23,16 +23,16 @@ The `alfamei()` function facilitates this type of work by
 2. aggregating results, and
 3. including default arguments and behavior appropriate for inventory calcuations.
 
-Actual emission calculations are made using `alfam2()`.
+Underlying emission calculations are automaticallymade with the `alfam2()` function.
 This document shows how to use the `alfamei` function through examples.
 The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
 
 # A simple example
 
 Let's pretend that we are interested in inventory estimates of ammonia emission from field-applied cattle and pig slurry in some area.
-We have input data at a geographic scale we'll call "sector" here.
+The most disaggregated input data we have is at a geographic scale we'll call "sector" here.
 In our input data there are two sectors in one of our "zones", and three other zones with one sector each.
-These data are imaginary and the important point is that input data must be at least as disaggregated as the required output.
+These data are imaginary of course, but the important point is that input data must be at least as disaggregated as the required output.
 In practice users might work at the district, county, state, or country level.
 In our example, we also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather.
 Without data like these, most of the benefit from using this function for inventory calculations is lost.
