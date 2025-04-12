@@ -3,11 +3,13 @@ title: "Emission inventory calculations with the ALFAM2 package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Emissions inventory calculations with the ALFAM2 package}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
-```{r, include=FALSE, cache=FALSE}
+```{r cache=FALSE, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(fig.width=12, fig.height=8, out.width='100%', out.height='100%') 
 opts_chunk$set(cache = FALSE, tidy = FALSE, fig.align = "center")
@@ -16,14 +18,14 @@ options(width=65)
 ```
 
 # Introduction
-An obvious application of the `alfam2()` function is emissions inventory calculations.
+An obvious application of the `alfam2()` function is emission inventory calculations.
 The `alfamei()` function facilitates this type of work by
 
 1. estimating uncertainty from both model input variables and parameter values, 
-2. aggregating results, and
+2. aggregating results for total emissions and effective emission factors, and
 3. including default arguments and behavior appropriate for inventory calcuations.
 
-Underlying emission calculations are automaticallymade with the `alfam2()` function.
+Underlying emission calculations are automatically made with the `alfam2()` function.
 This document shows how to use the `alfamei` function through examples.
 The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
 
@@ -33,8 +35,8 @@ Let's pretend that we are interested in inventory estimates of ammonia emission 
 The most disaggregated input data we have is at a geographic scale we'll call "sector" here.
 In our input data there are two sectors in one of our "zones", and three other zones with one sector each.
 These data are imaginary of course, but the important point is that input data must be at least as disaggregated as the required output.
-In practice users might work at the district, county, state, or country level.
-In our example, we also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather.
+In practice users might work at the district, county, state, or country level--the names of geographic scale is completely flexible for `alfamei()`.
+In our example, we also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather following the application events.
 Without data like these, most of the benefit from using this function for inventory calculations is lost.
 
 ```{r}
@@ -44,7 +46,7 @@ dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
 		  man.dm = c(7, 4, 6.5, 6.5, 4),
 		  man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
 		  app.mthd = c(rep('trailing hose', 4), 'broadcast'),
-		  wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
+		  wind.2m = c(2.2, 2.1, 4.0, 3.7, 4.0),
 		  air.temp = c(12, 8, 8, 15, 14),
 		  time.h = 168,
 		  TAN.app.tot = c(2000, 1500, 80, 4300, 25))
@@ -52,15 +54,17 @@ dat
 ```
 
 We might think about whether these data should be further "disaggregated", and whether we might consider how changing weather over the slurry application period affects total emission.
-For now we will set these issues aside.
+The `alfamei()` function could handle this, but for now we will set these issues aside.
 
-The `alfamei()` function needs these inputs along with a few settings.
+For inventory calculations, the `alfamei()` function needs these inputs above along with a few settings.
 
 ```{r}
 args(alfamei)
 ```
 
 Here we only really need to specify the name of the columns that have: the time after application at which emission should be integrated and total TAN application (N mass) in a known unit.
+Here TAN application is in metric tonnes (Mg). 
+
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
@@ -69,7 +73,9 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
 The function returns a list of 5 elements.
 
 ```{r}
+class(ei)
 names(ei)
+str(ei)
 ```
 
 For aggregated TAN application and emission, totals in this case, see the following element.
@@ -78,10 +84,10 @@ For aggregated TAN application and emission, totals in this case, see the follow
 ei$emisagg
 ```
 
-Total emission is given in the `emis.tot` column, and its units match TAN application units from the input.
-The `emis.fact` column has an effective emission factor, total emission divided by total applied TAN (`TAN.app.tot` here).
+Total emission is given in the `emis.tot` column, and its units match TAN application units from the input, t here.
+The `emis.fact` column has an *effective* emission factor, i.e., total emission (`emis.tot`) divided by total applied TAN (`TAN.app.tot` here).
 
-Disaggregated data are included as well.
+Disaggregated data are included as well, in the `emisdis` element.
 
 ```{r}
 ei$emisdis
@@ -95,7 +101,9 @@ But here we will just show that that overall value of `emis.factor` is not the s
 mean(ei$emisdis$emis.fact)
 ```
 
-To see more detailed ALFAM2 predictions from the `alfam2()` function, check the `predref` element, which has all the otput from `alfam2()` applied to the input data given in the `alfamei()` call.
+To see more detailed ALFAM2 predictions from the `alfam2()` function, check the `predref` element, which has all the output from `alfam2()` applied to the input data given in the `alfamei()` call.
+The `ref` part comes from the reference nature of these predictions; they are based on given inputs and default parameters, in contrast to uncertainty calculations.
+The topic of uncertainty is explored in the next subsection.
 
 ```{r}
 ei$predref
@@ -114,40 +122,41 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 ei$emisagg
 ```
 
-By default, `alfamei()` uses 100 "plausible" parameter sets (the `alfam2pars03var` object) that were developed using a bootstrap approach as descibed in the latest ALFAM2 model paper[^1].
+By default, `alfamei()` uses 100 "plausible" parameter sets (the `alfam2pars03var` object) that were developed using a bootstrap approach as described in the latest ALFAM2 model paper[^1].
 
-The `alfamei()` function can also incorporate uncertainty from `alfam2()` predictor variables, as well as in TAN application, using a Monte Carlo approach.
+The `alfamei()` function can also incorporate uncertainty from predictor variables, as well as TAN application, using a Monte Carlo approach.
 Getting uncertainty estimates requires setting some inputs in a data frame that is then passed to the `uncert.settings` argument.
 These settings can specify values for either uniform or normal distributions for uncertainty.
 Furthermore, uncertainty can be relative (a fraction of the value given in `dat`) or adjusted to the center (so estimated uncertainty is added to input values).
-And even with a normal distribution a minimum and maximum can be specified.
+And even with a normal distribution a minimum and maximum can be specified to exclude extreme values.
 Here we will use a normal distribution for slurry dry matter (DM) and pH, as well as TAN application.
+We'll specify a relative standard deviation for DM and TAN application (standard deviation of 20% of the mean value) and an absolute value for pH (standard deviation of 0.5 pH units), where the relative concept makes less sense.
 Other predictor variables are used in the predictions, but because we have omitted them, their uncertainty is not included.
-
 
 ```{r}
 uset <- data.frame(pvar = c('man.dm', 'man.ph',  'TAN.app.tot'),
-		   rel = 'Relative',
-		   dist.type = 'Normal',
-		   sd = 0.2,
-		   min = NA,
-		   max = NA)
+		               rel = c('Relative', 'Absolute', 'Relative'),
+		               dist.type = 'Normal',
+		               sd = c(0.2, 0.5, 0.2),
+		               min = NA,
+		               max = NA)
 uset
 ```
 
-Here is the effect of this additional uncertainty on predicted confidence limits.
-
+In the `alfamei()` call we now need to indicate that uncertainty should be included for both parameters and variables.
 
 ```{r}
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
+Here is the effect of this additional uncertainty on predicted confidence limits.
+
 ```{r}
 ei$emisagg
 ```
 
-The 20% relative standard deviation in TAN application alone has a large effect--see the limits for `TAN.app.tot`.
+The 20% relative standard deviation in TAN application alone has a large effect--see the limits for `TAN.app.tot` in `uset`.
 The default confidence interval level is 80%, and it could be adjusted with `cl`.
 
 ```{r}
@@ -155,7 +164,13 @@ alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('pars', 'vars'), uncert.settings = uset, cl = 0.9)$emisagg
 ```
 
-We can see the input variable values used in the `emisuc` element.
+We can see the input variable values used in the `emisuc` element, where `uc` is for "uncertainty".
+Here we have 100 rows for each input row in `dat`, because 100 iterations are the default (see `nu` below). 
+
+```{r}
+dim(ei$emisuc)
+```
+
 Here is the range and standard deviation.
 
 ```{r}
@@ -198,14 +213,13 @@ Better!
 Note that estimated errors are applied to a copy of the entire input data frame.
 That is, the estimates are at the level of the entire analysis.
 
-
 ```{r}
 ei$emisagg
 ```
 
 With these uncertainty settings, overall uncertainty in emissions is high.
 
-To separately look at the contributions of parameter and input variable uncertainty, or make any other quantitative comparion of oncertainty, the random number seed should be set for reproducibility with the `seed` argument.
+To separately look at the contributions of parameter and input variable uncertainty, or make any other quantitative comparison of uncertainty, the random number seed should be set for reproducibility with the `seed` argument.
 (The function calls `set.seed()`.)
 
 Parameters:

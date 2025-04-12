@@ -30,6 +30,11 @@ alfamei <- function(
     rmcols <- eventkey
   }
 
+  # Get wind.sqrt if missing
+  if (!'wind.sqrt' %in% names(dat) & 'wind.2m'%in% names(dat)) {
+    dat$wind.sqrt <- sqrt(dat$wind.2m)
+  }
+
   # Reference emission
   pred <- alfam2(dat, pars = pars, 
 		 app.name = NULL, 
