@@ -120,9 +120,27 @@ Sasha D. Hafner
 }
 
 \examples{
+dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
+		  sector = c(1, 2, 1, 1, 1),
+		  man.source = c('cattle', 'pig', 'cattle', 'cattle', 'pig'),
+		  man.dm = c(7, 4, 6.5, 6.5, 4),
+		  man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
+		  app.mthd = c(rep('trailing hose', 4), 'broadcast'),
+		  wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
+		  air.temp = c(12, 8, 8, 15, 14),
+		  time.h = 168,
+		  TAN.app.tot = c(2000, 1500, 80, 4300, 25))
+
+dat
+
+
+ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot', aggkey = 'zone')
+
+ei$emistot
+ei$emisagg
+
 # See vignette for more examples and explanation. Run:
 # vignette("ALFAM2-inventory")
-
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
