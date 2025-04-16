@@ -10,7 +10,7 @@ A wrapper for the \code{\link{alfam2}} function for emissions inventory applicat
 }
 
 \usage{
-alfamei(
+alfamei <- function(
   dat, 
   pars = ALFAM2::alfam2pars03, 
   time.name,
@@ -32,49 +32,53 @@ alfamei(
 \arguments{
   \item{dat}{
     data frame containing predictor variable values.
-    The data frame must include at least the elapsed (cumulative) time since manure was applied in hours, and the application rate of total ammoniaical nitrogen (TAN) in kg/h.
+    The data frame must include at least the elapsed (cumulative) time since manure was applied in hours at which emission should be evaluated, and the quantity of total ammoniaical nitrogen (TAN) applied in t (metric tonnes).
     (Other units could be used but should match parameter units and will affect the units of output.)
     Typically other predictor variables are included.
-    See the details section below and the vignette for more information.
+    See the vignette for more information.
 }
   \item{pars}{
     A named numeric vector (or a list of vectors) with model parameters (secondary parameters). Three parameter sets are provided with the package: \code{alfam2pars01}, \code{alfam2pars02} and \code{alfam2pars03}, with \code{alfam2pars03} recommended. See \code{\link{alfam2pars}} for details. Note that the function could be called with \code{pars = alfam2pars03} (omitting the \code{ALFAM2::} bit) but for clarity and safety, and to avoid a package check problem, the package name is included by default. See details for more information.
 }
   \item{time.name}{
-	  x.
+    name of column in \code{dat} that contains cumulative time since manure was applied (h) for evalution of emission.
 }
   \item{app.tan.name}{
-	  x
+    name of column in \code{dat} with total ammoniaical nitrogen (TAN) application (t)
 }
   \item{time.incorp}{
-	  x
+    passed to, so as in, \code{\link\{alfam2}}: either name of column in \code{dat} that contains time at which incorporation occurred (h), or length-one numeric value giving time that incorporation occurred (h). Omit if there was no incorporation or if incorporation is not a predictor variable. Optional.
 }
   \item{eventkey}{
-	  x
+    name of column containing a unique key application event key. Unlike \code{\link\{alfam2}}, each row is otherwise considered a separate application event.
 }
   \item{aggkey}{
-	  x
+    name of column or columns that should be used for aggregation of TAN application and emission. Character vector.
 }
   \item{uncert}{
-	  x
+    use to include uncertainty based on model parameters (\code{"pars"}), input variables (\code{"vars"}), both (\code{c("pars", "vars")}), or none (\code{NULL}).
+    Character vector.
 }
   \item{pars.uncert}{
-	  x
+    set of parameter sets to use for model uncertainty.
+    Unusual to specify; use default.
 }
   \item{uncert.settings}{
-	  x
+    data frame with uncertainty settings for uncertainty in input variables (when \code{'vars' %in% pars.uncert}), with these columns: \code{pvar} (predictor variable name), \code{rel} (relative, absolute, or centered uncertainty), \code{dist.type} (normal or uniform distribution), \code{sd} (distribution standard deviation), \code{min} (uniform distribution minimum), \code{max} (uniform distribution maximum).
 }
   \item{nu}{
-	  Number of uncertainty iterations.
+     number of uncertainty iterations.
 }  
   \item{cl}{
-	  x
+    confidence level.
 }
   \item{seed}{
-	  x
+    integer seed for uncertainty iterations.
+    Use for reproducing results.
+    Length-one integer vector.
 }
   \item{quiet}{
-	  x
+    set to \code{TRUE} to suppress some messages.
 }
   \item{...}{
     additional optional arguments to \code{\link{alfam2}}.
@@ -82,9 +86,14 @@ alfamei(
 }
 
 \details{
+This function simplifies emission calculations for inventory purposes and can estimate uncertainty from both model input variables and parameter values and aggregate TAN application and emission results.
+Actual emission calculations are made using \code{alfam2()}.
+The name of the function comes from 'ALFAM' and emissions inventory.
 }
 
 \value{
+A list with six elements, each a data frame with predicted emission and calculated TAN application, but with various additional variables and aggregated in different ways.
+See vignette.
 }
 
 \references{
@@ -100,12 +109,14 @@ alfamei(
 %% ~put references to the literature/web site here ~
 }
 \author{
-Sasha D. Hafner, Christoph Haeni, Roland Fuss
+Sasha D. Hafner
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
 \code{\link{alfam2}}
+\code{\link{alfam2pars03var}}
+\code{\link{alfam2pars}}
 }
 
 \examples{
