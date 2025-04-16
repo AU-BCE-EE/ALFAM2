@@ -54,6 +54,10 @@ alfamei <- function(
   dat.final <- merge(mxt, dat.out)
   s0 <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = aggkey, FUN = list(sum))
   s0$emis.fact <- s0$emis.tot / s0[, app.tan.name]
+
+  # Additional total aggregation to be returned regardless of requested aggregation level
+  stot <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = NULL, FUN = list(sum))
+  stot$emis.fact <- stot$emis.tot / stot[, app.tan.name]
   
   # Uncertainty ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -198,7 +202,16 @@ alfamei <- function(
 
     # Combine with summary s0
     s0 <- merge(s0, s3, by = aggkey)
-    
+
+    # And then get quantiles again, this time for stot = totals
+    s3tot <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = NULL, 
+	       FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+			  upr = function(x) quantile(x, 0.5 + cl / 2)))
+    stot <- cbind(stot, s3)
+
+    # Sort for export
+    dat.uc.final <- dat.uc.final[order(dat.uc.final$uset, dat.uc.final$ukey), ]
+ 
   } else {
     dat.uc.final <- NULL
     pred.uc <- NULL
@@ -209,6 +222,6 @@ alfamei <- function(
   dat.uc.final[, c('__eventkeydum')] <- NULL 
   pred.ref[, c('__eventkeydum')] <- NULL 
 
-  return(list(emisdis = dat.final, emisagg = s0, predref = pred.ref, emisuc = dat.uc.final, preduc = pred.uc))
+  return(list(emistot = stot, emisdis = dat.final, emisagg = s0, predref = pred.ref, emisuc = dat.uc.final, preduc = pred.uc))
 
 } 
