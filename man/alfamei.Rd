@@ -47,10 +47,10 @@ alfamei <- function(
     name of column in \code{dat} with total ammoniaical nitrogen (TAN) application (t)
 }
   \item{time.incorp}{
-    passed to, so as in, \code{\link\{alfam2}}: either name of column in \code{dat} that contains time at which incorporation occurred (h), or length-one numeric value giving time that incorporation occurred (h). Omit if there was no incorporation or if incorporation is not a predictor variable. Optional.
+    passed to, so as in, \code{\link{alfam2}}: either name of column in \code{dat} that contains time at which incorporation occurred (h), or length-one numeric value giving time that incorporation occurred (h). Omit if there was no incorporation or if incorporation is not a predictor variable. Optional.
 }
   \item{eventkey}{
-    name of column containing a unique key application event key. Unlike \code{\link\{alfam2}}, each row is otherwise considered a separate application event.
+    name of column containing a unique key application event key. Unlike \code{\link{alfam2}}, each row is otherwise considered a separate application event.
 }
   \item{aggkey}{
     name of column or columns that should be used for aggregation of TAN application and emission. Character vector.
@@ -64,7 +64,7 @@ alfamei <- function(
     Unusual to specify; use default.
 }
   \item{uncert.settings}{
-    data frame with uncertainty settings for uncertainty in input variables (when \code{'vars' %in% pars.uncert}), with these columns: \code{pvar} (predictor variable name), \code{rel} (relative, absolute, or centered uncertainty), \code{dist.type} (normal or uniform distribution), \code{sd} (distribution standard deviation), \code{min} (uniform distribution minimum), \code{max} (uniform distribution maximum).
+    data frame with uncertainty settings for uncertainty in input variables (when \code{'vars'} is included in \code{pars.uncert}), with these columns: \code{pvar} (predictor variable name), \code{rel} (relative, absolute, or centered uncertainty), \code{dist.type} (normal or uniform distribution), \code{sd} (distribution standard deviation), \code{min} (uniform distribution minimum), \code{max} (uniform distribution maximum).
 }
   \item{nu}{
      number of uncertainty iterations.
