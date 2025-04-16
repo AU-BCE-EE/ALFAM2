@@ -204,10 +204,12 @@ alfamei <- function(
     s0 <- merge(s0, s3, by = aggkey)
 
     # And then get quantiles again, this time for stot = totals
-    s3tot <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = NULL, 
+    s2tot <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot'), by = 'uset', FUN = list(sum))
+    s2tot$emis.fact <- s2tot$emis.tot / s2tot[, app.tan.name]
+    s3tot <- aggregate2(s2tot, c(app.tan.name, 'emis.tot', 'emis.fact'), by = NULL, 
 	       FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
 			  upr = function(x) quantile(x, 0.5 + cl / 2)))
-    stot <- cbind(stot, s3)
+    stot <- cbind(stot, s3tot)
 
     # Sort for export
     dat.uc.final <- dat.uc.final[order(dat.uc.final$uset, dat.uc.final$ukey), ]

@@ -333,6 +333,7 @@ By default `alfamei()` gives the totals.
 Let's modify the first example by expanding it over multiple years.
 
 ```{r}
+devtools::load_all()
 dat <- data.frame(app.key = 1:5,
 		              zone = c('north', 'north', 'south', 'east', 'west'),
 		              sector = c(1, 2, 1, 1, 1),
@@ -370,14 +371,17 @@ Here our default aggregation combines multiple years.
 
 ```{r}
 ei$emisagg
+ei$emistot
 ```
 
 We can have it do something else using the `aggkey` argument.
 For example, by `year`.
 
 ```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
-	      aggkey = 'year', uncert = c('pars', 'vars'), uncert.settings = uset)$emisagg
+ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+	      aggkey = 'year', uncert = c('pars', 'vars'), uncert.settings = uset)
+ei$emisagg
+ei$emistot
 ```
 
 Emission factors are identical across years because predictor variable values are identical (only TAN application differed)!
@@ -385,9 +389,12 @@ Emission factors are identical across years because predictor variable values ar
 We could aggregate by multiple variables.
 
 ```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 	      aggkey = c('zone', 'man.source', 'year'), uncert = c('pars', 'vars'), 
-        uncert.settings = uset)$emisagg
+        uncert.settings = uset)
+
+ei$emisagg
+ei$emistot
 ```
 
 If multiple aggregation combinations are needed, it may be best to make a single `alfamei()` call and extract the results from the expanded uncertainty data frame for external aggregation.
@@ -397,14 +404,3 @@ The `uset` column is unique for each uncertainty input dataset, and may be helpf
 head(ei$emisuc)
 dim(ei$emisuc)
 ```
-
-```{r}
-head(ei$emisdis)
-dim(ei$emisdis)
-```
-
-
-# References
-[^1]: Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. *Atmospheric Environment*. <https://doi.org/10.1016/j.atmosenv.2024.120910>
-
-
