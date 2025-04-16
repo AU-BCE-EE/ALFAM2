@@ -3,10 +3,7 @@ title: "Emission inventory calculations with the ALFAM2 package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Emissions inventory calculations with the ALFAM2 package}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r cache=FALSE, include=FALSE}
@@ -70,15 +67,20 @@ Here TAN application is in metric tonnes (Mg).
 ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
 ```
 
-The function returns a list of 5 elements.
+The function returns a list of 6 elements.
 
 ```{r}
-class(ei)
 names(ei)
-str(ei)
 ```
 
-For aggregated TAN application and emission, totals in this case, see the following element.
+For total TAN application and emission, see the following element.
+
+```{r}
+ei$emistot
+```
+
+The following element has aggregated results, with the level of aggregation depending on input (more on this below).
+In this case, it matches the total.
 
 ```{r}
 ei$emisagg
@@ -389,7 +391,7 @@ alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 ```
 
 If multiple aggregation combinations are needed, it may be best to make a single `alfamei()` call and extract the results from the expanded uncertainty data frame for external aggregation.
-The `ukey` column is unique for each uncertainty input dataset, and may be helpful for that task.
+The `uset` column is unique for each uncertainty input dataset, and may be helpful for that task.
 
 ```{r}
 head(ei$emisuc)
@@ -400,7 +402,6 @@ dim(ei$emisuc)
 head(ei$emisdis)
 dim(ei$emisdis)
 ```
-
 
 
 # References
