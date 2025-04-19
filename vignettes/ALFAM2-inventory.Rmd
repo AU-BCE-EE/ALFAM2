@@ -23,8 +23,33 @@ The `alfamei()` function facilitates this type of work by
 3. including default arguments and behavior appropriate for inventory calcuations.
 
 Underlying emission calculations are automatically made with the `alfam2()` function.
-This document shows how to use the `alfamei` function through examples.
+This document shows how to use the `alfamei()` function through examples.
 The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
+
+# The package
+
+Let's load the package,
+
+```{r}
+library(ALFAM2)
+```
+
+and check the version.
+
+```{r}
+packageVersion('ALFAM2')
+```
+
+The inventory function is available (and at leat initially debugged) in v4.2.5 and up.
+It is currently only included in the development branch publicly available through the ALFAM2 GitHub repo.
+So users can install it with
+
+```{r,eval=FALSE}
+devtools::install_github('AU-BCE-EE/ALFAM2', ref = 'dev')
+```
+
+This assumes the devtools package has already been installed.
+Eventually (after more testing and probably some revision) the function will be available in the main branch and later through CRAN.
 
 # A simple example
 
