@@ -49,8 +49,9 @@ alfamei <- function(
   
   # First sum 
   # Get max time by eventkey
-  mxt <- aggregate(dat.out[, time.name], dat.out[, eventkey, drop = F], FUN = max)
+  mxt <- aggregate(dat.out[, time.name], dat.out[, eventkey, drop = FALSE], FUN = max)
   names(mxt)[2] <- time.name
+  # Select only max times by merge
   dat.final <- merge(mxt, dat.out)
   s0 <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = aggkey, FUN = list(sum))
   s0$emis.fact <- s0$emis.tot / s0[, app.tan.name]
