@@ -358,7 +358,6 @@ By default `alfami()` gives the totals.
 Let's modify the first example by expanding it over multiple years.
 
 ```{r}
-devtools::load_all()
 dat <- data.frame(app.key = 1:5,
 		              zone = c('north', 'north', 'south', 'east', 'west'),
 		              sector = c(1, 2, 1, 1, 1),
@@ -422,10 +421,24 @@ ei$emisagg
 ei$emistot
 ```
 
-If multiple aggregation combinations are needed, it may be best to make a single `alfami()` call and extract the results from the expanded uncertainty data frame for external aggregation.
-The `uset` column is unique for each uncertainty input dataset, and may be helpful for that task.
+If multiple aggregation combinations are needed, `alfami()` can handle this as well.
+For example, to aggregate in three different ways:
 
 ```{r}
-head(ei$emisuc)
-dim(ei$emisuc)
+
+devtools::load_all() 
+ei <- alfami(dat, 
+             time.name = 'time.h', 
+             app.tan.name = 'TAN.app.tot',
+	           aggkey = list('year',
+	                         'man.source',
+	                         c('year', 'zone')),
+             uncert = c('pars', 'vars'), 
+             uncert.settings = uset)
+```
+
+Now the `emisagg` element is a list of multiple data frames.
+
+```{r}
+ei$emisagg
 ```

@@ -53,8 +53,17 @@ alfami <- function(
   names(mxt)[2] <- time.name
   # Select only max times by merge
   dat.final <- merge(mxt, dat.out)
-  s0 <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = aggkey, FUN = list(sum))
-  s0$emis.fact <- s0$emis.tot / s0[, app.tan.name]
+  if (!inherits(aggkey, 'list')) {
+    s0 <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = aggkey, FUN = list(sum))
+    s0$emis.fact <- s0$emis.tot / s0[, app.tan.name]
+  } else if (length(aggkey) > 1) {
+    s0 <- list()
+    for (aa in seq_along(aggkey)) {
+      ss0 <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = aggkey[[aa]], FUN = list(sum))
+      ss0$emis.fact <- ss0$emis.tot / ss0[, app.tan.name]
+      s0[[aa]] <- ss0
+    }
+  }
 
   # Additional total aggregation to be returned regardless of requested aggregation level
   stot <- aggregate2(dat.final, c(app.tan.name, 'emis.tot'), by = NULL, FUN = list(sum))
@@ -192,17 +201,31 @@ alfami <- function(
 			  upr = function(x) quantile(x, 0.5 + cl / 2)))
     dat.final <- merge(dat.final, s1, by = eventkey, all.x = TRUE)
     
-    # Aggregate within uncertainty set
-    s2 <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot'), by = c('uset', aggkey), FUN = list(sum))
-    s2$emis.fact <- s2$emis.tot / s2[, app.tan.name]
-    
-    # And then get quantiles
-    s3 <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = aggkey, 
-	       FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
-			  upr = function(x) quantile(x, 0.5 + cl / 2)))
+    if (!inherits(aggkey, 'list')) {
+      # Aggregate within uncertainty set
+      s2 <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot'), by = c('uset', aggkey), FUN = list(sum))
+      s2$emis.fact <- s2$emis.tot / s2[, app.tan.name]
+      
+      # And then get quantiles
+      s3 <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = aggkey, 
+	         FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+		  	  upr = function(x) quantile(x, 0.5 + cl / 2)))
 
-    # Combine with summary s0
-    s0 <- merge(s0, s3, by = aggkey)
+      # Combine with summary s0
+      s0 <- merge(s0, s3, by = aggkey)
+    } else if (length(aggkey) > 1) {
+      for (aa in seq_along(aggkey)) {
+        s2 <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot'), by = c('uset', aggkey[[aa]]), FUN = list(sum))
+        s2$emis.fact <- s2$emis.tot / s2[, app.tan.name]
+        
+        # And then get quantiles
+        s3 <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = aggkey[[aa]], 
+	           FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+		    	  upr = function(x) quantile(x, 0.5 + cl / 2)))
+
+        s0[[aa]] <- merge(s0[[aa]], s3, by = aggkey[[aa]])
+      }
+    }
 
     # And then get quantiles again, this time for stot = totals
     s2tot <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot'), by = 'uset', FUN = list(sum))
