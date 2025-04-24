@@ -1,5 +1,5 @@
-\name{alfamei}
-\alias{alfamei}
+\name{alfami}
+\alias{alfami}
 \title{
 Emissions Inventory Calculations of Ammonia Emission from Field-Applied Manure
 %%  ~~function to do ... ~~
@@ -10,7 +10,7 @@ A wrapper for the \code{\link{alfam2}} function for emissions inventory applicat
 }
 
 \usage{
-alfamei <- function(
+alfami <- function(
   dat, 
   pars = ALFAM2::alfam2pars03, 
   time.name,
@@ -134,7 +134,7 @@ dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
 dat
 
 
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot', aggkey = 'zone')
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot', aggkey = 'zone')
 
 ei$emistot
 ei$emisagg

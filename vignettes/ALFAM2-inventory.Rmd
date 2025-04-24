@@ -16,14 +16,14 @@ options(width=65)
 
 # Introduction
 An obvious application of the `alfam2()` function is emission inventory calculations.
-The `alfamei()` function facilitates this type of work by
+The `alfami()` function facilitates this type of work by
 
 1. estimating uncertainty from both model input variables and parameter values, 
 2. aggregating results for total emissions and effective emission factors, and
 3. including default arguments and behavior appropriate for inventory calcuations.
 
 Underlying emission calculations are automatically made with the `alfam2()` function.
-This document shows how to use the `alfamei()` function through examples.
+This document shows how to use the `alfami()` function through examples.
 The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
 
 # The package
@@ -57,7 +57,7 @@ Let's pretend that we are interested in inventory estimates of ammonia emission 
 The most disaggregated input data we have is at a geographic scale we'll call "sector" here.
 In our input data there are two sectors in one of our "zones", and three other zones with one sector each.
 These data are imaginary of course, but the important point is that input data must be at least as disaggregated as the required output.
-In practice users might work at the district, county, state, or country level--the names of geographic scale is completely flexible for `alfamei()`.
+In practice users might work at the district, county, state, or country level--the names of geographic scale is completely flexible for `alfami()`.
 In our example, we also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather following the application events.
 Without data like these, most of the benefit from using this function for inventory calculations is lost.
 
@@ -76,12 +76,12 @@ dat
 ```
 
 We might think about whether these data should be further "disaggregated", and whether we might consider how changing weather over the slurry application period affects total emission.
-The `alfamei()` function could handle this, but for now we will set these issues aside.
+The `alfami()` function could handle this, but for now we will set these issues aside.
 
-For inventory calculations, the `alfamei()` function needs these inputs above along with a few settings.
+For inventory calculations, the `alfami()` function needs these inputs above along with a few settings.
 
 ```{r}
-args(alfamei)
+args(alfami)
 ```
 
 Here we only really need to specify the name of the columns that have: the time after application at which emission should be integrated and total TAN application (N mass) in a known unit.
@@ -89,7 +89,7 @@ Here TAN application is in metric tonnes (Mg).
 
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
 ```
 
 The function returns a list of 6 elements.
@@ -121,14 +121,14 @@ ei$emisdis
 ```
 
 Note that the emission factors given are always based on aggregation level represented by each row in an output object.
-The `alfamei()` function does not calculate simple average emission factors, although if those are of interest they could be calculated from disaggregated results.
+The `alfami()` function does not calculate simple average emission factors, although if those are of interest they could be calculated from disaggregated results.
 But here we will just show that that overall value of `emis.factor` is not the simple average.
 
 ```{r}
 mean(ei$emisdis$emis.fact)
 ```
 
-To see more detailed ALFAM2 predictions from the `alfam2()` function, check the `predref` element, which has all the output from `alfam2()` applied to the input data given in the `alfamei()` call.
+To see more detailed ALFAM2 predictions from the `alfam2()` function, check the `predref` element, which has all the output from `alfam2()` applied to the input data given in the `alfami()` call.
 The `ref` part comes from the reference nature of these predictions; they are based on given inputs and default parameters, in contrast to uncertainty calculations.
 The topic of uncertainty is explored in the next subsection.
 
@@ -141,7 +141,7 @@ ei$predref
 To estimate uncertainty in predicted emissions based on uncertainty in model parameter values, set `uncert = 'pars'`.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               uncert = 'pars')
 ```
 
@@ -149,9 +149,9 @@ ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 ei$emisagg
 ```
 
-By default, `alfamei()` uses 100 "plausible" parameter sets (the `alfam2pars03var` object) that were developed using a bootstrap approach as described in the latest ALFAM2 model paper[^1].
+By default, `alfami()` uses 100 "plausible" parameter sets (the `alfam2pars03var` object) that were developed using a bootstrap approach as described in the latest ALFAM2 model paper[^1].
 
-The `alfamei()` function can also incorporate uncertainty from predictor variables, as well as TAN application, using a Monte Carlo approach.
+The `alfami()` function can also incorporate uncertainty from predictor variables, as well as TAN application, using a Monte Carlo approach.
 Getting uncertainty estimates requires setting some inputs in a data frame that is then passed to the `uncert.settings` argument.
 These settings can specify values for either uniform or normal distributions for uncertainty.
 Furthermore, uncertainty can be relative (a fraction of the value given in `dat`) or adjusted to the center (so estimated uncertainty is added to input values).
@@ -170,10 +170,10 @@ uset <- data.frame(pvar = c('man.dm', 'man.ph',  'TAN.app.tot'),
 uset
 ```
 
-In the `alfamei()` call we now need to indicate that uncertainty should be included for both parameters and variables.
+In the `alfami()` call we now need to indicate that uncertainty should be included for both parameters and variables.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
@@ -187,7 +187,7 @@ The 20% relative standard deviation in TAN application alone has a large effect-
 The default confidence interval level is 80%, and it could be adjusted with `cl`.
 
 ```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('pars', 'vars'), uncert.settings = uset, cl = 0.9)$emisagg
 ```
 
@@ -231,7 +231,7 @@ uset
 ```
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
@@ -258,21 +258,21 @@ To separately look at the contributions of parameter and input variable uncertai
 Parameters:
 
 ```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
 Predictor variables:
 
 ```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('vars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
 Together:
 
 ```{r}
-alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('vars', 'pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
 ```
 
@@ -283,7 +283,7 @@ All variables are calculated for each uncertainty iteration, and then quantiles 
 So for example, in the result below, the limits for total emission are *not* the product of the emission factor and TAN application limits, but less extreme (closer to the main estimate), as they should be.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
         uncert = c('vars', 'pars'), uncert.settings = uset, 
         seed = 1)
 ei$emisagg
@@ -331,14 +331,14 @@ tail(dat)
 So in this example we want to calculate emission for each of 3 application events, considering the effect of hourly weather changes.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               eventkey = 'ekey',
               uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
 Note how the `eventkey` issue is handled differently in the `alfam2()` function.
 For `alfam2()`, each separate row in `dat` is taken as another time interval in a single application event, unless `group` is given and the value differs between rows.
-In `alfamei()`, each row is assumed to be a separate application event unless the value of the column given in the `eventkey` argument says otherwise.
+In `alfami()`, each row is assumed to be a separate application event unless the value of the column given in the `eventkey` argument says otherwise.
 
 ```{r}
 ei$emisdis
@@ -354,7 +354,7 @@ dim(ei$predref)
 
 # Aggregation
 Any variable (or combination of variables) can be used to aggregate results.
-By default `alfamei()` gives the totals.
+By default `alfami()` gives the totals.
 Let's modify the first example by expanding it over multiple years.
 
 ```{r}
@@ -388,7 +388,7 @@ Here we have a single row per application event.
 We don't actually need the `app.key` column.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
 
@@ -403,7 +403,7 @@ We can have it do something else using the `aggkey` argument.
 For example, by `year`.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 	      aggkey = 'year', uncert = c('pars', 'vars'), uncert.settings = uset)
 ei$emisagg
 ei$emistot
@@ -414,7 +414,7 @@ Emission factors are identical across years because predictor variable values ar
 We could aggregate by multiple variables.
 
 ```{r}
-ei <- alfamei(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
 	      aggkey = c('zone', 'man.source', 'year'), uncert = c('pars', 'vars'), 
         uncert.settings = uset)
 
@@ -422,7 +422,7 @@ ei$emisagg
 ei$emistot
 ```
 
-If multiple aggregation combinations are needed, it may be best to make a single `alfamei()` call and extract the results from the expanded uncertainty data frame for external aggregation.
+If multiple aggregation combinations are needed, it may be best to make a single `alfami()` call and extract the results from the expanded uncertainty data frame for external aggregation.
 The `uset` column is unique for each uncertainty input dataset, and may be helpful for that task.
 
 ```{r}

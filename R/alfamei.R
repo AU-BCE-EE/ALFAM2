@@ -2,7 +2,7 @@
 
 # Inputs
 # Outputs
-alfamei <- function(
+alfami <- function(
   dat, 
   pars = ALFAM2::alfam2pars03, 
   time.name,
