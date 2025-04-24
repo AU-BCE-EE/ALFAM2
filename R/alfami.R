@@ -197,8 +197,8 @@ alfami <- function(
     # Get final (latest) values (the merge() call drops the other key x time combinations--not need to end all keys at same time)
     dat.uc.final <- merge(mxt, dat.uc)
     s1 <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot', 'emis.fact'), by = eventkey, 
-	       FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
-			  upr = function(x) quantile(x, 0.5 + cl / 2)))
+	                   FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+			                          upr = function(x) quantile(x, 0.5 + cl / 2)))
     dat.final <- merge(dat.final, s1, by = eventkey, all.x = TRUE)
     
     if (!inherits(aggkey, 'list')) {
@@ -208,8 +208,8 @@ alfami <- function(
       
       # And then get quantiles
       s3 <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = aggkey, 
-	         FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
-		  	  upr = function(x) quantile(x, 0.5 + cl / 2)))
+	                     FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+		  	                          upr = function(x) quantile(x, 0.5 + cl / 2)))
 
       # Combine with summary s0
       s0 <- merge(s0, s3, by = aggkey)
@@ -220,8 +220,8 @@ alfami <- function(
         
         # And then get quantiles
         s3 <- aggregate2(s2, c(app.tan.name, 'emis.tot', 'emis.fact'), by = aggkey[[aa]], 
-	           FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
-		    	  upr = function(x) quantile(x, 0.5 + cl / 2)))
+	                       FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+		    	                          upr = function(x) quantile(x, 0.5 + cl / 2)))
 
         s0[[aa]] <- merge(s0[[aa]], s3, by = aggkey[[aa]])
       }
@@ -231,8 +231,8 @@ alfami <- function(
     s2tot <- aggregate2(dat.uc.final, c(app.tan.name, 'emis.tot'), by = 'uset', FUN = list(sum))
     s2tot$emis.fact <- s2tot$emis.tot / s2tot[, app.tan.name]
     s3tot <- aggregate2(s2tot, c(app.tan.name, 'emis.tot', 'emis.fact'), by = NULL, 
-	       FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
-			  upr = function(x) quantile(x, 0.5 + cl / 2)))
+	                      FUN = list(lwr = function(x) quantile(x, (1 - cl) / 2), 
+			                             upr = function(x) quantile(x, 0.5 + cl / 2)))
     stot <- cbind(stot, s3tot)
 
     # Sort for export
