@@ -167,7 +167,8 @@ uset <- data.frame(pvar = c('man.dm', 'man.ph',  'TAN.app.tot'),
 		               dist.type = 'Normal',
 		               sd = c(0.2, 0.5, 0.2),
 		               min = NA,
-		               max = NA)
+		               max = NA,
+                   level = 'agg')
 uset
 ```
 
@@ -211,7 +212,8 @@ aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')],
           ei$emisuc[, c('zone', 'sector')], FUN = sd)
 ```
 
-The relative standard deviation is constant for all each variable.
+Notice how the 
+The relative standard deviation is exactly constant for all .
 
 ```{r}
 aggregate(ei$emisuc[, c('man.dm', 'TAN.app.tot')], 
@@ -227,7 +229,8 @@ uset <- data.frame(pvar = c('man.dm', 'man.ph', 'air.temp', 'wind.sqrt', 'TAN.ap
 		   dist.type = c('Normal', 'Uniform', 'Normal', 'Normal', 'Normal'),
 		   sd = c(0.2, NA, 3, 0.5, 0.2),
 		   min = c(NA, -0.7, NA, NA, NA),
-		   max = c(NA, 0.7, NA, NA, NA))
+		   max = c(NA, 0.7, NA, NA, NA),
+       level = 'agg')
 uset
 ```
 
@@ -426,8 +429,6 @@ If multiple aggregation combinations are needed, `alfami()` can handle this as w
 For example, to aggregate in three different ways:
 
 ```{r}
-
-devtools::load_all() 
 ei <- alfami(dat, 
              time.name = 'time.h', 
              app.tan.name = 'TAN.app.tot',

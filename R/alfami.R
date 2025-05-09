@@ -13,7 +13,6 @@ alfami <- function(
   uncert = NULL,
   pars.uncert = ALFAM2::alfam2pars03var,
   uncert.settings = NULL,
-  uncert.unit = 'row',
   nu = 100,
   cl = 0.8,
   seed = NULL,
@@ -81,12 +80,6 @@ alfami <- function(
     dat.uc$uset <- rep(1:nu, each = nrow(dat))
     dat.uc$ukey <- paste(dat.uc[, eventkey], dat.uc$uset)
 
-    if (tolower(uncert.unit) == 'row') {
-      nuv <- nu * nrow(dat)
-    } else {
-      nuv <- nu
-    }
- 
     # First input
     if ('vars' %in% uncert && any(!is.na(uncert.settings[, 3:5])) && any(uncert.settings[, 3:5] > 0)) {
       if (!quiet) {
@@ -101,6 +94,11 @@ alfami <- function(
       for (j in 1:nrow(uncert.settings)) {
         uccv <- as.list(uncert.settings[j, ])
         if (any(!is.na(uncert.settings[j, 3:5]))) {
+          if (tolower(uccv$level) == 'disagg') {
+            nuv <- nu * nrow(dat)
+          } else {
+            nuv <- nu
+          }
           pvar <- uccv$pvar
           # Get error for each uncertainty simulation (total = nuv)
           if (uccv$dist.type == 'Uniform') {
@@ -125,14 +123,15 @@ alfami <- function(
           }
 
           # Get error into data frame by uncertainty set
-          if (tolower(uncert.unit) == 'row') {
+          if (tolower(uccv$level) == 'disagg') {
             edat <- data.frame(uset = rep(1:nu, each = nrow(dat)), e = e)
+            names(edat)[2] <- paste0('e.', pvar)
+            dat.uc <- cbind(dat.uc, edat[, 2, drop = FALSE])
           } else {
             edat <- data.frame(uset = 1:nu, e = e)
+            names(edat)[2] <- paste0('e.', pvar)
+            dat.uc <- merge(dat.uc, edat, by = 'uset', all.x = TRUE)
           }
-           
-          names(edat)[2] <- paste0('e.', pvar)
-          dat.uc <- merge(dat.uc, edat, by = 'uset', all.x = TRUE)
 
           # And adjust predictor variable values by error
           if (uccv$rel == 'Absolute') {
