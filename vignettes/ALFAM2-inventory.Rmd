@@ -31,7 +31,8 @@ The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
 Let's load the package,
 
 ```{r}
-library(ALFAM2)
+#library(ALFAM2)
+devtools::load_all()
 ```
 
 and check the version.

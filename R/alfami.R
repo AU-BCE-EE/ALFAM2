@@ -13,12 +13,15 @@ alfami <- function(
   uncert = NULL,
   pars.uncert = ALFAM2::alfam2pars03var,
   uncert.settings = NULL,
+  uncert.unit = 'row',
   nu = 100,
   cl = 0.8,
   seed = NULL,
   quiet = FALSE,
   ...
 ) {
+
+  # Check arguments
 
   dat <- as.data.frame(dat)
   uncert <- tolower(uncert)
@@ -77,6 +80,12 @@ alfami <- function(
     dat.uc <- dat[rep(1:nrow(dat), nu), ]
     dat.uc$uset <- rep(1:nu, each = nrow(dat))
     dat.uc$ukey <- paste(dat.uc[, eventkey], dat.uc$uset)
+
+    if (tolower(uncert.unit) == 'row') {
+      nuv <- nu * nrow(dat)
+    } else {
+      nuv <- nu
+    }
  
     # First input
     if ('vars' %in% uncert && any(!is.na(uncert.settings[, 3:5])) && any(uncert.settings[, 3:5] > 0)) {
@@ -93,12 +102,12 @@ alfami <- function(
         uccv <- as.list(uncert.settings[j, ])
         if (any(!is.na(uncert.settings[j, 3:5]))) {
           pvar <- uccv$pvar
-          # Get error for each uncertainty simulation (total = nu)
+          # Get error for each uncertainty simulation (total = nuv)
           if (uccv$dist.type == 'Uniform') {
             if (!is.null(seed) && !is.na(seed)) {
               set.seed(seed)
             }
-            e <- runif(nu, min = uccv$min, max = uccv$max)
+            e <- runif(nuv, min = uccv$min, max = uccv$max)
           } else if (uccv$dist.type == 'Normal') {
             if (uccv$rel == 'Relative') {
               dmean = 1 
@@ -108,7 +117,7 @@ alfami <- function(
             if (!is.null(seed) && !is.na(seed)) {
               set.seed(seed)
             }
-            e <- rnorm(nu, mean = dmean, sd = uccv$sd)
+            e <- rnorm(nuv, mean = dmean, sd = uccv$sd)
             if (all(!is.na(c(uccv$min, uccv$max)))) {
               e[e < uccv$min] <- uccv$min
               e[e > uccv$max] <- uccv$max
@@ -116,7 +125,12 @@ alfami <- function(
           }
 
           # Get error into data frame by uncertainty set
-          edat <- data.frame(uset = 1:nu, e = e)
+          if (tolower(uncert.unit) == 'row') {
+            edat <- data.frame(uset = rep(1:nu, each = nrow(dat)), e = e)
+          } else {
+            edat <- data.frame(uset = 1:nu, e = e)
+          }
+           
           names(edat)[2] <- paste0('e.', pvar)
           dat.uc <- merge(dat.uc, edat, by = 'uset', all.x = TRUE)
 
