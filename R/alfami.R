@@ -123,14 +123,12 @@ alfami <- function(
           }
 
           # Get error into data frame by uncertainty set
+          # agg approach depends on proper sort order for dat.uc (by uset)
           if (tolower(uccv$level) == 'disagg') {
-            edat <- data.frame(uset = rep(1:nu, each = nrow(dat)), e = e)
-            names(edat)[2] <- paste0('e.', pvar)
-            dat.uc <- cbind(dat.uc, edat[, 2, drop = FALSE])
+            dat.uc[, paste0('e.', pvar)] <- e
           } else {
-            edat <- data.frame(uset = 1:nu, e = e)
-            names(edat)[2] <- paste0('e.', pvar)
-            dat.uc <- merge(dat.uc, edat, by = 'uset', all.x = TRUE)
+            dat.uc[, paste0('e.', pvar)] <- rep(e, each = nrow(dat))
+            head(dat.uc)
           }
 
           # And adjust predictor variable values by error

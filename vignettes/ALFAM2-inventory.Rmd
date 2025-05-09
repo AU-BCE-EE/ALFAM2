@@ -200,27 +200,102 @@ Here we have 100 rows for each input row in `dat`, because 100 iterations are th
 dim(ei$emisuc)
 ```
 
-Here is the range and standard deviation.
+Here is the range:
 
 ```{r}
 aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
           ei$emisuc[, c('zone', 'sector')], FUN = range)
 ```
 
+Mean:
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = mean)
+```
+
+And standard deviation:
+
 ```{r}
 aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
           ei$emisuc[, c('zone', 'sector')], FUN = sd)
 ```
 
-Notice how the 
-The relative standard deviation is exactly constant for all .
+Notice how the standard deviation is constant for `man.ph`, even though mean values differ.
+This is because the specified distribution settings given for uncertainty are interpreted as applying at the aggregated level.
+We set this in the last column of `uset`:
+
+```{r}
+uset
+```
+
+Each uncertainty replication (iteration) therefore adjusts slurry pH by the same amount for all application events.
+We can see that we approximately have our requested standard deviation (the exact value we see above) in fact at the aggregated level.
+
+```{r}
+sd(aggregate(ei$emisuc[, c('man.ph')], ei$emisuc[, c('uset'), drop = FALSE], FUN = mean)$x)
+```
+
+There is an alternative approach, but first, let's look at the other input variables.
+We don't see a constant standard deviation for `man.dm` or `TAN.app.tot` because we indicated that it was *relative* standard deviation that should be constant in `uset`.
 
 ```{r}
 aggregate(ei$emisuc[, c('man.dm', 'TAN.app.tot')], 
           ei$emisuc[, c('zone', 'sector')], FUN = function(x) sd(x) / mean(x))
 ```
 
-Let's use some different approaches.
+In fact we see constant relative standard deviation, despite very different mean values.
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = mean)
+```
+
+If we have uncertainty parameters for the disaggregated level, here our zone/sector combinations, we can specify that in the `uncert.settings` argument.
+
+
+```{r}
+usetd <- data.frame(pvar = c('man.dm', 'man.ph', 'air.temp', 'wind.sqrt', 'TAN.app.tot'),
+		   rel = c('Relative', 'Centered', 'Absolute', 'Absolute',  'Relative'),
+		   dist.type = c('Normal', 'Uniform', 'Normal', 'Normal', 'Normal'),
+		   sd = c(0.2, NA, 3, 0.5, 0.2),
+		   min = c(NA, -0.7, NA, NA, NA),
+		   max = c(NA, 0.7, NA, NA, NA),
+       level = 'disagg')
+usetd
+```
+
+We should expect similar (on average, identical) *disaggregated* results.
+
+```{r}
+eid <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              uncert = c('pars', 'vars'), uncert.settings = usetd)
+```
+
+```{r}
+eid$emisdis
+```
+
+```{r}
+ei$emisdis
+```
+
+Indeed, similar.
+But aggregated results will differ, because we have now removed the (perfect) correlation in error among the different application events.
+
+```{r}
+eid$emisagg
+```
+
+```{r}
+ei$emisagg
+```
+
+Confidence intervals for aggregated results are wider when the uncertainty distribution parameters apply at the aggregated level.
+The difference will increase as the number of application events increases.
+The aggregated distribution approach is probably the better one, and we will use it for the remainder of the examples.
+
+Let's explore some other features related to uncertainty.
 And we should include weather as well.
 
 ```{r}
@@ -238,17 +313,6 @@ uset
 ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
               uncert = c('pars', 'vars'), uncert.settings = uset)
 ```
-
-```{r}
-aggregate(ei$emisuc[, c('man.ph', 'air.temp')], 
-          ei$emisuc[, c('zone', 'sector')], FUN = range)
-
-aggregate(ei$emisuc[, c('man.ph', 'air.temp')], 
-          ei$emisuc[, c('zone', 'sector')], FUN = sd)
-```
-
-Note that estimated errors are applied to a copy of the entire input data frame.
-That is, the estimates are at the level of the entire analysis.
 
 ```{r}
 ei$emisagg
