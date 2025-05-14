@@ -31,9 +31,14 @@ Then install the latest [ALFAM2 release](https://github.com/AU-BCE-EE/ALFAM2/rel
 devtools::install_github("AU-BCE-EE/ALFAM2@*release", build_vignettes = TRUE)
 ```
 
-The `build_vignettes` argument is needed in order to get the vignette.
+The `build_vignettes` argument is needed in order to get the vignettes.
 
-You can just pull from the master branch (`AU-BCE-EE/ALFAM2`), but you may get some new changes not yet included in a release.
+You can just pull from the master branch (`AU-BCE-EE/ALFAM2`) with the following command, but you may get some new changes not yet included in a release.
+
+```
+devtools::install_github("AU-BCE-EE/ALFAM2", build_vignettes = TRUE)
+```
+
 And you can get any specific release (e.g., to check out a specific version used in a particular paper) with the following syntax.
 
 ```
@@ -43,7 +48,13 @@ devtools::install_github("AU-BCE-EE/ALFAM2@v3.2", build_vignettes = TRUE)
 See the [Releases page](https://github.com/AU-BCE-EE/ALFAM2/releases) for all available releases.
 The `@v3.2` bit in the command above is from the release *tag*.
 
-For other branches using the `ref` argument, but based on how the branches are used, this doesn't typically make sense for regular users.
+For other branches using the `ref` argument, but this doesn't typically make sense for regular users.
+If you are sure that you need another branch (for example, to test new features), use `ref`.
+For example, for the main development branch named `dev`:
+
+```
+devtools::install_github("AU-BCE-EE/ALFAM2", ref = "dev", build_vignettes = TRUE)
+```
 
 # Package use
 Once the package is installed, load it.
