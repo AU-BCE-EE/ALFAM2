@@ -312,9 +312,9 @@ alfam2 <- function(
   if (check && is.null(time.incorp)) {
     # Remove any incorporation columns if no incorporation time is provided (to avoid incorrect incorp effect on r3)
     names.orig <- names(dat)
-    dat <- dat[, !(ii <- grepl(paste(incorp.names, collapse = '|'), names(dat)))]
+    dat <- dat[, !(ii <- grepl(paste(incorp.names, collapse = '|'), names(dat))), drop = FALSE]
     # Note that dum is just for output (not calculations at this point, those already in dat)
-    dum <- dum[, !(jj <- grepl(paste(incorp.names, collapse = '|'), names(dum)))]
+    dum <- dum[, !(jj <- grepl(paste(incorp.names, collapse = '|'), names(dum))), drop = FALSE]
     if (warn) {
       warning(paste('Incorporation columns', paste(names.orig[ii], collapse = ', '), 'were dropped \n    because argument time.incorp is NULL\n    So there is no incorporation.\n    Set check = FALSE to not drop, but then check output.\n'))
     }
