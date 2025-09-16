@@ -59,7 +59,7 @@ alfam2(
 }
   \item{app.name}{
     name of column in \code{dat} that contains total ammonia nitrogen (TAN) application rate (usually kg/ha).
-    If omitted, function will return relative emission (fraction of applied TAN).
+    If omitted, function will return relative emission (fraction of applied TAN) and a warning (if \code{warn = TRUE}).
 }
   \item{time.name}{
     name of column in \code{dat} that contains cumulative time since manure was applied (h)
@@ -105,7 +105,7 @@ alfam2(
 }
   \item{warn}{
     set to \code{FALSE} to suppress some warnings and messages.
-    Doing so is useful for reducing console or report clutter, but use with caution, because problems with the input data or call could be missed.
+    Doing so is useful for reducing console or report clutter, but do so with caution, because problems with the input data or call could be missed.
     Even with \code{warn = FALSE} the \code{alfam2} function may make some substitutions in inputs (see vignette).
 }  
   \item{value}{

@@ -7,6 +7,9 @@ The latest default parameter set was revised slightly to reflect new results aft
 Resulting predictions will be slightly different than in v4.1.11 and earlier.
 In some cases the change may be around 1% of applied TAN, but is typically smaller.
 
+## New feature
+The `alfam2()` function can now be run without a column for TAN applcation rate (`app.name` argument). If omitted (or if default argument name is not present) only relative emission will be returned with a warning.
+
 ## Documentation
 Available default parameter sets are now documented in a separate help file.
 View it with `?alfam2pars` or `?alfam2pars03` etc.
