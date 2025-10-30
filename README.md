@@ -6,7 +6,7 @@ Sasha D. Hafner.
 Contact information here: <https://www.au.dk/vis/person/sasha.hafner@bce.au.dk>.
 
 # Installation
-The ALFAM2 package is now on [CRAN](https://cran.r-project.org/), so it can be installed in the normal way:
+The ALFAM2 package is on [CRAN](https://cran.r-project.org/), so it can be installed in the normal way:
 
 ```
 install.packages("ALFAM2")
@@ -69,7 +69,11 @@ When referring to the ALFAM2 model predictions in publications, be sure to inclu
 You can get citations to the R package and relevant publications with `citation('ALFAM2')` in R.
 
 # Model description
-The following paper describes the model in some detail:
+The most recent paper describes additions to the model and the most recent parameter set (3):
+
+Hafner, S.D., Pedersen, J., Fuß, R., Kamp, J.N., Dalby, F.R., Amon, B., Pacholski, A., Adamsen, A.P.S., Sommer, S.G., 2025. Improved tools for estimation of ammonia emission from field-applied animal slurry: Refinement of the ALFAM2 model and database. Atmospheric Environment 340, 120910. https://doi.org/10.1016/j.atmosenv.2024.120910. <https://doi-org.ez.statsbiblioteket.dk/10.1016/j.atmosenv.2024.120910>
+
+The following paper describes the original model in some detail:
 
 Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Génermont, S., Häni, C., Hansen, M.N., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S.G., 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. Atmospheric Environment 199: 474-484. <https://doi.org/10.1016/j.atmosenv.2018.11.034>
 
