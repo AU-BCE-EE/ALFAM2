@@ -1,0 +1,510 @@
+---
+title: "Emission inventory calculations with the ALFAM2 package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Emissions inventory calculations with the ALFAM2 package}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r cache=FALSE, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(fig.width=12, fig.height=8, out.width='100%', out.height='100%') 
+opts_chunk$set(cache = FALSE, tidy = FALSE, fig.align = "center")
+library(ALFAM2)
+options(width=65)
+```
+
+# Introduction
+An obvious application of the `alfam2()` function is emission inventory calculations.
+The `alfami()` function facilitates this type of work by
+
+1. estimating uncertainty from both model input variables and parameter values, 
+2. aggregating results for total emissions and effective emission factors, and
+3. including default arguments and behavior appropriate for inventory calcuations.
+
+Underlying emission calculations are automatically made with the `alfam2()` function.
+This document shows how to use the `alfami()` function through examples.
+The name of the function comes from 'ALFAM' and **e**missions **i**nventory.
+
+# The package
+
+Let's load the package,
+
+```{r}
+#library(ALFAM2)
+devtools::load_all()
+```
+
+and check the version.
+
+```{r}
+packageVersion('ALFAM2')
+```
+
+The inventory function is available (and at leat initially debugged) in v4.2.5 and up.
+It is currently only included in the development branch publicly available through the ALFAM2 GitHub repo.
+So users can install it with
+
+```{r,eval=FALSE}
+devtools::install_github('AU-BCE-EE/ALFAM2', ref = 'dev')
+```
+
+This assumes the devtools package has already been installed.
+Eventually (after more testing and probably some revision) the function will be available in the main branch and later through CRAN.
+
+# A simple example
+
+Let's pretend that we are interested in inventory estimates of ammonia emission from field-applied cattle and pig slurry in some area.
+The most disaggregated input data we have is at a geographic scale we'll call "sector" here.
+In our input data there are two sectors in one of our "zones", and three other zones with one sector each.
+These data are imaginary of course, but the important point is that input data must be at least as disaggregated as the required output.
+In practice users might work at the district, county, state, or country level--the names of geographic scale is completely flexible for `alfami()`.
+In our example, we also have some information on the application method in each sector, along with characteristics of slurry applied, and the weather following the application events.
+Without data like these, most of the benefit from using this function for inventory calculations is lost.
+
+```{r}
+dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
+		  sector = c(1, 2, 1, 1, 1),
+		  man.source = c('cattle', 'pig', 'cattle', 'cattle', 'pig'),
+		  man.dm = c(7, 4, 6.5, 6.5, 4),
+		  man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
+		  app.mthd = c(rep('trailing hose', 4), 'broadcast'),
+		  wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
+		  air.temp = c(12, 8, 8, 15, 14),
+		  time.h = 168,
+		  TAN.app.tot = c(2000, 1500, 80, 4300, 25))
+dat
+```
+
+We might think about whether these data should be further "disaggregated", and whether we might consider how changing weather over the slurry application period affects total emission.
+The `alfami()` function could handle this, but for now we will set these issues aside.
+
+For inventory calculations, the `alfami()` function needs these inputs above along with a few settings.
+
+```{r}
+args(alfami)
+```
+
+Here we only really need to specify the name of the columns that have: the time after application at which emission should be integrated and total TAN application (N mass) in a known unit.
+Here TAN application is in metric tonnes (Mg). 
+
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot')
+```
+
+The function returns a list of 6 elements.
+
+```{r}
+names(ei)
+```
+
+For total TAN application and emission, see the following element.
+
+```{r}
+ei$emistot
+```
+
+The following element has aggregated results, with the level of aggregation depending on input (more on this below).
+In this case, it matches the total.
+
+```{r}
+ei$emisagg
+```
+
+Total emission is given in the `emis.tot` column, and its units match TAN application units from the input, t here.
+The `emis.fact` column has an *effective* emission factor, i.e., total emission (`emis.tot`) divided by total applied TAN (`TAN.app.tot` here).
+
+Disaggregated data are included as well, in the `emisdis` element.
+
+```{r}
+ei$emisdis
+```
+
+Note that the emission factors given are always based on aggregation level represented by each row in an output object.
+The `alfami()` function does not calculate simple average emission factors, although if those are of interest they could be calculated from disaggregated results.
+But here we will just show that that overall value of `emis.factor` is not the simple average.
+
+```{r}
+mean(ei$emisdis$emis.fact)
+```
+
+To see more detailed ALFAM2 predictions from the `alfam2()` function, check the `predref` element, which has all the output from `alfam2()` applied to the input data given in the `alfami()` call.
+The `ref` part comes from the reference nature of these predictions; they are based on given inputs and default parameters, in contrast to uncertainty calculations.
+The topic of uncertainty is explored in the next subsection.
+
+```{r}
+ei$predref
+```
+
+## Estimating uncertainty
+
+To estimate uncertainty in predicted emissions based on uncertainty in model parameter values, set `uncert = 'pars'`.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              uncert = 'pars')
+```
+
+```{r}
+ei$emisagg
+```
+
+By default, `alfami()` uses 100 "plausible" parameter sets (the `alfam2pars03var` object) that were developed using a bootstrap approach as described in the latest ALFAM2 model paper[^1].
+
+The `alfami()` function can also incorporate uncertainty from predictor variables, as well as TAN application, using a Monte Carlo approach.
+Getting uncertainty estimates requires setting some inputs in a data frame that is then passed to the `uncert.settings` argument.
+These settings can specify values for either uniform or normal distributions for uncertainty.
+Furthermore, uncertainty can be relative (a fraction of the value given in `dat`) or adjusted to the center (so estimated uncertainty is added to input values).
+And even with a normal distribution a minimum and maximum can be specified to exclude extreme values.
+Here we will use a normal distribution for slurry dry matter (DM) and pH, as well as TAN application.
+We'll specify a relative standard deviation for DM and TAN application (standard deviation of 20% of the mean value) and an absolute value for pH (standard deviation of 0.5 pH units), where the relative concept makes less sense.
+Other predictor variables are used in the predictions, but because we have omitted them, their uncertainty is not included.
+
+```{r}
+uset <- data.frame(pvar = c('man.dm', 'man.ph',  'TAN.app.tot'),
+		               rel = c('Relative', 'Absolute', 'Relative'),
+		               dist.type = 'Normal',
+		               sd = c(0.2, 0.5, 0.2),
+		               min = NA,
+		               max = NA,
+                   level = 'agg')
+uset
+```
+
+In the `alfami()` call we now need to indicate that uncertainty should be included for both parameters and variables.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              uncert = c('pars', 'vars'), uncert.settings = uset)
+```
+
+Here is the effect of this additional uncertainty on predicted confidence limits.
+
+```{r}
+ei$emisagg
+```
+
+The 20% relative standard deviation in TAN application alone has a large effect--see the limits for `TAN.app.tot` in `uset`.
+The default confidence interval level is 80%, and it could be adjusted with `cl`.
+
+```{r}
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+        uncert = c('pars', 'vars'), uncert.settings = uset, cl = 0.9)$emisagg
+```
+
+We can see the input variable values used in the `emisuc` element, where `uc` is for "uncertainty".
+Here we have 100 rows for each input row in `dat`, because 100 iterations are the default (see `nu` below). 
+
+```{r}
+dim(ei$emisuc)
+```
+
+Here is the range:
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = range)
+```
+
+Mean:
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = mean)
+```
+
+And standard deviation:
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'man.ph', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = sd)
+```
+
+Notice how the standard deviation is constant for `man.ph`, even though mean values differ.
+This is because the specified distribution settings given for uncertainty are interpreted as applying at the aggregated level.
+We set this in the last column of `uset`:
+
+```{r}
+uset
+```
+
+Each uncertainty replication (iteration) therefore adjusts slurry pH by the same amount for all application events.
+We can see that we approximately have our requested standard deviation (the exact value we see above) in fact at the aggregated level.
+
+```{r}
+sd(aggregate(ei$emisuc[, c('man.ph')], ei$emisuc[, c('uset'), drop = FALSE], FUN = mean)$x)
+```
+
+There is an alternative approach, but first, let's look at the other input variables.
+We don't see a constant standard deviation for `man.dm` or `TAN.app.tot` because we indicated that it was *relative* standard deviation that should be constant in `uset`.
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = function(x) sd(x) / mean(x))
+```
+
+In fact we see constant relative standard deviation, despite very different mean values.
+
+```{r}
+aggregate(ei$emisuc[, c('man.dm', 'TAN.app.tot')], 
+          ei$emisuc[, c('zone', 'sector')], FUN = mean)
+```
+
+If we have uncertainty parameters for the disaggregated level, here our zone/sector combinations, we can specify that in the `uncert.settings` argument.
+
+
+```{r}
+usetd <- data.frame(pvar = c('man.dm', 'man.ph', 'air.temp', 'wind.sqrt', 'TAN.app.tot'),
+		   rel = c('Relative', 'Centered', 'Absolute', 'Absolute',  'Relative'),
+		   dist.type = c('Normal', 'Uniform', 'Normal', 'Normal', 'Normal'),
+		   sd = c(0.2, NA, 3, 0.5, 0.2),
+		   min = c(NA, -0.7, NA, NA, NA),
+		   max = c(NA, 0.7, NA, NA, NA),
+       level = 'disagg')
+usetd
+```
+
+We should expect similar (on average, identical) *disaggregated* results.
+
+```{r}
+eid <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              uncert = c('pars', 'vars'), uncert.settings = usetd)
+```
+
+```{r}
+eid$emisdis
+```
+
+```{r}
+ei$emisdis
+```
+
+Indeed, similar.
+But aggregated results will differ, because we have now removed the (perfect) correlation in error among the different application events.
+
+```{r}
+eid$emisagg
+```
+
+```{r}
+ei$emisagg
+```
+
+Confidence intervals for aggregated results are wider when the uncertainty distribution parameters apply at the aggregated level.
+The difference will increase as the number of application events increases.
+The aggregated distribution approach is probably the better one, and we will use it for the remainder of the examples.
+
+Let's explore some other features related to uncertainty.
+And we should include weather as well.
+
+```{r}
+uset <- data.frame(pvar = c('man.dm', 'man.ph', 'air.temp', 'wind.sqrt', 'TAN.app.tot'),
+		   rel = c('Relative', 'Centered', 'Absolute', 'Absolute',  'Relative'),
+		   dist.type = c('Normal', 'Uniform', 'Normal', 'Normal', 'Normal'),
+		   sd = c(0.2, NA, 3, 0.5, 0.2),
+		   min = c(NA, -0.7, NA, NA, NA),
+		   max = c(NA, 0.7, NA, NA, NA),
+       level = 'agg')
+uset
+```
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              uncert = c('pars', 'vars'), uncert.settings = uset)
+```
+
+```{r}
+ei$emisagg
+```
+
+With these uncertainty settings, overall uncertainty in emissions is high.
+
+To separately look at the contributions of parameter and input variable uncertainty, or make any other quantitative comparison of uncertainty, the random number seed can be set for reproducibility with the `seed` argument.
+(The function calls `set.seed()`.)
+
+Parameters:
+
+```{r}
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+        uncert = c('pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
+```
+
+Predictor variables:
+
+```{r}
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+        uncert = c('vars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
+```
+
+Together:
+
+```{r}
+alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+        uncert = c('vars', 'pars'), uncert.settings = uset, seed = 1)$emisagg[, c(4, 3, 5)]
+```
+
+So in this hypothetical example with no more than guesses for variable uncertainty inputs, that uncertainty in variables is more important than from parameter values.
+
+Note that estimated confidence limits are independent.
+All variables are calculated for each uncertainty iteration, and then quantiles are used to estimate limits, separately for all variables.
+So for example, in the result below, the limits for total emission are *not* the product of the emission factor and TAN application limits, but less extreme (closer to the main estimate), as they should be.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+        uncert = c('vars', 'pars'), uncert.settings = uset, 
+        seed = 1)
+ei$emisagg
+ei$emisagg$emis.fact.lwr * ei$emisagg$TAN.app.tot.lwr
+ei$emisagg$emis.fact.upr * ei$emisagg$TAN.app.tot.upr
+```
+
+The `nu` argument controls the number of iterations to used for uncertainty estimation.
+If considering only parameter uncertainty, no benefit will come from setting `nu` above the number of sets (which is 100 for the default).
+But with `'vars'` included, stability should improve with more.
+
+
+# Higher resolution weather
+
+We can use some artificial hourly weather data made with some code from the ALFAM2-start vignette.
+
+```{r}
+wthr <- data.frame(time.h = 0:84*2, 
+                   air.temp = 7 + 7*sin(0:84*2 * 2*pi/24) + 
+                     rnorm(85, 0, 2), 
+                   wind.sqrt = sqrt(1.5 + 0.4*sin(0:84*2 * 2*pi/24)) + 
+                      rnorm(85, 0, 0.12)) 
+plot(air.temp ~ time.h, data = wthr, type = 'o')
+plot(wind.sqrt ~ time.h, data = wthr, type = 'o')
+```
+
+Here we will use these weather data with different types of slurry.
+Importantly, because we will now have multiple rows per slurry application event (because of the higher resolution weather), we need an "application event key" to group these, which we will specify using the `eventkey` argument.
+
+```{r}
+dat <- data.frame(ekey = rep(1:3, each = 85), wthr[rep(1:85, 3), ])
+```
+
+We'll make up some slurry properties for each of the three application events used in this example.
+
+```{r}
+slurry <- data.frame(ekey = 1:3, man.soure = c('cattle', 'pig', 'cattle'),
+                     TAN.app.tot = c(1, 2, 3),
+                     man.dm = c(6.2, 3.9, 8.0), man.ph = c(7.0, 7.5, 7.9))
+dat <- merge(dat, slurry, by = 'ekey')
+head(dat)
+tail(dat)
+```
+
+So in this example we want to calculate emission for each of 3 application events, considering the effect of hourly weather changes.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              eventkey = 'ekey',
+              uncert = c('pars', 'vars'), uncert.settings = uset)
+```
+
+Note how the `eventkey` issue is handled differently in the `alfam2()` function.
+For `alfam2()`, each separate row in `dat` is taken as another time interval in a single application event, unless `group` is given and the value differs between rows.
+In `alfami()`, each row is assumed to be a separate application event unless the value of the column given in the `eventkey` argument says otherwise.
+
+```{r}
+ei$emisdis
+ei$emisagg
+```
+
+If we want the high-resolution predictions, they are in `predref`.
+
+```{r}
+head(ei$predref)
+dim(ei$predref)
+```
+
+# Aggregation
+Any variable (or combination of variables) can be used to aggregate results.
+By default `alfami()` gives the totals.
+Let's modify the first example by expanding it over multiple years.
+
+```{r}
+dat <- data.frame(app.key = 1:5,
+		              zone = c('north', 'north', 'south', 'east', 'west'),
+		              sector = c(1, 2, 1, 1, 1),
+		              man.source = c('cattle', 'pig', 'cattle', 'cattle', 'pig'),
+		              man.dm = c(7, 4, 6.5, 6.5, 4),
+		              man.ph = c(7.0, 7.2, 6.9, 7.5, 7.4),
+		              app.mthd = c(rep('trailing hose', 4), 'broadcast'),
+		              wind.sqrt = sqrt(c(2.2, 2.1, 4.0, 3.7, 4.0)),
+		              air.temp = c(12, 8, 8, 15, 14),
+		              time.h = 168,
+		              TAN.app.tot = c(2000, 1500, 80, 4300, 25))
+```
+
+Apply in multiple years.
+
+```{r}
+dat <- data.frame(year = rep(2010:2015, each = 5), dat[rep(1:5, 6), ])
+```
+
+And change at least the TAN application values among the years, to make the ultimate output more interesting.
+
+```{r}
+dat$TAN.app.tot <- dat$TAN.app.tot * (1 + as.numeric(factor(dat$year)) / 10)
+```
+
+Here we have a single row per application event.
+We don't actually need the `app.key` column.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+              uncert = c('pars', 'vars'), uncert.settings = uset)
+```
+
+Here our default aggregation combines multiple years.
+
+```{r}
+ei$emisagg
+ei$emistot
+```
+
+We can have it do something else using the `aggkey` argument.
+For example, by `year`.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+	      aggkey = 'year', uncert = c('pars', 'vars'), uncert.settings = uset)
+ei$emisagg
+ei$emistot
+```
+
+Emission factors are identical across years because predictor variable values are identical (only TAN application differed)!
+
+We could aggregate by multiple variables.
+
+```{r}
+ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot',
+	      aggkey = c('zone', 'man.source', 'year'), uncert = c('pars', 'vars'), 
+        uncert.settings = uset)
+
+ei$emisagg
+ei$emistot
+```
+
+If multiple aggregation combinations are needed, `alfami()` can handle this as well.
+For example, to aggregate in three different ways:
+
+```{r}
+ei <- alfami(dat, 
+             time.name = 'time.h', 
+             app.tan.name = 'TAN.app.tot',
+	           aggkey = list('year',
+	                         'man.source',
+	                         c('year', 'zone')),
+             uncert = c('pars', 'vars'), 
+             uncert.settings = uset)
+```
+
+Now the `emisagg` element is a list of multiple data frames.
+
+```{r}
+ei$emisagg
+```

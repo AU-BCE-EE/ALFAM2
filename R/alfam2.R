@@ -83,6 +83,16 @@ alfam2 <- function(
   if (inherits(dat, c('data.table', 'tbl_df'))) {
     dat <- as.data.frame(dat)
   } 
+  
+  # Relative emission only if app.name is missing
+  if (is.null(app.name) || is.na(app.name) || !app.name %in% names(dat)) {
+    if (warn) {
+      warning('Argument app.name is missing or dat is missing column of given name.\n    So function will return relative emission only.\n')
+    }
+    relonly <- TRUE
+    dat$`__appplaceholder94` <- 1
+    app.name <- '__appplaceholder94'
+  }
 
   # Argument checks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (check) {
@@ -111,16 +121,6 @@ alfam2 <- function(
       if (warn) {
         warning('You specified values for the center argument for centering means.\n    Only use this option if you know what you are doing and centering means match the parameter set.\n    User-supplied values will replace or extend default values.')
       }
-    }
-
-    # Relative emission only if app.name is missing
-    if (is.null(app.name) || is.na(app.name) || !app.name %in% names(dat)) {
-      if (warn) {
-        warning('Argument app.name is missing or dat is missing column of given name.\n    So function will return relative emission only.\n')
-      }
-      relonly <- TRUE
-      dat$`__appplaceholder94` <- 1
-      app.name <- '__appplaceholder94'
     }
 
     # Check that arguments that should be column names are actually present in dat
@@ -312,9 +312,9 @@ alfam2 <- function(
   if (check && is.null(time.incorp)) {
     # Remove any incorporation columns if no incorporation time is provided (to avoid incorrect incorp effect on r3)
     names.orig <- names(dat)
-    dat <- dat[, !(ii <- grepl(paste(incorp.names, collapse = '|'), names(dat)))]
+    dat <- dat[, !(ii <- grepl(paste(incorp.names, collapse = '|'), names(dat))), drop = FALSE]
     # Note that dum is just for output (not calculations at this point, those already in dat)
-    dum <- dum[, !(jj <- grepl(paste(incorp.names, collapse = '|'), names(dum)))]
+    dum <- dum[, !(jj <- grepl(paste(incorp.names, collapse = '|'), names(dum))), drop = FALSE]
     if (warn) {
       warning(paste('Incorporation columns', paste(names.orig[ii], collapse = ', '), 'were dropped \n    because argument time.incorp is NULL\n    So there is no incorporation.\n    Set check = FALSE to not drop, but then check output.\n'))
     }
