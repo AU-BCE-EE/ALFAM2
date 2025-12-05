@@ -166,6 +166,11 @@ pred1 <- alfam2(dat1, app.name = 'TAN.app', time.name = 'ctime', warn = FALSE)
 expect_equal(pred0$e, pred0$er, tolerance = 0.00001)
 expect_equal(pred1$e / 100, pred1$er, tolerance = 0.00001)
 
+# Check that combination of no TAN.app column and conf.int no longer throws error (see #101)~~~~~~~~~~~~~~
+# There is no `expect_...` here, just has a bare call, which will show up if it throws an error even though the test shows OK
+dat0 <- data.frame(ctime = c(0, 10, 168))
+alfam2(dat0, app.name = 'TAN.app', time.name = 'ctime', conf.int = 0.8, warn = FALSE)
+
 # Tests are needed for groups and pass_cols
 # Also perhaps for additional warnings or errors
 
