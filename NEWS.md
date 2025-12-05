@@ -1,6 +1,6 @@
 # NEWS for ALFAM2 R package
 
-# ALFAM2 v4.2.13 (5 Dec 2025)
+# ALFAM2 v4.2.14 (5 Dec 2025)
 ## Bug fixes
 From v4.2 `alfam2()` could be run without TAN application rate, but this did not work when the `conf.int` argument was used. That problem was fixed.
 
