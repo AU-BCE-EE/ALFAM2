@@ -9,9 +9,9 @@ vignette: >
 
 ```{r, include=FALSE, cache=FALSE}
 library(knitr)
-#opts_chunk$set(cache=FALSE,tidy=FALSE,highlight=FALSE)
+#opts_chunk$set(cache=FALSE,highlight=FALSE)
 knitr::opts_chunk$set(fig.width=12, fig.height=8, out.width='100%', out.height='100%') 
-opts_chunk$set(cache = FALSE, tidy = FALSE, fig.align = "center")
+opts_chunk$set(cache = FALSE, fig.align = "center")
 library(ALFAM2)
   options(width=65)
 ```
@@ -45,8 +45,6 @@ To use the ALFAM2 package, you will need to install the package (done once, or e
 In R, you will need to be able to install and load packages, call functions, and, ideally, create data frames and import and export data to/from file.
 For information on these tasks and more, there are many free resources online. 
 CRAN provides various manuals, including a good introduction: <https://cran.r-project.org/> (select "Manuals" at the lower left).
-Posit (RStudio developers) also provides various materials for learning R, although the focus is skewed toward packages from Posit.
-This book for a course on R has some details: <https://www.researchgate.net/publication/325170649_An_Introduction_to_R_for_Beginners>.
 Alternatively, the examples given below may be sufficient.
 
 # Installing the ALFAM2 package
@@ -941,7 +939,7 @@ Christoph Haeni, Johanna Maria Pedersen, Frederik Dalby, and Anders Peter Adamse
 	
 [^2]: Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. *Atmospheric Environment*. <https://doi.org/10.1016/j.atmosenv.2024.120910>
 
-[^3]: Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. <https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf>
+[^3]: Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. 
 
 [^4]: Hafner, S.D., Kamp, J.N., Pedersen, J. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. *Agricultural and Forest Meteorology*, 344, 109790, 2024. <https://doi.org/10.1016/j.agrformet.2023.109790>
 

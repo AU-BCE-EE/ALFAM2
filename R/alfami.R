@@ -128,7 +128,6 @@ alfami <- function(
             dat.uc[, paste0('e.', pvar)] <- e
           } else {
             dat.uc[, paste0('e.', pvar)] <- rep(e, each = nrow(dat))
-            head(dat.uc)
           }
 
           # And adjust predictor variable values by error

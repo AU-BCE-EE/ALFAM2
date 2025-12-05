@@ -6,11 +6,13 @@ Emissions Inventory Calculations of Ammonia Emission from Field-Applied Manure
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-A wrapper for the \code{\link{alfam2}} function for emissions inventory applications.
+A wrapper and higher-level analysis for the \code{\link{alfam2}} function for emissions inventory applications.
+This function is under development and not currently exported!
+Warning: The API will likely change in the coming months.
 }
 
 \usage{
-alfami <- function(
+alfami(
   dat, 
   pars = ALFAM2::alfam2pars03, 
   time.name,
@@ -97,14 +99,6 @@ See vignette.
 }
 
 \references{
-  Hafner, S.D., Pacholski, A., Bittman, S., Carozzi, M., Chantigny, M., Genermont, S., Haeni, C., Hansen, M., Huijsmans, J., Kupper, T., Misselbrook, T., Neftel, A., Nyord, T., Sommer, S. 2019. A flexible semi-empirical model for estimating ammonia volatilization from field-applied slurry. \emph{Atmospheric Environment} \bold{199} 474-484. \doi{10.1016/j.atmosenv.2018.11.034}
-
-  Hafner, S.D., Nyord, T., Sommer, S.G., Adamsen, A.P.S. 2021. Estimation of Danish emission factors for ammonia from field-applied liquid manure for 1980 to 2019. Danish Centre for Food and Agriculture, Aarhus University, Aarhus, Denmark. Report no. 2021-0251862. \url{https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf}
-
-  Hafner, S.D., Kamp, J.N., Pedersen, J., 2024a. Experimental and model-based comparison of wind tunnel and inverse dispersion model measurement of ammonia emission from field-applied animal slurry. Agricultural and Forest Meteorology 344, 109790. \doi{10.1016/j.agrformet.2023.109790}
-  
-  Hafner S, Pedersen J, Fuss R, Kamp J, Dalby F, Amon B, Pacholski A, Adamsen A, Sommer S., 2024b. Improved tools for estimation of ammonia emission from field-applied animal slurry: refinement of the ALFAM2 model and database. Atmospheric Environment. \doi{10.1016/j.atmosenv.2024.120910}
-
   The AlFAM2 project website. \url{https://projects.au.dk/alfam/}
 %% ~put references to the literature/web site here ~
 }
@@ -120,6 +114,7 @@ Sasha D. Hafner
 }
 
 \examples{
+\dontrun{
 dat <- data.frame(zone = c('north', 'north', 'south', 'east', 'west'),
 		  sector = c(1, 2, 1, 1, 1),
 		  man.source = c('cattle', 'pig', 'cattle', 'cattle', 'pig'),
@@ -138,7 +133,7 @@ ei <- alfami(dat, time.name = 'time.h', app.tan.name = 'TAN.app.tot', aggkey = '
 
 ei$emistot
 ei$emisagg
-
+}
 # See vignette for more examples and explanation. Run:
 # vignette("ALFAM2-inventory")
 }

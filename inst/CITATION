@@ -60,7 +60,7 @@ bibentry('Article',
                           person('Sven Gjedde', 'Sommer')
                           ),
          journal      = 'Atmospheric Environment',
-         year         = '2024',
+         year         = '2025',
          volume       = '',
          pages        = '',
          doi          = '10.1016/j.atmosenv.2024.120910')
@@ -76,7 +76,6 @@ bibentry('TechReport',
                           person('Anders Peter S.', 'Adamsen')
                           ),
          institution  = 'Danish Centre for Food and Agriculture, Aarhus University',
-         year         = '2021',
-         url          = 'https://pure.au.dk/portal/files/223538048/EFreport23092021.pdf')
+         year         = '2021')
 
 
