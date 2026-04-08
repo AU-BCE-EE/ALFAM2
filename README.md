@@ -16,19 +16,19 @@ This will install the latest version available on CRAN.
 
 Earlier versions can still be found here on the ALFAM2 GitHub repository.
 And as package development continues, there will be times when the CRAN version is not the latest one.
-Installation of packages from GitHub requires a package called devtools.
-You can run the code below to install devtools and ALFAM2.
+Installation of packages from GitHub requires a package called remotes (or the devtools package, which can be used exactly like remotes below).
+You can run the code below to install remotes and ALFAM2.
 
-If you don't already have it, first install devtools from CRAN.
+If you don't already have it, first install remotes from CRAN.
 
 ```
-install.packages("devtools")
+install.packages("remotes")
 ```
 
 Then install the latest [ALFAM2 release](https://github.com/AU-BCE-EE/ALFAM2/releases) from this ALFAM2 repository with the following command.
 
 ```
-devtools::install_github("AU-BCE-EE/ALFAM2@*release", build_vignettes = TRUE)
+remotes::install_github("AU-BCE-EE/ALFAM2@*release", build_vignettes = TRUE)
 ```
 
 The `build_vignettes` argument is needed in order to get the vignettes.
@@ -36,13 +36,13 @@ The `build_vignettes` argument is needed in order to get the vignettes.
 You can just pull from the master branch (`AU-BCE-EE/ALFAM2`) with the following command, but you may get some new changes not yet included in a release.
 
 ```
-devtools::install_github("AU-BCE-EE/ALFAM2", build_vignettes = TRUE)
+remotes::install_github("AU-BCE-EE/ALFAM2", build_vignettes = TRUE)
 ```
 
 And you can get any specific release (e.g., to check out a specific version used in a particular paper) with the following syntax.
 
 ```
-devtools::install_github("AU-BCE-EE/ALFAM2@v3.2", build_vignettes = TRUE)
+remotes::install_github("AU-BCE-EE/ALFAM2@v3.2", build_vignettes = TRUE)
 ```
 
 See the [Releases page](https://github.com/AU-BCE-EE/ALFAM2/releases) for all available releases.
@@ -53,11 +53,11 @@ If you are sure that you need another branch (for example, to test new features)
 For example, for the main development branch named `dev`:
 
 ```
-devtools::install_github("AU-BCE-EE/ALFAM2", ref = "dev", build_vignettes = TRUE)
+remotes::install_github("AU-BCE-EE/ALFAM2", ref = "dev", build_vignettes = TRUE)
 ```
 
 # Package use
-Once the package is installed, load it.
+Once the package is installed, load it in R.
 
 ```
 library(ALFAM2)
