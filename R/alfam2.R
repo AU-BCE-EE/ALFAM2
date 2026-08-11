@@ -277,6 +277,24 @@ alfam2 <- function(
     }
   }
 
+  # Sort out interactions
+  # This solution suggested by Claude Code
+  # Built here (post-centering, pre-sort, pre-incorp-row-addition) so intcols
+  # has the same row count and order as dat/dum -- can be reattached to ce
+  # at the very end alongside dum. Loop is skipped if ':' is not in pars.
+  ppn <- gsub('\\.[rf][0-9]$', '', names(pars))      # strip primary-par suffix
+  intnms <- character(0)
+  for (nm in unique(ppn[grepl(':', ppn, fixed = TRUE)])) {
+    comps <- strsplit(nm, ':', fixed = TRUE)[[1]]
+    if (all(comps %in% names(dat)) && !nm %in% names(dat)) {
+      dat[, nm] <- apply(dat[, comps, drop = FALSE], 1, prod)
+      intnms <- c(intnms, nm)
+    }
+    # If a component is missing, the column isn't built and the existing
+    # "Drop parameters for missing predictors" logic warns and drops it.
+  }
+  intcols <- dat[, intnms, drop = FALSE]
+
   # Original order (for sorting before return)
   dat$`__orig.order` <- 1:nrow(dat)
 
@@ -319,7 +337,6 @@ alfam2 <- function(
       warning(paste('Incorporation columns', paste(names.orig[ii], collapse = ', '), 'were dropped \n    because argument time.incorp is NULL\n    So there is no incorporation.\n    Set check = FALSE to not drop, but then check output.\n'))
     }
   }
-
 
   # Drop parameters for missing predictors
   p.orig <- pars
@@ -440,6 +457,11 @@ alfam2 <- function(
   # Keep up with dat for grouped operation below
   dat <- dat[order(dat$`__orig.order`), ]
   row.names(ce) <- seq.int(nrow(ce))
+
+  # Add interaction columns, same guard/timing as dummy variables below
+  if (!add.incorp.rows && ncol(intcols) > 0 && nrow(intcols) == nrow(ce)) {
+    ce <- cbind(intcols, ce)
+  }
 
   # Add dummy variables *after* switching back to original sort order
   if (!add.incorp.rows && prep.dum) {
