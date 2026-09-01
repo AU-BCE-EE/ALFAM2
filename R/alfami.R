@@ -101,13 +101,13 @@ alfami <- function(
           }
           pvar <- uccv$pvar
           # Get error for each uncertainty simulation (total = nuv)
-          if (uccv$dist.type == 'Uniform') {
+          if (tolower(uccv$dist.type) == 'uniform') {
             if (!is.null(seed) && !is.na(seed)) {
               set.seed(seed)
             }
             e <- runif(nuv, min = uccv$min, max = uccv$max)
-          } else if (uccv$dist.type == 'Normal') {
-            if (uccv$rel == 'Relative') {
+          } else if (tolower(uccv$dist.type) == 'normal') {
+            if (tolower(uccv$rel) == 'relative') {
               dmean = 1 
             } else {
               dmean = 0 
@@ -120,6 +120,8 @@ alfami <- function(
               e[e < uccv$min] <- uccv$min
               e[e > uccv$max] <- uccv$max
             }
+          } else {
+            stop('Dist type not recognized')
           }
 
           # Get error into data frame by uncertainty set
@@ -131,15 +133,15 @@ alfami <- function(
           }
 
           # And adjust predictor variable values by error
-          if (uccv$rel == 'Absolute') {
-            if (uccv$dist.type == 'Uniform') {
+          if (tolower(uccv$rel) == 'absolute') {
+            if (tolower(uccv$dist.type) == 'uniform') {
               dat.uc[, pvar] <- dat.uc[, paste0('e.', pvar)]
             } else {
               dat.uc[, pvar] <- dat.uc[, pvar] + dat.uc[, paste0('e.', pvar)]
             }
-          } else if (uccv$rel == 'Centered') {
+          } else if (tolower(uccv$rel) == 'centered') {
             dat.uc[, pvar] <- dat.uc[, pvar] + dat.uc[, paste0('e.', pvar)]
-          } else if (uccv$rel == 'Relative') {
+          } else if (tolower(uccv$rel) == 'relative') {
             dat.uc[, pvar] <- dat.uc[, pvar] * dat.uc[, paste0('e.', pvar)]
           } else {
             stop('Check uncert.settings relative column')
