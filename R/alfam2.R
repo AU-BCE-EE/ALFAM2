@@ -316,7 +316,7 @@ alfam2 <- function(
     }
     if (value == 'incorp') {
       if (warn) {
-        warning('You set values = "incorp" so output does not include emission results.')
+        warning('You set value = "incorp" so output does not include emission results.')
       }
       dat <- dat[order(dat$`__orig.order`), ]
       return(dat)

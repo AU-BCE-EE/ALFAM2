@@ -1,7 +1,7 @@
 # Check for multiple values of mutually exclusive dummy variables
 # Returns 0 for no problems
 
-checkDum <- function(dat, vnames = c('^app\\.mthd\\.[ocbt]', '^incorp\\.[ds]', '^man\\.source\\.[cp]')) {
+checkDum <- function(dat, vnames = c('^app\\.mthd\\.[ocbt][sc]', '^incorp\\.[ds]', '^man\\.source\\.[cp]')) {
 
   for (i in vnames) {
     if (any(grepl(i, names(dat)))) {
