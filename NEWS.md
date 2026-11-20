@@ -1,5 +1,12 @@
 # NEWS for ALFAM2 R package
 
+# ALFAM2 v4.3.0 (20 Nov 2026)
+## Bug fixes
+Check for multiple 1/TRUE in what should be mutually exclusive dummy variable columns was made a bit more selective for `app.mthd` dummy variables, and a more helpful message was added.
+
+## New feature
+Interaction parameters can now be used, but this is not documented.
+
 # ALFAM2 v4.2.14 (5 Dec 2025)
 ## Bug fixes
 From v4.2 `alfam2()` could be run without TAN application rate, but this did not work when the `conf.int` argument was used. That problem was fixed.
