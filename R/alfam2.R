@@ -238,7 +238,7 @@ alfam2 <- function(
 
   # Check for dummy variables problems
   if (check && checkDum(dat) != 0) {
-    stop('Dummy variable problem--multiple (suspected) mututally exclusive dummy variables are 1 or TRUE.\n    Check input data.')
+    stop('Dummy variable problem--multiple (suspected) mututally exclusive dummy variables are 1 or TRUE.\n    Check input data or set check = FALSE.')
   }
 
   # Set app.rate.ni to 0 for any injection method
